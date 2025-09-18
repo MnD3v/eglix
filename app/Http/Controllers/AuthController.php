@@ -98,7 +98,7 @@ class AuthController extends Controller
             ]);
         } catch (\Exception $e) {
             return redirect()->back()
-                ->withErrors(['church_name' => 'Erreur lors de la création de l\'église. Veuillez réessayer.'])
+                ->withErrors(['church_name' => 'Erreur lors de la création de l\'église: ' . $e->getMessage()])
                 ->withInput($request->except('password', 'password_confirmation'));
         }
 
@@ -114,7 +114,7 @@ class AuthController extends Controller
         } catch (\Exception $e) {
             $church->delete(); // Supprimer l'église créée en cas d'erreur
             return redirect()->back()
-                ->withErrors(['church_name' => 'Erreur lors de la création du rôle administrateur.'])
+                ->withErrors(['church_name' => 'Erreur lors de la création du rôle administrateur: ' . $e->getMessage()])
                 ->withInput($request->except('password', 'password_confirmation'));
         }
 
@@ -133,7 +133,7 @@ class AuthController extends Controller
             $church->delete(); // Supprimer l'église et le rôle en cas d'erreur
             $adminRole->delete();
             return redirect()->back()
-                ->withErrors(['email' => 'Erreur lors de la création de l\'utilisateur administrateur.'])
+                ->withErrors(['email' => 'Erreur lors de la création de l\'utilisateur administrateur: ' . $e->getMessage()])
                 ->withInput($request->except('password', 'password_confirmation'));
         }
 
