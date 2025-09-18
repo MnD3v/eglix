@@ -9,7 +9,7 @@
         <div class="row g-3">
             <div class="col-md-6">
                 <label class="form-label">Membre</label>
-                <select name="member_id" class="form-select @error('member_id') is-invalid @enderror" required>
+                <select name="member_id" class="form-select select2-members @error('member_id') is-invalid @enderror" required>
                     @foreach($members as $m)
                         <option value="{{ $m->id }}" @selected(old('member_id', $tithe->member_id)==$m->id)>
                             {{ $m->last_name }} {{ $m->first_name }}

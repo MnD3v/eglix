@@ -1,11 +1,6 @@
 @extends('layouts.app')
 
-@push('scripts')
-<!-- Select2 CSS -->
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-<!-- Select2 JS -->
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-@endpush
+<!-- Suppression des scripts Select2 car ils sont déjà inclus dans le layout principal -->
 
 @section('content')
 <div class="container py-4">
@@ -74,23 +69,8 @@
             pm.addEventListener('change', updateRef);
             updateRef();
         }
-
-        // Initialisation de Select2 pour la recherche de membres
-        $(document).ready(function() {
-            $('.select2-members').select2({
-                placeholder: 'Rechercher un membre...',
-                allowClear: true,
-                width: '100%',
-                language: {
-                    noResults: function() {
-                        return "Aucun résultat trouvé";
-                    },
-                    searching: function() {
-                        return "Recherche en cours...";
-                    }
-                }
-            });
-        });
+        
+        // Ne pas initialiser Select2 ici car il est déjà initialisé globalement
     })();
     </script>
 </div>

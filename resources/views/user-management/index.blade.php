@@ -3,30 +3,25 @@
 @section('content')
 <div class="container-fluid px-4">
     <!-- En-tête de page -->
-    <div class="page-header">
+    <div class="accounts-header mb-4">
         <div class="d-flex justify-content-between align-items-center">
             <div>
-                <h1 class="page-title">
+                <h1 class="accounts-title">
                     <i class="bi bi-people-fill me-3"></i>
                     Gestion des Comptes
                 </h1>
-                <p class="page-subtitle">
+                <p class="accounts-subtitle">
                     <i class="bi bi-shield-check me-2"></i>
                     Gérez les utilisateurs et leurs permissions
                 </p>
             </div>
-           
+            <div>
+                <a href="{{ route('user-management.create') }}" class="btn btn-new-user">
+                    <i class="bi bi-person-plus-fill me-2"></i>
+                    <span class="btn-label">Nouvel Utilisateur</span>
+                </a>
+            </div>
         </div>
-    </div>
-    <div class="d-flex gap-2">
-        <a href="{{ route('user-management.create') }}" class="btn btn-primary btn-lg">
-            <i class="bi bi-person-plus-fill me-2"></i>
-            <span class="d-none d-md-inline">Nouvel Utilisateur</span>
-        </a>
-        <button type="button" class="btn btn-outline-light btn-lg" onclick="window.location.href='{{ route('user-management.create') }}'">
-            <i class="bi bi-plus-circle me-2"></i>
-            <span class="d-none d-md-inline">Test</span>
-        </button>
     </div>
     <!-- Liste des utilisateurs -->
     <div class="row justify-content-center">
@@ -139,70 +134,158 @@
 </div>
 
 <style>
-.user-card {
+.accounts-header {
+    padding: 1.5rem 0;
+}
+
+.accounts-title {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 0.5rem;
+}
+
+.accounts-subtitle {
+    font-size: 1rem;
+    color: #718096;
+    margin-bottom: 0;
+}
+
+.btn-new-user {
+    background-color: #4c51bf;
+    color: white;
     border: none;
-    border-radius: 15px;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.btn-new-user:hover {
+    background-color: #434190;
+    color: white;
+    transform: translateY(-1px);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
-    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+}
+
+.user-card {
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
+    transition: all 0.2s ease;
+    background-color: #ffffff;
 }
 
 .user-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
 }
 
 .user-avatar {
-    width: 50px;
-    height: 50px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    width: 46px;
+    height: 46px;
+    background-color: #ede9fe;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: white;
-    font-size: 1.5rem;
+    color: #6d28d9;
+    font-size: 1.4rem;
 }
 
 .user-info {
-    background: rgba(0, 0, 0, 0.02);
-    border-radius: 10px;
-    padding: 1rem;
+    background-color: #f8fafc;
+    border-radius: 8px;
+    padding: 0.875rem;
+    margin-bottom: 1rem;
 }
 
 .permissions-section {
-    background: rgba(0, 0, 0, 0.02);
-    border-radius: 10px;
-    padding: 1rem;
+    background-color: #f8fafc;
+    border-radius: 8px;
+    padding: 0.875rem;
 }
 
 .permissions-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
     gap: 0.5rem;
 }
 
 .permission-item {
     display: flex;
     align-items: center;
-    font-size: 0.8rem;
+    font-size: 0.75rem;
+    color: #475569;
+}
+
+.permission-item i {
+    color: #10b981;
+    font-size: 0.875rem;
 }
 
 .user-status .badge {
-    font-size: 0.75rem;
-    padding: 0.4rem 0.8rem;
+    font-size: 0.7rem;
+    padding: 0.35rem 0.7rem;
     border-radius: 20px;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+}
+
+.badge.bg-success {
+    background-color: #c6f6d5 !important;
+    color: #047857 !important;
+}
+
+.badge.bg-secondary {
+    background-color: #e2e8f0 !important;
+    color: #475569 !important;
+}
+
+.badge.bg-primary {
+    background-color: #ddd6fe !important;
+    color: #5b21b6 !important;
+}
+
+.badge.bg-info {
+    background-color: #bfdbfe !important;
+    color: #1d4ed8 !important;
 }
 
 .card-footer {
-    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    border-top: 1px solid #f1f5f9;
     padding: 1rem;
+    background-color: #ffffff;
+}
+
+.btn-outline-primary {
+    border-color: #cbd5e1;
+    color: #4c51bf;
+}
+
+.btn-outline-primary:hover {
+    background-color: #eff6ff;
+    color: #4c51bf;
+    border-color: #4c51bf;
+}
+
+.btn-outline-danger {
+    border-color: #cbd5e1;
+    color: #64748b;
+}
+
+.btn-outline-danger:hover {
+    background-color: #fef2f2;
+    color: #dc2626;
+    border-color: #fca5a5;
 }
 
 .btn {
     border-radius: 8px;
     font-weight: 500;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
+    font-size: 0.875rem;
+    padding: 0.5rem 1rem;
 }
 
 .btn:hover {
@@ -222,6 +305,10 @@
         padding-left: 1rem;
         padding-right: 1rem;
     }
+    
+    .user-management-title {
+        font-size: 1.5rem;
+    }
 }
 
 /* Amélioration de la marge et de l'espacement */
@@ -230,45 +317,27 @@
     margin: 0 auto;
 }
 
-.page-header {
-    margin-bottom: 2rem;
-}
-
 .user-card {
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
 }
 
-/* Styles pour le bouton Nouvel Utilisateur */
-.btn.btn-light {
-    background-color: #ffffff !important;
-    border: 1px solid #dee2e6 !important;
-    color: #495057 !important;
-    font-weight: 500 !important;
-    transition: all 0.3s ease !important;
-    text-decoration: none !important;
-    cursor: pointer !important;
-    display: inline-block !important;
-    padding: 0.75rem 1.5rem !important;
-    border-radius: 0.5rem !important;
+/* Styles pour les textes */
+.card-title {
+    color: #334155;
+    font-weight: 600;
+    font-size: 1.1rem;
 }
 
-.btn.btn-light:hover {
-    background-color: #f8f9fa !important;
-    border-color: #adb5bd !important;
-    color: #495057 !important;
-    transform: translateY(-1px) !important;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
-    text-decoration: none !important;
+.text-muted {
+    color: #64748b !important;
 }
 
-.btn.btn-light:focus {
-    outline: none !important;
-    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25) !important;
-}
-
-.btn.btn-light:active {
-    transform: translateY(0) !important;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+/* Styles pour les éléments spécifiques */
+h6.text-muted {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
 }
 </style>
 

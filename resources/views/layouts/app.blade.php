@@ -230,12 +230,12 @@
             <img src="{{ asset('images/eglix.png') }}" alt="Eglix" style=" height: 50px; margin-bottom: 15px;">
             
             @auth
-            <div class="user-info" style="color: white; font-size: 0.9rem;">
+            <div class="user-info" style="background-color: transparent; color: white; font-size: 0.9rem; padding: 0.75rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2);">
                 <div style="font-weight: 600; margin-bottom: 5px; color: #fff;">
                     <i class="bi bi-person-circle me-2"></i>
                     {{ Auth::user()->name }}
                 </div>
-                <div style="font-size: 0.8rem; opacity: 0.8; color: rgba(255,255,255,0.8);">
+                <div style="font-size: 0.8rem; opacity: 0.9; color: rgba(255,255,255,0.9);">
                     <i class="bi bi-building me-2"></i>
                     {{ Auth::user()->church->name ?? 'Église' }}
                 </div>

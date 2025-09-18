@@ -2,6 +2,9 @@
 
 namespace App\Providers;
 
+use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\View;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Routing\UrlGenerator;
 use Illuminate\Support\ServiceProvider;
 
@@ -9,6 +12,14 @@ class AppServiceProvider extends ServiceProvider
 {
     public function boot(UrlGenerator $url)
     {
+        // Configuration de la pagination
+        Paginator::useBootstrap();
+        
+        // Configurer le resolver de vue pour la pagination
+        LengthAwarePaginator::viewFactoryResolver(function () {
+            return app('view');
+        });
+        
         // Forcer HTTPS en production ou si configuré
         if (env('APP_ENV') == 'production' || config('secure.force_https')) {
             $url->forceScheme('https');
