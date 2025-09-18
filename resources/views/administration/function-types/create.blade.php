@@ -6,14 +6,12 @@
         <h1 class="h3">Créer un type de fonction</h1>
         @include('partials.back-button')
     </div>
-
     <div class="row justify-content-center">
         <div class="col-lg-8">
             <div class="card card-soft">
                 <div class="card-body">
                     <form action="{{ route('administration-function-types.store') }}" method="POST">
                         @csrf
-                        
                         <div class="row g-3">
                             <div class="col-12">
                                 <label for="name" class="form-label">Nom de la fonction <span class="text-danger">*</span></label>

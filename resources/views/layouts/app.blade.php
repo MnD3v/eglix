@@ -3,7 +3,10 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Gestion d'église</title>
+    <title>Eglix - Application de gestion d'église</title>
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    @include('partials.meta')
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -322,6 +325,207 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- jQuery et Select2 pour les listes déroulantes avec recherche -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    
+    <!-- Configuration AJAX pour inclure le token CSRF -->
+    <script>
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+    </script>
+    <style>
+        /* Styles personnalisés pour Select2 */
+        .select2-container {
+            width: 100% !important;
+        }
+        
+        .select2-container .select2-selection--single {
+            height: 42px;
+            padding: 6px 16px;
+            font-size: 1rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            transition: all 0.2s ease;
+            background-color: #fff;
+        }
+        
+        .select2-container .select2-selection--single:hover {
+            border-color: #cbd5e1;
+        }
+        
+        .select2-container.select2-container--focus .select2-selection--single,
+        .select2-container.select2-container--open .select2-selection--single {
+            border-color: #FF2600;
+            box-shadow: 0 0 0 3px rgba(255, 38, 0, 0.15);
+        }
+        
+        .select2-container .select2-selection--single .select2-selection__arrow {
+            height: 40px;
+            right: 12px;
+            top: 0;
+        }
+        
+        .select2-container .select2-selection--single .select2-selection__arrow b {
+            border-color: #94a3b8 transparent transparent transparent;
+            border-width: 5px 5px 0 5px;
+        }
+        
+        .select2-container.select2-container--open .select2-selection--single .select2-selection__arrow b {
+            border-color: transparent transparent #94a3b8 transparent;
+            border-width: 0 5px 5px 5px;
+        }
+        
+        .select2-container .select2-selection--single .select2-selection__rendered {
+            line-height: 28px;
+            padding-left: 0;
+            color: #334155;
+            padding-right: 30px;
+        }
+        
+        .select2-container .select2-selection--single .select2-selection__placeholder {
+            color: #94a3b8;
+        }
+        
+        .select2-container .select2-results__option--highlighted[aria-selected] {
+            background-color: #FF2600;
+            color: white;
+        }
+        
+        .select2-container .select2-search--dropdown .select2-search__field {
+            border-radius: 6px;
+            padding: 10px 12px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            transition: all 0.2s ease;
+        }
+        
+        .select2-container .select2-search--dropdown .select2-search__field:focus {
+            border-color: #FF2600;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(255, 38, 0, 0.15);
+        }
+        
+        .select2-dropdown {
+            border-color: #e2e8f0;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            overflow: hidden;
+            margin-top: 3px;
+        }
+        
+        .select2-container .select2-results__option {
+            padding: 10px 16px;
+            transition: background-color 0.15s ease;
+        }
+        
+        .select2-container .select2-results__option[aria-selected=true] {
+            background-color: #f1f5f9;
+            font-weight: 500;
+        }
+        
+        .select2-container .select2-results__group {
+            padding: 8px 16px;
+            font-weight: 600;
+            color: #64748b;
+            background-color: #f8fafc;
+        }
+        
+        /* Icône de recherche dans le champ */
+        .select2-container .select2-selection--single {
+            position: relative;
+        }
+        
+        .select2-container .select2-selection--single::before {
+            content: "\F52A"; /* Code pour l'icône de recherche Bootstrap Icons */
+            font-family: "bootstrap-icons";
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            z-index: 1;
+            pointer-events: none;
+            font-size: 14px;
+        }
+        
+        .select2-container .select2-selection--single .select2-selection__rendered {
+            padding-left: 28px; /* Espace pour l'icône */
+        }
+        
+        /* Styles améliorés pour les éléments Select2 */
+        .select2-result-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 0;
+        }
+        
+        .select2-result-item__text {
+            flex: 1;
+        }
+        
+        /* Style pour le champ de recherche dans le dropdown */
+        .select2-search--dropdown {
+            padding: 12px;
+            background-color: #f8fafc;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        /* Animation lors de l'ouverture du dropdown */
+        .select2-dropdown {
+            animation: select2FadeIn 0.2s ease-out;
+        }
+        
+        @keyframes select2FadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Style pour le texte surligné dans les résultats */
+        .select2-results__option .select2-highlighted {
+            background-color: rgba(255, 38, 0, 0.1);
+            font-weight: 500;
+            padding: 0 2px;
+            border-radius: 2px;
+        }
+        
+        /* Correction pour les formulaires avec validation Bootstrap */
+        .is-invalid + .select2-container .select2-selection--single {
+            border-color: #dc3545 !important;
+            box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.15) !important;
+        }
+        
+        /* Styles spécifiques pour corriger l'apparence */
+        .select2-container {
+            z-index: 100;
+        }
+        
+        .select2-container--open {
+            z-index: 9999;
+        }
+        
+        /* Style pour les options de résultats */
+        .select2-results__option {
+            position: relative;
+            padding-left: 16px !important;
+        }
+        
+        .select2-results__option[aria-selected=true]::before {
+            content: "\F26B"; /* Code pour l'icône de coche Bootstrap Icons */
+            font-family: "bootstrap-icons";
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #FF2600;
+            font-size: 14px;
+        }
+    </style>
     <!-- Firebase (compat) for simple Storage uploads from views -->
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
@@ -459,6 +663,104 @@
             }
         });
     })();
+    </script>
+
+    <script>
+    // Initialisation globale de Select2 pour toutes les listes déroulantes
+    $(document).ready(function() {
+        // Configuration commune pour Select2
+        const select2Config = {
+            placeholder: "Rechercher...",
+            allowClear: true,
+            width: '100%',
+            language: {
+                noResults: function() {
+                    return "Aucun résultat trouvé";
+                },
+                searching: function() {
+                    return "Recherche en cours...";
+                },
+                inputTooShort: function() {
+                    return "Commencez à taper pour rechercher...";
+                }
+            },
+            templateResult: formatResult,
+            templateSelection: formatSelection,
+            escapeMarkup: function(m) { return m; }
+        };
+        
+        // Fonction pour formater les résultats avec mise en évidence
+        function formatResult(result) {
+            if (!result.id) return result.text;
+            
+            // Récupérer le terme recherché
+            const term = $('.select2-search__field').val();
+            let text = result.text;
+            
+            // Si un terme de recherche existe, le mettre en surbrillance
+            if (term && term.length > 0) {
+                const regex = new RegExp('(' + term.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&') + ')', 'gi');
+                text = text.replace(regex, '<span class="select2-highlighted">$1</span>');
+            }
+            
+            // Ajouter des classes pour le style
+            let $result = $(
+                '<div class="select2-result-item">' +
+                    '<span class="select2-result-item__text">' + text + '</span>' +
+                '</div>'
+            );
+            
+            return $result;
+        }
+        
+        // Fonction pour formater la sélection
+        function formatSelection(result) {
+            if (!result.id) return result.text;
+            return result.text;
+        }
+        
+        // Appliquer Select2 à tous les select sauf ceux avec la classe .no-select2
+        $('select:not(.no-select2)').each(function() {
+            // Vérifier si ce n'est pas déjà un Select2
+            if (!$(this).hasClass('select2-hidden-accessible')) {
+                // Récupérer le placeholder depuis l'option vide ou le premier élément
+                const firstOption = $(this).find('option:first');
+                const placeholder = firstOption.text() || "Rechercher...";
+                
+                // Créer une configuration spécifique pour ce select
+                const config = {
+                    ...select2Config,
+                    placeholder: placeholder,
+                    allowClear: !$(this).prop('required') && !$(this).is('[data-no-clear]')
+                };
+                
+                $(this).select2(config);
+            }
+        });
+
+        // Réinitialiser Select2 après les changements dynamiques du DOM
+        $(document).on('DOMNodeInserted', function(e) {
+            var target = $(e.target);
+            if (target.find('select').length > 0) {
+                setTimeout(function() {
+                    target.find('select:not(.select2-hidden-accessible):not(.no-select2)').each(function() {
+                        // Récupérer le placeholder depuis l'option vide ou le premier élément
+                        const firstOption = $(this).find('option:first');
+                        const placeholder = firstOption.text() || "Rechercher...";
+                        
+                        // Créer une configuration spécifique pour ce select
+                        const config = {
+                            ...select2Config,
+                            placeholder: placeholder,
+                            allowClear: !$(this).prop('required') && !$(this).is('[data-no-clear]')
+                        };
+                        
+                        $(this).select2(config);
+                    });
+                }, 100);
+            }
+        });
+    });
     </script>
 </body>
  </html>

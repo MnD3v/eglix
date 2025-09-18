@@ -31,8 +31,9 @@ class ReportsController extends Controller
         $from = Carbon::parse($from)->startOfDay();
         $to = Carbon::parse($to)->endOfDay();
         
-        // Récupérer les dîmes pour la période
+        // Récupérer les dîmes pour la période et pour l'église de l'utilisateur connecté
         $tithes = Tithe::with('member')
+            ->forChurch() // Utilisation du scope du trait BelongsToChurch
             ->whereBetween('paid_at', [$from, $to])
             ->orderBy('paid_at', 'desc')
             ->get();
@@ -76,8 +77,9 @@ class ReportsController extends Controller
         $from = Carbon::parse($from)->startOfDay();
         $to = Carbon::parse($to)->endOfDay();
         
-        // Récupérer les offrandes pour la période
+        // Récupérer les offrandes pour la période et pour l'église de l'utilisateur connecté
         $offerings = Offering::with('member')
+            ->forChurch() // Utilisation du scope du trait BelongsToChurch
             ->whereBetween('received_at', [$from, $to])
             ->orderBy('received_at', 'desc')
             ->get();
@@ -120,8 +122,9 @@ class ReportsController extends Controller
         $from = Carbon::parse($from)->startOfDay();
         $to = Carbon::parse($to)->endOfDay();
         
-        // Récupérer les dons pour la période
+        // Récupérer les dons pour la période et pour l'église de l'utilisateur connecté
         $donations = Donation::with('member', 'project')
+            ->forChurch() // Utilisation du scope du trait BelongsToChurch
             ->whereBetween('received_at', [$from, $to])
             ->orderBy('received_at', 'desc')
             ->get();
@@ -164,8 +167,9 @@ class ReportsController extends Controller
         $from = Carbon::parse($from)->startOfDay();
         $to = Carbon::parse($to)->endOfDay();
         
-        // Récupérer les dépenses pour la période
+        // Récupérer les dépenses pour la période et pour l'église de l'utilisateur connecté
         $expenses = Expense::with('project')
+            ->forChurch() // Utilisation du scope du trait BelongsToChurch
             ->whereBetween('paid_at', [$from, $to])
             ->orderBy('paid_at', 'desc')
             ->get();
@@ -247,6 +251,7 @@ class ReportsController extends Controller
         $to = Carbon::parse($to)->endOfDay();
         
         $tithes = Tithe::with('member')
+            ->forChurch() // Filtrer par église
             ->whereBetween('paid_at', [$from, $to])
             ->orderBy('paid_at', 'desc')
             ->get();
@@ -290,6 +295,7 @@ class ReportsController extends Controller
         $to = Carbon::parse($to)->endOfDay();
         
         $offerings = Offering::with('member')
+            ->forChurch() // Filtrer par église
             ->whereBetween('received_at', [$from, $to])
             ->orderBy('received_at', 'desc')
             ->get();
@@ -334,6 +340,7 @@ class ReportsController extends Controller
         $to = Carbon::parse($to)->endOfDay();
         
         $donations = Donation::with('member', 'project')
+            ->forChurch() // Filtrer par église
             ->whereBetween('received_at', [$from, $to])
             ->orderBy('received_at', 'desc')
             ->get();
@@ -379,6 +386,7 @@ class ReportsController extends Controller
         $to = Carbon::parse($to)->endOfDay();
         
         $expenses = Expense::with('project')
+            ->forChurch() // Filtrer par église
             ->whereBetween('paid_at', [$from, $to])
             ->orderBy('paid_at', 'desc')
             ->get();

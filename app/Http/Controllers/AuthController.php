@@ -110,10 +110,15 @@ class AuthController extends Controller
 
         // Créer le rôle admin pour cette église
         try {
+            // Générer un slug vraiment unique pour ce rôle
+            $timestamp = time();
+            $random = substr(md5(uniqid(mt_rand(), true)), 0, 6);
+            $slug = "administrateur-{$church->id}-{$timestamp}-{$random}";
+            
             $adminRole = \App\Models\Role::create([
                 'church_id' => $church->id,
                 'name' => 'Administrateur',
-                'slug' => '', // Laisser le système générer un slug unique
+                'slug' => $slug,
                 'description' => 'Administrateur de l\'église avec tous les droits',
                 'permissions' => array_keys(\App\Models\Role::getAvailablePermissions()),
             ]);

@@ -1,5 +1,12 @@
 @extends('layouts.app')
 
+@push('scripts')
+<!-- Select2 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<!-- Select2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+@endpush
+
 @section('content')
 <div class="container py-4">
     <h1 class="h3 mb-3">Nouvelle dîme</h1>
@@ -8,8 +15,8 @@
         <div class="row g-3">
             <div class="col-md-6">
                 <label class="form-label">Membre</label>
-                <select name="member_id" class="form-select @error('member_id') is-invalid @enderror" required>
-                    <option value="">Sélectionner...</option>
+                <select name="member_id" class="form-select select2-members @error('member_id') is-invalid @enderror" required>
+                    <option value="">Rechercher un membre...</option>
                     @foreach($members as $m)
                         <option value="{{ $m->id }}" @selected(old('member_id', request('member_id'))==$m->id)>
                             {{ $m->last_name }} {{ $m->first_name }}
@@ -67,6 +74,23 @@
             pm.addEventListener('change', updateRef);
             updateRef();
         }
+
+        // Initialisation de Select2 pour la recherche de membres
+        $(document).ready(function() {
+            $('.select2-members').select2({
+                placeholder: 'Rechercher un membre...',
+                allowClear: true,
+                width: '100%',
+                language: {
+                    noResults: function() {
+                        return "Aucun résultat trouvé";
+                    },
+                    searching: function() {
+                        return "Recherche en cours...";
+                    }
+                }
+            });
+        });
     })();
     </script>
 </div>

@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Connexion - Eglix</title>
+    @include('partials.meta')
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -223,98 +224,26 @@
         }
 
         .right-panel {
-            background: linear-gradient(135deg, #FF2600 0%, #ff4d33 100%);
-            padding: 60px 50px;
             display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            position: relative;
             overflow: hidden;
         }
 
-        .illustration-container {
-            position: relative;
-            width: 100%;
-            max-width: 400px;
-            height: 500px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .main-illustration {
-            width: 280px;
-            height: 280px;
-            background: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-        }
-
-        .avatar {
-            width: 200px;
-            height: 200px;
-            background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 80px;
-            color: #FF2600;
-        }
-
-        .floating-icons {
-            position: absolute;
+        .image-container {
             width: 100%;
             height: 100%;
-        }
-
-        .floating-icon {
-            position: absolute;
-            width: 40px;
-            height: 40px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
-            font-size: 18px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            overflow: hidden;
         }
 
-        .icon-1 { top: 20%; left: 10%; animation: float 3s ease-in-out infinite; }
-        .icon-2 { top: 15%; right: 15%; animation: float 3s ease-in-out infinite 0.5s; }
-        .icon-3 { bottom: 30%; left: 5%; animation: float 3s ease-in-out infinite 1s; }
-        .icon-4 { bottom: 20%; right: 10%; animation: float 3s ease-in-out infinite 1.5s; }
-        .icon-5 { top: 50%; left: 0%; animation: float 3s ease-in-out infinite 2s; }
-        .icon-6 { top: 60%; right: 0%; animation: float 3s ease-in-out infinite 2.5s; }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
+        .login-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
-        .success-checkmark {
-            position: absolute;
-            top: 20%;
-            left: 20%;
-            width: 60px;
-            height: 60px;
-            background: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #10b981;
-            font-size: 24px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-        }
+        /* Styles supprimés car remplacés par l'image */
 
         .alert {
             padding: 16px;
@@ -432,37 +361,8 @@
         </div>
 
         <div class="right-panel">
-            <div class="illustration-container">
-                <div class="main-illustration">
-                    <div class="avatar">
-                        <i class="bi bi-person-check"></i>
-                </div>
-                </div>
-                
-                <div class="floating-icons">
-                    <div class="floating-icon icon-1">
-                        <i class="bi bi-globe"></i>
-                    </div>
-                    <div class="floating-icon icon-2">
-                        <i class="bi bi-chat-dots"></i>
-                    </div>
-                    <div class="floating-icon icon-3">
-                        <i class="bi bi-headphones"></i>
-                    </div>
-                    <div class="floating-icon icon-4">
-                        <i class="bi bi-laptop"></i>
-                    </div>
-                    <div class="floating-icon icon-5">
-                        <i class="bi bi-phone"></i>
-                    </div>
-                    <div class="floating-icon icon-6">
-                        <i class="bi bi-envelope"></i>
-                    </div>
-        </div>
-
-                <div class="success-checkmark">
-                    <i class="bi bi-check"></i>
-                </div>
+            <div class="image-container">
+                <img src="https://i.ibb.co/BvmsKVV/Capture-d-cran-2025-09-18-201325.png" alt="Connexion" class="login-image">
             </div>
         </div>
     </div>

@@ -36,13 +36,16 @@ class Role extends Model
         static::creating(function ($role) {
             if (empty($role->slug)) {
                 $baseSlug = Str::slug($role->name);
-                $slug = $baseSlug;
-                $counter = 1;
                 
-                // Ensure slug is unique within the church
-                while (static::where('church_id', $role->church_id)->where('slug', $slug)->exists()) {
-                    $slug = $baseSlug . '-' . $counter;
-                    $counter++;
+                // Ajouter un timestamp et un hash aléatoire pour garantir l'unicité
+                $timestamp = time();
+                $random = substr(md5(uniqid(mt_rand(), true)), 0, 6);
+                
+                // Si l'ID de l'église est disponible, l'inclure dans le slug
+                if (!empty($role->church_id)) {
+                    $slug = "{$baseSlug}-{$role->church_id}-{$timestamp}-{$random}";
+                } else {
+                    $slug = "{$baseSlug}-{$timestamp}-{$random}";
                 }
                 
                 $role->slug = $slug;

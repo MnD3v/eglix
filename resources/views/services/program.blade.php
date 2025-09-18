@@ -1,5 +1,12 @@
 @extends('layouts.app')
 
+@push('scripts')
+<!-- Select2 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<!-- Select2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+@endpush
+
 @section('content')
 <div class="container-fluid">
     <div class="row">
@@ -64,11 +71,11 @@
 
                                 <div class="mb-3">
                                     <label for="member_id" class="form-label fw-semibold">Membre *</label>
-                                    <select class="form-select @error('member_id') is-invalid @enderror" 
+                                    <select class="form-select select2-members @error('member_id') is-invalid @enderror" 
                                             id="member_id" 
                                             name="member_id" 
                                             required>
-                                        <option value="">Sélectionner un membre</option>
+                                        <option value="">Rechercher un membre</option>
                                         @foreach($members as $member)
                                             <option value="{{ $member->id }}" {{ old('member_id') == $member->id ? 'selected' : '' }}>
                                                 {{ $member->last_name }} {{ $member->first_name }}
@@ -161,6 +168,24 @@
         </div>
     </div>
 </div>
+<script>
+$(document).ready(function() {
+    // Initialisation de Select2 pour la recherche de membres
+    $('.select2-members').select2({
+        placeholder: 'Rechercher un membre...',
+        allowClear: true,
+        width: '100%',
+        language: {
+            noResults: function() {
+                return "Aucun résultat trouvé";
+            },
+            searching: function() {
+                return "Recherche en cours...";
+            }
+        }
+    });
+});
+</script>
 @endsection
 
 

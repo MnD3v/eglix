@@ -84,24 +84,24 @@
 }
 
 .btn-primary.action-btn {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: #4a6cf7;
     border-color: transparent;
     color: white;
 }
 
 .btn-primary.action-btn:hover {
-    background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+    background: #3d5bd9;
     color: white;
 }
 
 .btn-success.action-btn {
-    background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+    background: #34c759;
     border-color: transparent;
     color: white;
 }
 
 .btn-success.action-btn:hover {
-    background: linear-gradient(135deg, #38a169 0%, #2f855a 100%);
+    background: #28a745;
     color: white;
 }
 }
@@ -181,27 +181,39 @@
 }
 
 .btn-primary.btn-sm {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: #4a6cf7;
     border-color: transparent;
     color: white;
 }
 
 .btn-primary.btn-sm:hover {
-    background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+    background: #3d5bd9;
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    box-shadow: 0 2px 8px rgba(74, 108, 247, 0.3);
 }
 
 .btn-success.btn-sm {
-    background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+    background: #34c759;
     border-color: transparent;
     color: white;
 }
 
 .btn-success.btn-sm:hover {
-    background: linear-gradient(135deg, #38a169 0%, #2f855a 100%);
+    background: #28a745;
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(72, 187, 120, 0.3);
+    box-shadow: 0 2px 8px rgba(52, 199, 89, 0.3);
+}
+
+.btn-danger.btn-sm {
+    background: #ff3b30;
+    border-color: transparent;
+    color: white;
+}
+
+.btn-danger.btn-sm:hover {
+    background: #dc3545;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(255, 59, 48, 0.3);
 }
 </style>
 
@@ -264,19 +276,19 @@
     <!-- Cartes des rapports -->
     <div class="row g-4">
         <div class="col-md-6 col-lg-3">
-            <div class="card report-card h-100">
+            <div class="card report-card h-100" onclick="window.location='{{ route('reports.tithes', ['from' => $from, 'to' => $to]) }}'">
                 <div class="card-body text-center">
-                    <div class="report-icon mx-auto" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); color: #6366f1;">
+                    <div class="report-icon mx-auto" style="background: #f0f7ff; color: #4a6cf7;">
                         <i class="bi bi-wallet2"></i>
                     </div>
                     <h5 class="report-title">Rapport Dîmes</h5>
                     <p class="report-description">Analyse des dîmes collectées</p>
-                    <div class="d-flex gap-2 justify-content-center mt-3">
-                        <a href="{{ route('reports.tithes', ['from' => $from, 'to' => $to]) }}" class="btn btn-primary btn-sm">
-                            <i class="bi bi-eye"></i> Voir
+                    <div class="d-flex gap-2 justify-content-center mt-3" onclick="event.stopPropagation()">
+                        <a href="{{ route('reports.tithes.export', ['from' => $from, 'to' => $to, 'format' => 'pdf']) }}" class="btn btn-danger btn-sm">
+                            <i class="bi bi-file-earmark-pdf"></i> PDF
                         </a>
-                        <a href="{{ route('reports.tithes.export', ['from' => $from, 'to' => $to]) }}" class="btn btn-success btn-sm">
-                            <i class="bi bi-download"></i> CSV
+                        <a href="{{ route('reports.tithes.export', ['from' => $from, 'to' => $to, 'format' => 'excel']) }}" class="btn btn-success btn-sm">
+                            <i class="bi bi-file-earmark-excel"></i> Excel
                         </a>
                     </div>
                 </div>
@@ -284,19 +296,19 @@
         </div>
 
         <div class="col-md-6 col-lg-3">
-            <div class="card report-card h-100">
+            <div class="card report-card h-100" onclick="window.location='{{ route('reports.offerings', ['from' => $from, 'to' => $to]) }}'">
                 <div class="card-body text-center">
-                    <div class="report-icon mx-auto" style="background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%); color: #f97316;">
+                    <div class="report-icon mx-auto" style="background: #fff0e6; color: #ff6b35;">
                         <i class="bi bi-heart-fill"></i>
                     </div>
                     <h5 class="report-title">Rapport Offrandes</h5>
                     <p class="report-description">Analyse des offrandes reçues</p>
-                    <div class="d-flex gap-2 justify-content-center mt-3">
-                        <a href="{{ route('reports.offerings', ['from' => $from, 'to' => $to]) }}" class="btn btn-primary btn-sm">
-                            <i class="bi bi-eye"></i> Voir
+                    <div class="d-flex gap-2 justify-content-center mt-3" onclick="event.stopPropagation()">
+                        <a href="{{ route('reports.offerings.export', ['from' => $from, 'to' => $to, 'format' => 'pdf']) }}" class="btn btn-danger btn-sm">
+                            <i class="bi bi-file-earmark-pdf"></i> PDF
                         </a>
-                        <a href="{{ route('reports.offerings.export', ['from' => $from, 'to' => $to]) }}" class="btn btn-success btn-sm">
-                            <i class="bi bi-download"></i> CSV
+                        <a href="{{ route('reports.offerings.export', ['from' => $from, 'to' => $to, 'format' => 'excel']) }}" class="btn btn-success btn-sm">
+                            <i class="bi bi-file-earmark-excel"></i> Excel
                         </a>
                     </div>
                 </div>
@@ -304,19 +316,19 @@
         </div>
 
         <div class="col-md-6 col-lg-3">
-            <div class="card report-card h-100">
+            <div class="card report-card h-100" onclick="window.location='{{ route('reports.donations', ['from' => $from, 'to' => $to]) }}'">
                 <div class="card-body text-center">
-                    <div class="report-icon mx-auto" style="background: linear-gradient(135deg, #d299c2 0%, #fef9d7 100%); color: #8b5cf6;">
+                    <div class="report-icon mx-auto" style="background: #f5f0ff; color: #7b61ff;">
                         <i class="bi bi-gift-fill"></i>
                     </div>
                     <h5 class="report-title">Rapport Dons</h5>
                     <p class="report-description">Analyse des dons reçus</p>
-                    <div class="d-flex gap-2 justify-content-center mt-3">
-                        <a href="{{ route('reports.donations', ['from' => $from, 'to' => $to]) }}" class="btn btn-primary btn-sm">
-                            <i class="bi bi-eye"></i> Voir
+                    <div class="d-flex gap-2 justify-content-center mt-3" onclick="event.stopPropagation()">
+                        <a href="{{ route('reports.donations.export', ['from' => $from, 'to' => $to, 'format' => 'pdf']) }}" class="btn btn-danger btn-sm">
+                            <i class="bi bi-file-earmark-pdf"></i> PDF
                         </a>
-                        <a href="{{ route('reports.donations.export', ['from' => $from, 'to' => $to]) }}" class="btn btn-success btn-sm">
-                            <i class="bi bi-download"></i> CSV
+                        <a href="{{ route('reports.donations.export', ['from' => $from, 'to' => $to, 'format' => 'excel']) }}" class="btn btn-success btn-sm">
+                            <i class="bi bi-file-earmark-excel"></i> Excel
                         </a>
                     </div>
                 </div>
@@ -324,19 +336,19 @@
         </div>
 
         <div class="col-md-6 col-lg-3">
-            <div class="card report-card h-100">
+            <div class="card report-card h-100" onclick="window.location='{{ route('reports.expenses', ['from' => $from, 'to' => $to]) }}'">
                 <div class="card-body text-center">
-                    <div class="report-icon mx-auto" style="background: linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%); color: #0ea5e9;">
+                    <div class="report-icon mx-auto" style="background: #e6f7ff; color: #0099e5;">
                         <i class="bi bi-receipt-cutoff"></i>
                     </div>
                     <h5 class="report-title">Rapport Dépenses</h5>
                     <p class="report-description">Analyse des dépenses effectuées</p>
-                    <div class="d-flex gap-2 justify-content-center mt-3">
-                        <a href="{{ route('reports.expenses', ['from' => $from, 'to' => $to]) }}" class="btn btn-primary btn-sm">
-                            <i class="bi bi-eye"></i> Voir
+                    <div class="d-flex gap-2 justify-content-center mt-3" onclick="event.stopPropagation()">
+                        <a href="{{ route('reports.expenses.export', ['from' => $from, 'to' => $to, 'format' => 'pdf']) }}" class="btn btn-danger btn-sm">
+                            <i class="bi bi-file-earmark-pdf"></i> PDF
                         </a>
-                        <a href="{{ route('reports.expenses.export', ['from' => $from, 'to' => $to]) }}" class="btn btn-success btn-sm">
-                            <i class="bi bi-download"></i> CSV
+                        <a href="{{ route('reports.expenses.export', ['from' => $from, 'to' => $to, 'format' => 'excel']) }}" class="btn btn-success btn-sm">
+                            <i class="bi bi-file-earmark-excel"></i> Excel
                         </a>
                     </div>
                 </div>

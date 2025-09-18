@@ -123,7 +123,7 @@
                         </div>
                         <div class="chart-info">
                             <h3 class="chart-title">Évolution mensuelle</h3>
-                            <p class="chart-description">6 derniers mois</p>
+                            <p class="chart-description">Toute l'année</p>
                         </div>
                     </div>
                     <div class="chart-content">
@@ -522,9 +522,19 @@
     position: relative;
 }
 
-.chart-container-small {
-    height: 250px;
-    position: relative;
+.image-card {
+    background: white;
+    border: 1px solid #E5E7EB;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    transition: all 0.2s ease;
+    overflow: hidden;
+}
+
+.image-card:hover {
+    border-color: #D1D5DB;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 /* Empty State */
