@@ -212,9 +212,65 @@ class AuthController extends Controller
                 ');
             }
 
+            // Ajouter les colonnes manquantes à la table users
+            $this->addMissingUsersColumns();
+
             \Log::info('Tables critiques créées manuellement');
         } catch (\Exception $e) {
             \Log::error('Erreur lors de la création manuelle des tables: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Ajouter les colonnes manquantes à la table users
+     */
+    private function addMissingUsersColumns()
+    {
+        try {
+            // Vérifier et ajouter church_id
+            if (!$this->columnExists('users', 'church_id')) {
+                \DB::statement('ALTER TABLE users ADD COLUMN church_id BIGINT');
+                \Log::info('Colonne church_id ajoutée à users');
+            }
+
+            // Vérifier et ajouter role_id
+            if (!$this->columnExists('users', 'role_id')) {
+                \DB::statement('ALTER TABLE users ADD COLUMN role_id BIGINT');
+                \Log::info('Colonne role_id ajoutée à users');
+            }
+
+            // Vérifier et ajouter is_church_admin
+            if (!$this->columnExists('users', 'is_church_admin')) {
+                \DB::statement('ALTER TABLE users ADD COLUMN is_church_admin BOOLEAN DEFAULT false');
+                \Log::info('Colonne is_church_admin ajoutée à users');
+            }
+
+            // Vérifier et ajouter is_active
+            if (!$this->columnExists('users', 'is_active')) {
+                \DB::statement('ALTER TABLE users ADD COLUMN is_active BOOLEAN DEFAULT true');
+                \Log::info('Colonne is_active ajoutée à users');
+            }
+
+        } catch (\Exception $e) {
+            \Log::error('Erreur lors de l\'ajout des colonnes à users: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Vérifier si une colonne existe dans une table
+     */
+    private function columnExists($table, $column)
+    {
+        try {
+            $result = \DB::select("
+                SELECT column_name 
+                FROM information_schema.columns 
+                WHERE table_name = ? AND column_name = ?
+            ", [$table, $column]);
+            
+            return count($result) > 0;
+        } catch (\Exception $e) {
+            return false;
         }
     }
 
