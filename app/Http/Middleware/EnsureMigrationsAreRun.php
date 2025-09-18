@@ -47,19 +47,76 @@ class EnsureMigrationsAreRun
             // Vérifier si la table churches existe
             DB::select('SELECT 1 FROM churches LIMIT 1');
         } catch (\Exception $e) {
-            Log::warning('Table churches manquante, exécution des migrations...');
+            Log::warning('Table churches manquante, tentative de création...');
             
-            try {
-                // Exécuter les migrations
-                Artisan::call('migrate', [
-                    '--force' => true, 
-                    '--no-interaction' => true
-                ]);
-                
-                Log::info('Migrations exécutées avec succès');
-            } catch (\Exception $migrationError) {
-                Log::error('Erreur lors de l\'exécution des migrations: ' . $migrationError->getMessage());
+            // Essayer de créer seulement les tables manquantes sans migrations
+            $this->createMissingTables();
+        }
+    }
+
+    /**
+     * Créer seulement les tables critiques manquantes
+     */
+    private function createMissingTables(): void
+    {
+        try {
+            // Créer la table churches si elle n'existe pas
+            if (!$this->tableExists('churches')) {
+                DB::statement('
+                    CREATE TABLE IF NOT EXISTS churches (
+                        id BIGSERIAL PRIMARY KEY,
+                        name VARCHAR(255) NOT NULL,
+                        slug VARCHAR(255) UNIQUE NOT NULL,
+                        description TEXT,
+                        address VARCHAR(255),
+                        phone VARCHAR(20),
+                        email VARCHAR(255),
+                        website VARCHAR(255),
+                        logo VARCHAR(255),
+                        settings JSONB,
+                        is_active BOOLEAN DEFAULT true,
+                        created_at TIMESTAMP,
+                        updated_at TIMESTAMP
+                    )
+                ');
+                Log::info('Table churches créée');
             }
+
+            // Créer la table roles si elle n'existe pas
+            if (!$this->tableExists('roles')) {
+                DB::statement('
+                    CREATE TABLE IF NOT EXISTS roles (
+                        id BIGSERIAL PRIMARY KEY,
+                        church_id BIGINT NOT NULL,
+                        name VARCHAR(255) NOT NULL,
+                        slug VARCHAR(255) NOT NULL,
+                        description TEXT,
+                        permissions JSONB,
+                        is_active BOOLEAN DEFAULT true,
+                        created_at TIMESTAMP,
+                        updated_at TIMESTAMP,
+                        FOREIGN KEY (church_id) REFERENCES churches(id) ON DELETE CASCADE,
+                        UNIQUE (church_id, slug)
+                    )
+                ');
+                Log::info('Table roles créée');
+            }
+
+        } catch (\Exception $e) {
+            Log::error('Erreur lors de la création des tables: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Vérifier si une table existe
+     */
+    private function tableExists(string $tableName): bool
+    {
+        try {
+            DB::select("SELECT 1 FROM {$tableName} LIMIT 1");
+            return true;
+        } catch (\Exception $e) {
+            return false;
         }
     }
 }
