@@ -11,7 +11,10 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        // Middleware pour s'assurer que les migrations sont exécutées
+        $middleware->web(append: [
+            \App\Http\Middleware\EnsureMigrationsAreRun::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

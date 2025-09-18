@@ -65,6 +65,9 @@ class AuthController extends Controller
      */
     public function register(Request $request)
     {
+        // FORCER L'EXÉCUTION DES MIGRATIONS SI NÉCESSAIRE
+        $this->ensureMigrationsAreRun();
+
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
@@ -140,6 +143,23 @@ class AuthController extends Controller
         Auth::login($user);
 
         return redirect('/')->with('success', 'Compte et église créés avec succès ! Vous êtes maintenant administrateur de votre église.');
+    }
+
+    /**
+     * S'assurer que les migrations sont exécutées
+     */
+    private function ensureMigrationsAreRun()
+    {
+        try {
+            // Vérifier si la table churches existe
+            \DB::select('SELECT 1 FROM churches LIMIT 1');
+        } catch (\Exception $e) {
+            // La table n'existe pas, exécuter les migrations
+            \Artisan::call('migrate', ['--force' => true, '--no-interaction' => true]);
+            
+            // Log pour debug
+            \Log::info('Migrations exécutées automatiquement lors de l\'inscription');
+        }
     }
 
     /**

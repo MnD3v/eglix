@@ -436,7 +436,7 @@
                 <div class="main-illustration">
                     <div class="avatar">
                         <i class="bi bi-person-check"></i>
-                    </div>
+                </div>
                 </div>
                 
                 <div class="floating-icons">
@@ -458,7 +458,7 @@
                     <div class="floating-icon icon-6">
                         <i class="bi bi-envelope"></i>
                     </div>
-                </div>
+        </div>
 
                 <div class="success-checkmark">
                     <i class="bi bi-check"></i>
