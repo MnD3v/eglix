@@ -65,6 +65,9 @@ class AuthController extends Controller
      */
     public function register(Request $request)
     {
+        // FORCER L'AJOUT DES COLONNES USERS EN PREMIER
+        $this->ensureUsersTableIsComplete();
+
         // FORCER L'EXÉCUTION DES MIGRATIONS SI NÉCESSAIRE
         $this->ensureMigrationsAreRun();
 
@@ -123,7 +126,7 @@ class AuthController extends Controller
 
         // Créer l'utilisateur admin
         try {
-            $user = User::create([
+            $user = $this->createUserSafely([
                 'name' => $request->name,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
@@ -143,6 +146,43 @@ class AuthController extends Controller
         Auth::login($user);
 
         return redirect('/')->with('success', 'Compte et église créés avec succès ! Vous êtes maintenant administrateur de votre église.');
+    }
+
+    /**
+     * S'assurer que la table users a toutes les colonnes nécessaires
+     */
+    private function ensureUsersTableIsComplete()
+    {
+        try {
+            \Log::info('Vérification des colonnes de la table users...');
+
+            // Forcer l'ajout de chaque colonne
+            $this->addColumnIfNotExists('users', 'church_id', 'BIGINT');
+            $this->addColumnIfNotExists('users', 'role_id', 'BIGINT');
+            $this->addColumnIfNotExists('users', 'is_church_admin', 'BOOLEAN DEFAULT false');
+            $this->addColumnIfNotExists('users', 'is_active', 'BOOLEAN DEFAULT true');
+
+            \Log::info('Vérification des colonnes users terminée');
+        } catch (\Exception $e) {
+            \Log::error('Erreur lors de la vérification des colonnes users: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Ajouter une colonne si elle n'existe pas
+     */
+    private function addColumnIfNotExists($table, $column, $type)
+    {
+        try {
+            if (!$this->columnExists($table, $column)) {
+                \DB::statement("ALTER TABLE {$table} ADD COLUMN {$column} {$type}");
+                \Log::info("Colonne {$column} ajoutée à {$table}");
+            } else {
+                \Log::info("Colonne {$column} existe déjà dans {$table}");
+            }
+        } catch (\Exception $e) {
+            \Log::error("Erreur lors de l'ajout de la colonne {$column}: " . $e->getMessage());
+        }
     }
 
     /**
@@ -298,5 +338,59 @@ class AuthController extends Controller
         $request->session()->regenerateToken();
 
         return redirect('/login')->with('success', 'Vous avez été déconnecté avec succès.');
+    }
+
+    /**
+     * Créer un utilisateur de manière sécurisée
+     */
+    private function createUserSafely(array $data)
+    {
+        // Vérifier d'abord que toutes les colonnes existent
+        $this->ensureUsersTableIsComplete();
+
+        // Filtrer les données selon les colonnes existantes
+        $filteredData = [];
+        $requiredColumns = ['name', 'email', 'password'];
+        $optionalColumns = ['church_id', 'role_id', 'is_church_admin', 'is_active'];
+
+        // Toujours inclure les colonnes requises
+        foreach ($requiredColumns as $column) {
+            if (isset($data[$column])) {
+                $filteredData[$column] = $data[$column];
+            }
+        }
+
+        // N'inclure les colonnes optionnelles que si elles existent
+        foreach ($optionalColumns as $column) {
+            if (isset($data[$column]) && $this->columnExists('users', $column)) {
+                $filteredData[$column] = $data[$column];
+            }
+        }
+
+        // Créer l'utilisateur avec les données filtrées
+        $user = User::create($filteredData);
+
+        // Si certaines colonnes n'existaient pas, les ajouter maintenant
+        if (isset($data['church_id']) && !isset($filteredData['church_id'])) {
+            $this->addColumnIfNotExists('users', 'church_id', 'BIGINT');
+            $user->update(['church_id' => $data['church_id']]);
+        }
+
+        if (isset($data['role_id']) && !isset($filteredData['role_id'])) {
+            $this->addColumnIfNotExists('users', 'role_id', 'BIGINT');
+            $user->update(['role_id' => $data['role_id']]);
+        }
+
+        if (isset($data['is_church_admin']) && !isset($filteredData['is_church_admin'])) {
+            $this->addColumnIfNotExists('users', 'is_church_admin', 'BOOLEAN DEFAULT false');
+            $user->update(['is_church_admin' => $data['is_church_admin']]);
+        }
+
+        if (isset($data['is_active']) && !isset($filteredData['is_active'])) {
+            $this->addColumnIfNotExists('users', 'is_active', 'BOOLEAN DEFAULT true');
+            $user->update(['is_active' => $data['is_active']]);
+        }
+
+        return $user;
     }
 }
