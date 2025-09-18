@@ -4,11 +4,21 @@
 <div class="container py-4">
     <!-- Page Header -->
     <div class="page-header">
-        <h1 class="page-title">Tableau de bord</h1>
-        <p class="page-subtitle">Vue d'ensemble des activités et finances de l'église</p>
-        <div class="d-flex align-items-center gap-2 mt-2">
-            <i class="bi bi-calendar3 text-muted"></i>
-            <span class="text-muted">{{ optional($from ?? null)->format('d/m/Y') }} — {{ optional($to ?? null)->format('d/m/Y') }}</span>
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h1 class="page-title">
+                    <i class="bi bi-speedometer2 me-3"></i>
+                    Tableau de bord
+                </h1>
+                <p class="page-subtitle">
+                    <i class="bi bi-graph-up me-2"></i>
+                    Vue d'ensemble des activités et finances de l'église
+                </p>
+                <div class="d-flex align-items-center gap-2 mt-2">
+                    <i class="bi bi-calendar3 text-muted"></i>
+                    <span class="text-muted">{{ optional($from ?? null)->format('d/m/Y') }} — {{ optional($to ?? null)->format('d/m/Y') }}</span>
+                </div>
+            </div>
         </div>
     </div>
 

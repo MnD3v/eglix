@@ -220,11 +220,21 @@
 <div class="container py-4">
     <!-- Page Header -->
     <div class="page-header">
-        <h1 class="page-title">Rapports Financiers</h1>
-        <p class="page-subtitle">Analysez les données financières de votre église</p>
-        <div class="d-flex align-items-center gap-2 mt-2">
-            <i class="bi bi-calendar3 text-muted"></i>
-            <span class="text-muted">{{ \Carbon\Carbon::parse($from)->format('d/m/Y') }} — {{ \Carbon\Carbon::parse($to)->format('d/m/Y') }}</span>
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h1 class="page-title">
+                    <i class="bi bi-graph-up me-3"></i>
+                    Rapports Financiers
+                </h1>
+                <p class="page-subtitle">
+                    <i class="bi bi-bar-chart me-2"></i>
+                    Analysez les données financières de votre église
+                </p>
+                <div class="d-flex align-items-center gap-2 mt-2">
+                    <i class="bi bi-calendar3 text-muted"></i>
+                    <span class="text-muted">{{ \Carbon\Carbon::parse($from)->format('d/m/Y') }} — {{ \Carbon\Carbon::parse($to)->format('d/m/Y') }}</span>
+                </div>
+            </div>
         </div>
     </div>
 

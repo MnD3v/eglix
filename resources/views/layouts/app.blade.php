@@ -36,50 +36,29 @@
 
         /* Styles globaux pour les titres de page */
         .page-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 20px;
-            padding: 2rem;
+            padding: 1.5rem 0;
             margin-bottom: 2rem;
-            color: white;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .page-header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
         }
 
         .page-title {
-            font-size: 2rem;
-            font-weight: 700;
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #2d3748;
             margin-bottom: 0.5rem;
-            position: relative;
-            z-index: 1;
-            color: white;
         }
 
         .page-subtitle {
             font-size: 1rem;
-            opacity: 0.9;
+            color: #718096;
             margin-bottom: 0;
-            position: relative;
-            z-index: 1;
-            color: white;
         }
 
         .page-header .text-muted {
-            color: rgba(255, 255, 255, 0.8) !important;
+            color: #718096 !important;
         }
 
         .page-header i {
-            color: rgba(255, 255, 255, 0.8) !important;
+            color: #718096 !important;
         }
 
         /* Force primary color across common components */

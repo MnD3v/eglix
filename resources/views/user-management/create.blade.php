@@ -15,7 +15,7 @@
                     Créez un compte utilisateur avec des permissions spécifiques
                 </p>
             </div>
-            <a href="{{ route('user-management.index') }}" class="btn btn-outline-light">
+            <a href="{{ route('user-management.index') }}" class="btn btn-outline-secondary">
                 <i class="bi bi-arrow-left me-2"></i>
                 Retour
             </a>

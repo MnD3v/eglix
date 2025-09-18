@@ -270,16 +270,24 @@
 <div class="container py-4">
     <!-- Page Header -->
     <div class="page-header">
-        <h1 class="page-title">Événements</h1>
-        <p class="page-subtitle">Gérez les événements et activités de l'église</p>
-    </div>
-
-    <!-- Action Buttons -->
-    <div class="action-buttons">
-        <a href="{{ route('events.create') }}" class="action-btn primary">
-            <i class="bi bi-plus"></i>
-            Nouvel événement
-        </a>
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h1 class="page-title">
+                    <i class="bi bi-calendar-event me-3"></i>
+                    Événements
+                </h1>
+                <p class="page-subtitle">
+                    <i class="bi bi-calendar-check me-2"></i>
+                    Gérez les événements et activités de l'église
+                </p>
+            </div>
+            <div>
+                <a href="{{ route('events.create') }}" class="btn btn-primary">
+                    <i class="bi bi-plus-lg me-2"></i>
+                    <span class="btn-label">Nouvel événement</span>
+                </a>
+            </div>
+        </div>
     </div>
 
     <!-- Filter Tabs -->

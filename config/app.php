@@ -174,13 +174,9 @@ return [
         Filament\Tables\TablesServiceProvider::class,
         Filament\Widgets\WidgetsServiceProvider::class,
         Kirschbaum\PowerJoins\PowerJoinsServiceProvider::class,
-        Laravel\Pail\PailServiceProvider::class,
-        Laravel\Sail\SailServiceProvider::class,
         Laravel\Tinker\TinkerServiceProvider::class,
         Livewire\LivewireServiceProvider::class,
         Carbon\Laravel\ServiceProvider::class,
-        NunoMaduro\Collision\Adapters\Laravel\CollisionServiceProvider::class,
-        Termwind\Laravel\TermwindServiceProvider::class,
         RyanChandler\BladeCaptureDirective\BladeCaptureDirectiveServiceProvider::class,
 
         // Application Service Providers

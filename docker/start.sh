@@ -26,10 +26,13 @@ if [ -f database/database.sqlite ] || grep -qE '^DB_CONNECTION=sqlite' .env 2>/d
 fi
 
 # Use runtime env from Render (avoid stale cached config)
-php artisan config:clear || true
-php artisan route:clear || true
-php artisan view:clear || true
-php artisan event:clear || true
+php artisan config:clear || echo "⚠️ Config clear échoué, continuons..."
+php artisan route:clear || echo "⚠️ Route clear échoué, continuons..."
+php artisan view:clear || echo "⚠️ View clear échoué, continuons..."
+php artisan event:clear || echo "⚠️ Event clear échoué, continuons..."
+
+# Try to discover packages safely
+php artisan package:discover --ansi || echo "⚠️ Package discover échoué, continuons..."
 
 # Ensure we have an .env; create from example if absent
 if [ ! -f .env ]; then

@@ -2,17 +2,29 @@
 
 @section('content')
 <div class="container py-4">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h1 class="h3">Offrandes</h1>
-        <div class="d-flex gap-2">
-            <a href="{{ route('offerings.create') }}" class="btn btn-primary">
-                <i class="bi bi-plus-lg"></i>
-                <span class="btn-label">Ajouter une offrande</span>
-            </a>
-            <a href="{{ route('offering-types.index') }}" class="btn btn-outline-secondary">
-                <i class="bi bi-tags"></i>
-                <span class="btn-label">Types d'offrande</span>
-            </a>
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h1 class="page-title">
+                    <i class="bi bi-gift me-3"></i>
+                    Offrandes
+                </h1>
+                <p class="page-subtitle">
+                    <i class="bi bi-heart me-2"></i>
+                    Gérez les offrandes des membres
+                </p>
+            </div>
+            <div class="d-flex gap-2">
+                <a href="{{ route('offerings.create') }}" class="btn btn-primary">
+                    <i class="bi bi-plus-lg me-2"></i>
+                    <span class="btn-label">Ajouter une offrande</span>
+                </a>
+                <a href="{{ route('offering-types.index') }}" class="btn btn-outline-secondary">
+                    <i class="bi bi-tags me-2"></i>
+                    <span class="btn-label">Types d'offrande</span>
+                </a>
+            </div>
         </div>
     </div>
     @if(session('success'))<div class="alert alert-success">{{ session('success') }}</div>@endif

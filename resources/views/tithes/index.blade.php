@@ -2,9 +2,26 @@
 
 @section('content')
 <div class="container py-4">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h1 class="h3">Dîmes</h1>
-        <a href="{{ route('tithes.create') }}" class="btn btn-primary"><i class="bi bi-plus-lg"></i> <span class="btn-label">Nouvelle dîme</span></a>
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h1 class="page-title">
+                    <i class="bi bi-cash-coin me-3"></i>
+                    Dîmes
+                </h1>
+                <p class="page-subtitle">
+                    <i class="bi bi-wallet2 me-2"></i>
+                    Gérez les dîmes des membres
+                </p>
+            </div>
+            <div>
+                <a href="{{ route('tithes.create') }}" class="btn btn-primary">
+                    <i class="bi bi-plus-lg me-2"></i>
+                    <span class="btn-label">Nouvelle dîme</span>
+                </a>
+            </div>
+        </div>
     </div>
 
     @if(session('success'))

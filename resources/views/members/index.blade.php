@@ -2,9 +2,26 @@
 
 @section('content')
 <div class="container py-4">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h1 class="h3">Membres</h1>
-        <a href="{{ route('members.create') }}" class="btn btn-primary">Nouveau membre</a>
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h1 class="page-title">
+                    <i class="bi bi-people me-3"></i>
+                    Membres
+                </h1>
+                <p class="page-subtitle">
+                    <i class="bi bi-person-check me-2"></i>
+                    Gérez les membres de votre église
+                </p>
+            </div>
+            <div>
+                <a href="{{ route('members.create') }}" class="btn btn-primary">
+                    <i class="bi bi-person-plus-fill me-2"></i>
+                    <span class="btn-label">Nouveau membre</span>
+                </a>
+            </div>
+        </div>
     </div>
 
     @if(session('success'))
