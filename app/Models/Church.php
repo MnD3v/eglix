@@ -42,10 +42,15 @@ class Church extends Model
                 $slug = $baseSlug;
                 $counter = 1;
                 
-                // Ensure slug is unique
-                while (static::where('slug', $slug)->exists()) {
-                    $slug = $baseSlug . '-' . $counter;
-                    $counter++;
+                // Ensure slug is unique (only if table exists)
+                try {
+                    while (static::where('slug', $slug)->exists()) {
+                        $slug = $baseSlug . '-' . $counter;
+                        $counter++;
+                    }
+                } catch (\Exception $e) {
+                    // Table doesn't exist yet, use base slug
+                    $slug = $baseSlug;
                 }
                 
                 $church->slug = $slug;
