@@ -1,0 +1,262 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\User;
+use App\Models\Role;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
+
+class UserManagementController extends Controller
+{
+    public function __construct()
+    {
+        // Vérifier l'authentification et les permissions dans chaque méthode
+    }
+
+    /**
+     * Display a listing of users for the church
+     */
+    public function index()
+    {
+        // Vérifier que l'utilisateur est authentifié et est admin de l'église
+        if (!Auth::check() || !Auth::user()->is_church_admin) {
+            abort(403, 'Accès non autorisé. Seuls les administrateurs peuvent gérer les utilisateurs.');
+        }
+
+        $users = User::where('church_id', Auth::user()->church_id)
+            ->with('role')
+            ->orderBy('name')
+            ->get();
+
+        return view('user-management.index', compact('users'));
+    }
+
+    /**
+     * Show the form for creating a new user
+     */
+    public function create()
+    {
+        // Vérifier que l'utilisateur est authentifié et est admin de l'église
+        if (!Auth::check() || !Auth::user()->is_church_admin) {
+            abort(403, 'Accès non autorisé. Seuls les administrateurs peuvent gérer les utilisateurs.');
+        }
+
+        return view('user-management.create');
+    }
+
+    /**
+     * Store a newly created user
+     */
+    public function store(Request $request)
+    {
+        // Vérifier que l'utilisateur est authentifié et est admin de l'église
+        if (!Auth::check() || !Auth::user()->is_church_admin) {
+            abort(403, 'Accès non autorisé. Seuls les administrateurs peuvent gérer les utilisateurs.');
+        }
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|string|min:6|confirmed',
+            'role_name' => 'required|string|max:255',
+            'permissions' => 'array',
+            'permissions.*' => 'string|in:members,tithes,offerings,donations,expenses,reports,services,journal,administration',
+            'is_active' => 'nullable|in:on,1,true',
+        ], [
+            'name.required' => 'Le nom est requis.',
+            'email.required' => 'L\'adresse email est requise.',
+            'email.unique' => 'Cette adresse email est déjà utilisée.',
+            'password.required' => 'Le mot de passe est requis.',
+            'password.min' => 'Le mot de passe doit contenir au moins 6 caractères.',
+            'password.confirmed' => 'La confirmation du mot de passe ne correspond pas.',
+            'role_name.required' => 'Le rôle est requis.',
+            'role_name.max' => 'Le nom du rôle ne peut pas dépasser 255 caractères.',
+            'permissions.array' => 'Les permissions doivent être un tableau.',
+            'permissions.*.in' => 'Une ou plusieurs permissions ne sont pas valides.',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput($request->except('password', 'password_confirmation'));
+        }
+
+        // Créer un nouveau rôle pour cet utilisateur
+        $role = Role::create([
+            'church_id' => Auth::user()->church_id,
+            'name' => $request->role_name,
+            'slug' => Str::slug($request->role_name),
+            'description' => 'Rôle personnalisé pour ' . $request->name,
+            'permissions' => $request->permissions ?? [],
+        ]);
+
+        User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'church_id' => Auth::user()->church_id,
+            'role_id' => $role->id,
+            'is_church_admin' => false,
+            'is_active' => $request->has('is_active') || $request->input('is_active') === 'on',
+        ]);
+
+        return redirect()->route('user-management.index')
+            ->with('success', 'Utilisateur créé avec succès.');
+    }
+
+    /**
+     * Display the specified user
+     */
+    public function show(User $user)
+    {
+        // Vérifier que l'utilisateur appartient à la même église
+        if ($user->church_id !== Auth::user()->church_id) {
+            abort(403, 'Accès non autorisé.');
+        }
+
+        return view('user-management.show', compact('user'));
+    }
+
+    /**
+     * Show the form for editing the specified user
+     */
+    public function edit(User $user)
+    {
+        // Vérifier que l'utilisateur appartient à la même église
+        if ($user->church_id !== Auth::user()->church_id) {
+            abort(403, 'Accès non autorisé.');
+        }
+
+        $roles = Role::where('church_id', Auth::user()->church_id)
+            ->where('is_active', true)
+            ->orderBy('name')
+            ->get();
+
+        return view('user-management.edit', compact('user', 'roles'));
+    }
+
+    /**
+     * Update the specified user
+     */
+    public function update(Request $request, User $user)
+    {
+        // Vérifier que l'utilisateur appartient à la même église
+        if ($user->church_id !== Auth::user()->church_id) {
+            abort(403, 'Accès non autorisé.');
+        }
+
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $user->id,
+            'role_id' => 'required|exists:roles,id',
+            'permissions' => 'array',
+            'permissions.*' => 'string|in:members,tithes,offerings,donations,expenses,reports,services,journal,administration',
+            'is_active' => 'boolean',
+            'password' => 'nullable|string|min:6|confirmed',
+        ], [
+            'name.required' => 'Le nom est requis.',
+            'email.required' => 'L\'adresse email est requise.',
+            'email.unique' => 'Cette adresse email est déjà utilisée.',
+            'role_id.required' => 'Le rôle est requis.',
+            'role_id.exists' => 'Le rôle sélectionné n\'existe pas.',
+            'permissions.array' => 'Les permissions doivent être un tableau.',
+            'permissions.*.in' => 'Une ou plusieurs permissions ne sont pas valides.',
+            'password.min' => 'Le mot de passe doit contenir au moins 6 caractères.',
+            'password.confirmed' => 'La confirmation du mot de passe ne correspond pas.',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        // Vérifier que le rôle appartient à la même église
+        $role = Role::findOrFail($request->role_id);
+        if ($role->church_id !== Auth::user()->church_id) {
+            return redirect()->back()
+                ->withErrors(['role_id' => 'Le rôle sélectionné n\'appartient pas à votre église.'])
+                ->withInput();
+        }
+
+        // Mettre à jour les permissions du rôle si des permissions personnalisées sont fournies
+        if ($request->has('permissions')) {
+            $role->update([
+                'permissions' => $request->permissions
+            ]);
+        }
+
+        $updateData = [
+            'name' => $request->name,
+            'email' => $request->email,
+            'role_id' => $request->role_id,
+            'is_active' => $request->has('is_active'),
+        ];
+
+        // Mettre à jour le mot de passe seulement s'il est fourni
+        if ($request->filled('password')) {
+            $updateData['password'] = Hash::make($request->password);
+        }
+
+        $user->update($updateData);
+
+        return redirect()->route('user-management.index')
+            ->with('success', 'Utilisateur mis à jour avec succès.');
+    }
+
+    /**
+     * Remove the specified user
+     */
+    public function destroy(User $user)
+    {
+        // Vérifier que l'utilisateur appartient à la même église
+        if ($user->church_id !== Auth::user()->church_id) {
+            abort(403, 'Accès non autorisé.');
+        }
+
+        // Ne pas permettre de supprimer l'admin de l'église
+        if ($user->is_church_admin) {
+            return redirect()->back()
+                ->with('error', 'Impossible de supprimer l\'administrateur de l\'église.');
+        }
+
+        $user->delete();
+
+        return redirect()->route('user-management.index')
+            ->with('success', 'Utilisateur supprimé avec succès.');
+    }
+
+    /**
+     * Reset user password
+     */
+    public function resetPassword(Request $request, User $user)
+    {
+        // Vérifier que l'utilisateur appartient à la même église
+        if ($user->church_id !== Auth::user()->church_id) {
+            abort(403, 'Accès non autorisé.');
+        }
+
+        $validator = Validator::make($request->all(), [
+            'password' => 'required|string|min:6|confirmed',
+        ], [
+            'password.required' => 'Le mot de passe est requis.',
+            'password.min' => 'Le mot de passe doit contenir au moins 6 caractères.',
+            'password.confirmed' => 'La confirmation du mot de passe ne correspond pas.',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator);
+        }
+
+        $user->update([
+            'password' => Hash::make($request->password),
+        ]);
+
+        return redirect()->back()
+            ->with('success', 'Mot de passe réinitialisé avec succès.');
+    }
+}

@@ -1,0 +1,275 @@
+@extends('layouts.app')
+
+@section('content')
+<div class="container py-4">
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="d-flex justify-content-between align-items-start">
+            <div>
+                <h1 class="page-title">Rapport des Dons</h1>
+                <p class="page-subtitle">Analyse détaillée des dons reçus</p>
+                <div class="d-flex align-items-center gap-2 mt-2">
+                    <i class="bi bi-calendar3 text-muted"></i>
+                    <span class="text-muted">{{ \Carbon\Carbon::parse($from)->format('d/m/Y') }} — {{ \Carbon\Carbon::parse($to)->format('d/m/Y') }}</span>
+                </div>
+            </div>
+            <div class="d-flex gap-2">
+                <a href="{{ route('reports.donations.export', ['from' => $from, 'to' => $to]) }}" class="btn btn-light">
+                    <i class="bi bi-download"></i> Télécharger CSV
+                </a>
+                <a href="{{ route('reports.index') }}" class="btn btn-outline-light">
+                    <i class="bi bi-arrow-left"></i> Retour aux rapports
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filtres de période -->
+    <div class="card card-soft mb-4">
+        <div class="card-body">
+            <h5 class="card-title mb-3">Filtrer par période</h5>
+            <form method="GET" id="periodForm">
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-3">
+                        <label class="form-label small text-muted mb-1">Date de début</label>
+                        <input type="date" class="form-control" name="from" value="{{ $from }}" id="fromDate">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label small text-muted mb-1">Date de fin</label>
+                        <input type="date" class="form-control" name="to" value="{{ $to }}" id="toDate">
+                    </div>
+                    <div class="col-md-3">
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="bi bi-funnel"></i> Appliquer
+                        </button>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="{{ route('reports.donations') }}" class="btn btn-outline-secondary w-100">
+                            <i class="bi bi-arrow-counterclockwise"></i> Réinitialiser
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Graphique d'évolution annuelle -->
+    <div class="card card-soft mb-4">
+        <div class="card-body">
+            <h5 class="card-title mb-3">Évolution des Dons par Mois</h5>
+            <div class="chart-container" style="position: relative; height: 400px; width: 100%;">
+                <canvas id="donationsChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistiques -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-3">
+            <div class="card card-soft text-center">
+                <div class="card-body">
+                    <i class="bi bi-gift-fill text-primary" style="font-size: 2.5rem;"></i>
+                    <h4 class="mt-3 mb-1" style="color: #202124;">{{ number_format($totalAmount ?? 0, 0, ',', ' ') }} FCFA</h4>
+                    <p class="text-muted mb-0">Total des dons</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card card-soft text-center">
+                <div class="card-body">
+                    <i class="bi bi-people text-success" style="font-size: 2.5rem;"></i>
+                    <h4 class="mt-3 mb-1" style="color: #202124;">{{ $totalCount ?? 0 }}</h4>
+                    <p class="text-muted mb-0">Nombre de dons</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card card-soft text-center">
+                <div class="card-body">
+                    <i class="bi bi-graph-up text-info" style="font-size: 2.5rem;"></i>
+                    <h4 class="mt-3 mb-1" style="color: #202124;">{{ number_format($averageAmount ?? 0, 0, ',', ' ') }} FCFA</h4>
+                    <p class="text-muted mb-0">Moyenne par don</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card card-soft text-center">
+                <div class="card-body">
+                    <i class="bi bi-calendar-month text-warning" style="font-size: 2.5rem;"></i>
+                    <h4 class="mt-3 mb-1" style="color: #202124;">{{ $totalMonths ?? 0 }}</h4>
+                    <p class="text-muted mb-0">Mois avec données</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tableau des dons -->
+    <div class="card card-soft">
+        <div class="card-body">
+            <h5 class="card-title mb-3">Détail des Dons</h5>
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Membre</th>
+                            <th>Type</th>
+                            <th>Date</th>
+                            <th>Montant</th>
+                            <th>Projet</th>
+                            <th>Méthode de paiement</th>
+                            <th>Référence</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($donations ?? [] as $donation)
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <div class="member-avatar me-2" style="width: 32px; height: 32px; border-radius: 50%; background: #e8f0fe; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 0.8rem; color: #1a73e8;">
+                                        {{ substr($donation->member->first_name, 0, 1) }}{{ substr($donation->member->last_name, 0, 1) }}
+                                    </div>
+                                    <div>
+                                        <div class="fw-semibold">{{ $donation->member->last_name }} {{ $donation->member->first_name }}</div>
+                                        <small class="text-muted">{{ $donation->member->email ?? 'Aucun email' }}</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="badge bg-{{ $donation->donation_type === 'monetary' ? 'success' : 'info' }}">
+                                    {{ ucfirst($donation->donation_type) }}
+                                </span>
+                            </td>
+                            <td>{{ $donation->received_at->format('d/m/Y') }}</td>
+                            <td class="fw-semibold text-success">{{ number_format($donation->amount, 0, ',', ' ') }} FCFA</td>
+                            <td>
+                                @if($donation->project)
+                                    <span class="badge bg-primary">{{ $donation->project->name }}</span>
+                                @else
+                                    <span class="text-muted">Aucun</span>
+                                @endif
+                            </td>
+                            <td>
+                                <span class="badge bg-{{ $donation->payment_method === 'cash' ? 'success' : ($donation->payment_method === 'mobile' ? 'info' : 'primary') }}">
+                                    {{ ucfirst($donation->payment_method) }}
+                                </span>
+                            </td>
+                            <td>{{ $donation->reference ?? '-' }}</td>
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="7" class="text-center text-muted py-4">
+                                <i class="bi bi-inbox" style="font-size: 2rem;"></i>
+                                <p class="mt-2 mb-0">Aucun don trouvé pour cette période</p>
+                            </td>
+                        </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Données du graphique
+    const chartData = {
+        labels: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Jun', 'Jul', 'Aoû', 'Sep', 'Oct', 'Nov', 'Déc'],
+        datasets: [{
+            label: 'Dons (FCFA)',
+            data: @json($monthlyData['data'] ?? []),
+            borderColor: '#8b5cf6',
+            backgroundColor: 'rgba(139, 92, 246, 0.1)',
+            borderWidth: 3,
+            fill: true,
+            tension: 0.4,
+            pointBackgroundColor: '#8b5cf6',
+            pointBorderColor: '#ffffff',
+            pointBorderWidth: 2,
+            pointRadius: 6,
+            pointHoverRadius: 8
+        }]
+    };
+
+    // Configuration du graphique
+    const config = {
+        type: 'line',
+        data: chartData,
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top',
+                    labels: {
+                        usePointStyle: true,
+                        padding: 20,
+                        font: {
+                            size: 14,
+                            weight: '500'
+                        }
+                    }
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                    titleColor: '#ffffff',
+                    bodyColor: '#ffffff',
+                    borderColor: '#8b5cf6',
+                    borderWidth: 1,
+                    cornerRadius: 8,
+                    displayColors: false,
+                    callbacks: {
+                        label: function(context) {
+                            return 'Dons: ' + new Intl.NumberFormat('fr-FR').format(context.parsed.y) + ' FCFA';
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    grid: {
+                        display: false
+                    },
+                    ticks: {
+                        font: {
+                            size: 12,
+                            weight: '500'
+                        },
+                        color: '#5f6368'
+                    }
+                },
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        color: 'rgba(0, 0, 0, 0.1)',
+                        drawBorder: false
+                    },
+                    ticks: {
+                        font: {
+                            size: 12,
+                            weight: '500'
+                        },
+                        color: '#5f6368',
+                        callback: function(value) {
+                            return new Intl.NumberFormat('fr-FR').format(value) + ' FCFA';
+                        }
+                    }
+                }
+            },
+            interaction: {
+                intersect: false,
+                mode: 'index'
+            }
+        }
+    };
+
+    // Création du graphique
+    const ctx = document.getElementById('donationsChart').getContext('2d');
+    new Chart(ctx, config);
+});
+</script>
+@endpush
+@endsection

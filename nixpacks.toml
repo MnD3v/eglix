@@ -1,0 +1,22 @@
+[phases.setup]
+  nixPkgs = [
+    "php82Extensions.intl",
+    "php82Extensions.zip"
+  ]
+
+[phases.install]
+  cmds = [
+    "composer install --no-dev --prefer-dist --no-interaction --optimize-autoloader"
+  ]
+
+[phases.build]
+  cmds = [
+    "php artisan key:generate --force || true",
+    "php artisan migrate --force || true",
+    "php artisan storage:link || true"
+  ]
+
+[start]
+  cmd = "php -d variables_order=EGPCS -S 0.0.0.0:$PORT -t public public/index.php"
+
+

@@ -1,0 +1,17 @@
+{
+    order php_server before file_server
+}
+
+php_server {
+    root * /app/public
+    php_server
+}
+
+handle {
+    root * /app/public
+    try_files {path} {path}/ /index.php?{query}
+    file_server
+    php_server
+}
+
+
