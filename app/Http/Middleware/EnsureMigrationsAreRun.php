@@ -15,9 +15,9 @@ class EnsureMigrationsAreRun
      */
     public function handle(Request $request, Closure $next)
     {
-        // Vérifier uniquement sur les routes critiques
+        // Vérifier toutes les tables critiques sur toutes les routes importantes
         if ($this->shouldCheckMigrations($request)) {
-            $this->ensureMigrationsAreRun();
+            $this->ensureAllTablesAreComplete();
         }
 
         return $next($request);
@@ -28,14 +28,59 @@ class EnsureMigrationsAreRun
      */
     private function shouldCheckMigrations(Request $request): bool
     {
-        $criticalRoutes = [
-            'register',
-            'login',
-            'churches.store',
-            'churches.create'
+        // Vérifier sur toutes les routes authentifiées
+        return $request->user() !== null;
+    }
+
+    /**
+     * S'assurer que toutes les tables sont complètes
+     */
+    private function ensureAllTablesAreComplete(): void
+    {
+        try {
+            // Créer les tables principales si nécessaire
+            $this->ensureMigrationsAreRun();
+            
+            // Ajouter church_id à toutes les tables qui en ont besoin
+            $this->addChurchIdToAllTables();
+            
+        } catch (\Exception $e) {
+            Log::error('Erreur lors de la vérification complète des tables: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Ajouter church_id à toutes les tables nécessaires
+     */
+    private function addChurchIdToAllTables(): void
+    {
+        $tablesNeedingChurchId = [
+            'members',
+            'tithes', 
+            'offerings',
+            'donations',
+            'expenses',
+            'projects',
+            'services',
+            'church_events',
+            'service_roles',
+            'service_assignments',
+            'offering_types',
+            'journal_entries',
+            'administration_functions',
+            'administration_function_types'
         ];
 
-        return $request->routeIs($criticalRoutes);
+        foreach ($tablesNeedingChurchId as $table) {
+            try {
+                if ($this->tableExists($table) && !$this->columnExists($table, 'church_id')) {
+                    DB::statement("ALTER TABLE {$table} ADD COLUMN church_id BIGINT");
+                    Log::info("Colonne church_id ajoutée à {$table}");
+                }
+            } catch (\Exception $e) {
+                Log::warning("Impossible d'ajouter church_id à {$table}: " . $e->getMessage());
+            }
+        }
     }
 
     /**
