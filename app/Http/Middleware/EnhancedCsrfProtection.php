@@ -22,7 +22,7 @@ class EnhancedCsrfProtection
         if (in_array($request->method(), ['POST', 'PUT', 'PATCH', 'DELETE'])) {
             
             // Vérifier le token CSRF
-            if (!$request->hasValidSignature() && !$request->hasValidCsrfToken()) {
+            if (!$request->hasValidSignature() && !$this->hasValidCsrfToken($request)) {
                 Log::warning('Tentative de soumission de formulaire sans token CSRF valide', [
                     'ip' => $request->ip(),
                     'user_agent' => $request->userAgent(),
@@ -72,5 +72,22 @@ class EnhancedCsrfProtection
         }
         
         return $next($request);
+    }
+    
+    /**
+     * Vérifier si le token CSRF est valide
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return bool
+     */
+    private function hasValidCsrfToken(Request $request): bool
+    {
+        $token = $request->input('_token') ?: $request->header('X-CSRF-TOKEN');
+        
+        if (!$token) {
+            return false;
+        }
+        
+        return hash_equals(session()->token(), $token);
     }
 }

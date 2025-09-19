@@ -46,6 +46,12 @@ if [ "${FORCE_MIGRATIONS}" = "1" ] || [ "${FORCE_MIGRATIONS}" = "true" ] || [ "$
     /usr/local/bin/force-migrations.sh || echo "⚠️ Script de migration forcée échoué, continuons..."
 fi
 
+# Exécuter le script de migration forcée d'administration si nécessaire
+if [ "${FORCE_ADMIN_MIGRATION}" = "1" ] || [ "${FORCE_ADMIN_MIGRATION}" = "true" ] || [ "${FORCE_ADMIN_MIGRATION}" = "TRUE" ]; then
+    echo "[start.sh] FORCE_ADMIN_MIGRATION est activé -> exécution du script de migration forcée d'administration"
+    /usr/local/bin/force-admin-migration.sh || echo "⚠️ Script de migration forcée d'administration échoué, continuons..."
+fi
+
 # Ensure we have an .env; create from example if absent
 if [ ! -f .env ]; then
   cp .env.example .env || true

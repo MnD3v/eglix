@@ -157,6 +157,34 @@
             box-shadow: 0 10px 25px rgba(255, 38, 0, 0.3);
         }
 
+        .btn-primary:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn-primary:disabled:hover {
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn-loader {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .spinner {
+            animation: spin 1.5s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
         .divider {
             display: flex;
             align-items: center;
@@ -348,8 +376,17 @@
                     <a href="#" class="forgot-password">Mot de passe oublié ?</a>
                 </div>
 
-                <button type="submit" class="btn-primary">
-                    Se connecter
+                <button type="submit" class="btn-primary" id="loginBtn">
+                    <span class="btn-text">Se connecter</span>
+                    <span class="btn-loader" style="display: none;">
+                        <svg class="spinner" width="20" height="20" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-dasharray="60" stroke-dashoffset="60">
+                                <animate attributeName="stroke-dasharray" dur="1.5s" values="0 60;60 0" repeatCount="indefinite"/>
+                                <animate attributeName="stroke-dashoffset" dur="1.5s" values="0;-60" repeatCount="indefinite"/>
+                            </circle>
+                        </svg>
+                        Connexion en cours...
+                    </span>
                 </button>
             </form>
 
@@ -377,5 +414,38 @@
             </div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.querySelector('form[method="POST"]');
+            const loginBtn = document.getElementById('loginBtn');
+            const btnText = loginBtn.querySelector('.btn-text');
+            const btnLoader = loginBtn.querySelector('.btn-loader');
+
+            form.addEventListener('submit', function(e) {
+                // Activer l'état de chargement
+                loginBtn.disabled = true;
+                btnText.style.display = 'none';
+                btnLoader.style.display = 'flex';
+                
+                // Empêcher la double soumission
+                e.preventDefault();
+                
+                // Soumettre le formulaire après un court délai pour voir l'animation
+                setTimeout(() => {
+                    form.submit();
+                }, 100);
+            });
+
+            // Gérer les erreurs de validation (si le formulaire est rechargé avec des erreurs)
+            const hasErrors = document.querySelector('.alert-danger');
+            if (hasErrors) {
+                // Réinitialiser l'état du bouton en cas d'erreur
+                loginBtn.disabled = false;
+                btnText.style.display = 'inline';
+                btnLoader.style.display = 'none';
+            }
+        });
+    </script>
 </body>
 </html>

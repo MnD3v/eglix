@@ -1049,13 +1049,10 @@
         
         <!-- Bouton de déconnexion -->
         <div style="margin-top: 20px; padding: 0 16px;">
-            <form method="POST" action="{{ route('logout') }}" style="margin: 0;">
-                @csrf
-                <button type="submit" class="btn btn-outline-light btn-sm w-100" style="border-radius: 8px; font-size: 0.875rem;" title="Se déconnecter">
-                    <i class="bi bi-box-arrow-right me-2"></i>
-                    <span class="sidebar-text">Déconnexion</span>
-                </button>
-            </form>
+            <button type="button" class="btn btn-outline-light btn-sm w-100" style="border-radius: 8px; font-size: 0.875rem;" title="Se déconnecter" onclick="confirmLogout()">
+                <i class="bi bi-box-arrow-right me-2"></i>
+                <span class="sidebar-text">Déconnexion</span>
+            </button>
         </div>
         
         <!-- Crédit développeur en bas de sidebar -->
@@ -1101,6 +1098,48 @@
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
+        
+        // Fonction de confirmation de déconnexion
+        function confirmLogout() {
+            const modal = new bootstrap.Modal(document.getElementById('confirmModal'));
+            const modalMessage = document.getElementById('confirmModalMessage');
+            const modalOk = document.getElementById('confirmModalOk');
+            
+            // Personnaliser le modal pour la déconnexion
+            modalMessage.innerHTML = `
+                <div class="text-center">
+                    <i class="bi bi-exclamation-triangle text-warning" style="font-size: 2rem; margin-bottom: 1rem;"></i>
+                    <p class="mb-0">Êtes-vous sûr de vouloir vous déconnecter ?</p>
+                    <small class="text-muted">Vous devrez vous reconnecter pour accéder à nouveau à l'application.</small>
+                </div>
+            `;
+            
+            modalOk.innerHTML = '<i class="bi bi-box-arrow-right me-2"></i>Se déconnecter';
+            modalOk.className = 'btn btn-danger';
+            
+            // Supprimer les anciens événements
+            modalOk.replaceWith(modalOk.cloneNode(true));
+            const newModalOk = document.getElementById('confirmModalOk');
+            
+            // Ajouter le nouvel événement
+            newModalOk.addEventListener('click', function() {
+                // Créer un formulaire temporaire pour la déconnexion
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '{{ route("logout") }}';
+                
+                const csrfToken = document.createElement('input');
+                csrfToken.type = 'hidden';
+                csrfToken.name = '_token';
+                csrfToken.value = '{{ csrf_token() }}';
+                
+                form.appendChild(csrfToken);
+                document.body.appendChild(form);
+                form.submit();
+            });
+            
+            modal.show();
+        }
     </script>
     <style>
         /* Styles personnalisés pour Select2 */
