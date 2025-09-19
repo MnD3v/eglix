@@ -25,6 +25,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ChurchController;
 use App\Http\Controllers\UserManagementController;
 use App\Http\Controllers\ReportsController;
+use App\Http\Controllers\AdvancedReportsController;
 use Illuminate\Support\Facades\Auth;
 
 // Routes d'authentification
@@ -176,6 +177,22 @@ Route::get('/reports/tithes/export', [ReportsController::class, 'exportTithes'])
 Route::get('/reports/offerings/export', [ReportsController::class, 'exportOfferings'])->name('reports.offerings.export');
 Route::get('/reports/donations/export', [ReportsController::class, 'exportDonations'])->name('reports.donations.export');
 Route::get('/reports/expenses/export', [ReportsController::class, 'exportExpenses'])->name('reports.expenses.export');
+
+// Routes pour les rapports avancés
+Route::prefix('reports/advanced')->name('reports.advanced.')->group(function () {
+    Route::get('/', [AdvancedReportsController::class, 'dashboard'])->name('dashboard');
+    Route::get('/comparison', [AdvancedReportsController::class, 'comparisonReport'])->name('comparison');
+    Route::get('/projection', [AdvancedReportsController::class, 'projectionReport'])->name('projection');
+    
+    // Exports avancés
+    Route::get('/export/excel', [AdvancedReportsController::class, 'exportExcel'])->name('export.excel');
+    Route::get('/export/pdf', [AdvancedReportsController::class, 'exportPdf'])->name('export.pdf');
+    Route::get('/export/json', [AdvancedReportsController::class, 'exportJson'])->name('export.json');
+    Route::get('/export/csv', [AdvancedReportsController::class, 'exportCsv'])->name('export.csv');
+    
+    // API pour données temps réel
+    Route::get('/api/data', [AdvancedReportsController::class, 'apiData'])->name('api.data');
+});
 
 // Routes pour la programmation des cultes
 Route::get('services/{service}/program', [ServiceProgramController::class, 'show'])->name('services.program');

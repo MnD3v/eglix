@@ -1157,8 +1157,9 @@
         }
         
         .select2-container .select2-results__option--highlighted[aria-selected] {
-            background-color: #FF2600;
-            color: white;
+            background-color: #fef2f2;
+            color: #374151;
+            border-left: 3px solid #FF2600;
         }
         
         .select2-container .select2-search--dropdown .select2-search__field {
@@ -1288,6 +1289,38 @@
             transform: translateY(-50%);
             color: #FF2600;
             font-size: 14px;
+        }
+
+        /* Correction pour les listes déroulantes natives HTML */
+        select, select option {
+            color: #374151 !important;
+            background-color: #ffffff !important;
+        }
+        
+        select option:hover {
+            background-color: #fef2f2 !important;
+            color: #374151 !important;
+        }
+        
+        select option:checked {
+            background-color: #fef2f2 !important;
+            color: #374151 !important;
+        }
+        
+        /* Correction pour les listes déroulantes Bootstrap */
+        .form-select option {
+            color: #374151 !important;
+            background-color: #ffffff !important;
+        }
+        
+        .form-select option:hover {
+            background-color: #fef2f2 !important;
+            color: #374151 !important;
+        }
+        
+        .form-select option:checked {
+            background-color: #fef2f2 !important;
+            color: #374151 !important;
         }
     </style>
     <!-- Firebase (compat) for simple Storage uploads from views -->

@@ -68,7 +68,11 @@
             
             @php
                 $roles = \App\Models\ServiceRole::where('is_active', true)->orderBy('name')->get();
-                $members = \App\Models\Member::where('status', 'active')->orderBy('last_name')->orderBy('first_name')->get();
+                $members = \App\Models\Member::where('church_id', auth()->user()->church_id)
+                    ->where('status', 'active')
+                    ->orderBy('last_name')
+                    ->orderBy('first_name')
+                    ->get();
             @endphp
 
             @foreach($roles as $role)

@@ -359,10 +359,21 @@
                 Pas de compte ? <a href="{{ route('register') }}">Créer un compte</a>
             </div>
         </div>
-
         <div class="right-panel">
             <div class="image-container">
-                <img src="https://i.ibb.co/BvmsKVV/Capture-d-cran-2025-09-18-201325.png" alt="Connexion" class="login-image">
+                <!-- Image de connexion avec fallback -->
+               <img src="https://images.pexels.com/photos/33953535/pexels-photo-33953535.jpeg" 
+                    alt="Connexion" 
+                    class="login-image"
+                    onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <!-- Gradient de remplacement si l'image ne charge pas -->
+                <div class="gradient-backup" style="display:none; width:100%; height:100%; background: linear-gradient(135deg, #FF2600 0%, #ff4d33 50%, #ff6b47 100%); align-items:center; justify-content:center; color:white; font-size:24px; font-weight:600;">
+                    <div style="text-align:center;">
+                        <div style="font-size:48px; margin-bottom:16px;">⛪</div>
+                        <div>Eglix</div>
+                        <div style="font-size:16px; margin-top:8px; opacity:0.9;">Gestion d'Église</div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

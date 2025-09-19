@@ -6,6 +6,7 @@ use App\Models\AdministrationFunction;
 use App\Models\Member;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class AdministrationController extends Controller
 {
@@ -69,7 +70,11 @@ class AdministrationController extends Controller
      */
     public function create()
     {
-        $members = Member::where('status', 'active')->orderBy('last_name')->orderBy('first_name')->get();
+        $members = Member::where('church_id', Auth::user()->church_id)
+            ->where('status', 'active')
+            ->orderBy('last_name')
+            ->orderBy('first_name')
+            ->get();
         $functions = $this->getAvailableFunctions();
         
         return view('administration.create', compact('members', 'functions'));
@@ -119,7 +124,11 @@ class AdministrationController extends Controller
      */
     public function edit(AdministrationFunction $administration)
     {
-        $members = Member::where('status', 'active')->orderBy('last_name')->orderBy('first_name')->get();
+        $members = Member::where('church_id', Auth::user()->church_id)
+            ->where('status', 'active')
+            ->orderBy('last_name')
+            ->orderBy('first_name')
+            ->get();
         $functions = $this->getAvailableFunctions();
         
         return view('administration.edit', compact('administration', 'members', 'functions'));

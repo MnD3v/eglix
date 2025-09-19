@@ -83,14 +83,14 @@
                                     <div class="small text-muted"><i class="bi bi-chat-text me-1"></i>{{ Str::limit($donation->notes, 50) }}</div>
                                 @endif
 
-                                <a href="{{ route('donations.show', $donation) }}" class="stretched-link" aria-label="Voir le don"></a>
                                 <div class="d-flex justify-content-between align-items-center mt-2">
                                     <small class="text-muted"><i class="bi bi-calendar3 me-1"></i>{{ $donation->created_at->format('d/m/Y') }}</small>
                                     <div class="btn-group btn-group-sm">
-                                        <a href="{{ route('donations.edit', $donation) }}" class="btn btn-outline-secondary btn-sm"><i class="bi bi-pencil"></i></a>
+                                        <a href="{{ route('donations.show', $donation) }}" class="btn btn-outline-primary btn-sm" title="Voir le détail"><i class="bi bi-eye"></i></a>
+                                        <a href="{{ route('donations.edit', $donation) }}" class="btn btn-outline-secondary btn-sm" title="Modifier"><i class="bi bi-pencil"></i></a>
                                         <form action="{{ route('donations.destroy', $donation) }}" method="POST" class="d-inline">
                                             @csrf @method('DELETE')
-                                            <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirm('Supprimer ce don ?')"><i class="bi bi-trash"></i></button>
+                                            <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirm('Supprimer ce don ?')" title="Supprimer"><i class="bi bi-trash"></i></button>
                                         </form>
                                     </div>
                                 </div>

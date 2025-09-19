@@ -7,6 +7,7 @@ use App\Models\ServiceRole;
 use App\Models\ServiceAssignment;
 use App\Models\Member;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ServiceProgramController extends Controller
 {
@@ -17,7 +18,11 @@ class ServiceProgramController extends Controller
     {
         $service->load(['assignments.member', 'assignments.serviceRole']);
         $roles = ServiceRole::where('is_active', true)->orderBy('name')->get();
-        $members = Member::where('status', 'active')->orderBy('last_name')->orderBy('first_name')->get();
+        $members = Member::where('church_id', Auth::user()->church_id)
+            ->where('status', 'active')
+            ->orderBy('last_name')
+            ->orderBy('first_name')
+            ->get();
         
         return view('services.program', compact('service', 'roles', 'members'));
     }

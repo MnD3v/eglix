@@ -364,8 +364,8 @@
             <i class="bi bi-calendar-x"></i>
             <h3>Aucun événement</h3>
             <p>Aucun événement n'a été créé pour le moment.</p>
-            <a href="{{ route('events.create') }}" class="action-btn primary mt-3">
-                <i class="bi bi-plus"></i>
+            <a href="{{ route('events.create') }}" class="btn btn-primary mt-3">
+                <i class="bi bi-plus me-2"></i>
                 Créer le premier événement
             </a>
         </div>
