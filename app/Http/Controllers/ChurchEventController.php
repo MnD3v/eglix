@@ -42,7 +42,7 @@ class ChurchEventController extends Controller
         ]);
         $validated['images'] = array_values(array_filter($validated['images'] ?? [], fn($u) => !empty($u)));
         $e = ChurchEvent::create($validated);
-        return redirect()->route('events.show', $e)->with('success','Événement créé.');
+        return redirect()->route('events.index')->with('success','Événement créé.');
     }
 
     /**
@@ -79,7 +79,7 @@ class ChurchEventController extends Controller
         ]);
         $validated['images'] = array_values(array_filter($validated['images'] ?? [], fn($u) => !empty($u)));
         $churchEvent->update($validated);
-        return redirect()->route('events.show', $churchEvent)->with('success','Mise à jour effectuée.');
+        return redirect()->route('events.index')->with('success','Mise à jour effectuée.');
     }
 
     /**

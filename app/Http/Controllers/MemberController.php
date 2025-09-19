@@ -82,7 +82,7 @@ class MemberController extends Controller
         $validated['church_id'] = \Illuminate\Support\Facades\Auth::user()->church_id;
         $validated['created_by'] = \Illuminate\Support\Facades\Auth::id();
         $member = Member::create($validated);
-        return redirect()->route('members.show', $member)->with('success', 'Membre enregistré.');
+        return redirect()->route('members.index')->with('success', 'Membre enregistré.');
     }
 
     /**
@@ -96,7 +96,43 @@ class MemberController extends Controller
         }
         
         $member->load('tithes');
-        return view('members.show', compact('member'));
+        
+        // Données pour le graphique des dîmes sur l'année
+        $currentYear = now()->year;
+        $driver = \Illuminate\Support\Facades\DB::getDriverName();
+        
+        // Expression SQL pour extraire le mois selon le driver de base de données
+        $monthExpr = match ($driver) {
+            'mysql', 'mariadb' => "DATE_FORMAT(paid_at, '%m')",
+            'pgsql' => "to_char(paid_at, 'MM')",
+            default => "strftime('%m', paid_at)",
+        };
+        
+        // Récupérer les données des dîmes par mois pour l'année courante
+        $monthlyTithes = \Illuminate\Support\Facades\DB::table('tithes')
+            ->where('member_id', $member->id)
+            ->whereYear('paid_at', $currentYear)
+            ->selectRaw("{$monthExpr} as month, SUM(amount) as total")
+            ->groupBy('month')
+            ->pluck('total', 'month');
+        
+        // Créer les données du graphique pour les 12 mois
+        $chartData = [];
+        $labels = [];
+        for ($i = 1; $i <= 12; $i++) {
+            $month = sprintf('%02d', $i);
+            $chartData[] = (float) ($monthlyTithes[$month] ?? 0);
+            $labels[] = $month;
+        }
+        
+        $chart = [
+            'labels' => $labels,
+            'data' => $chartData,
+            'year' => $currentYear,
+            'labels_numeric' => range(1, 12)
+        ];
+        
+        return view('members.show', compact('member', 'chart'));
     }
 
     /**
@@ -143,7 +179,7 @@ class MemberController extends Controller
 
         $validated['updated_by'] = \Illuminate\Support\Facades\Auth::id();
         $member->update($validated);
-        return redirect()->route('members.show', $member)->with('success', 'Mise à jour effectuée.');
+        return redirect()->route('members.index')->with('success', 'Mise à jour effectuée.');
     }
 
     /**

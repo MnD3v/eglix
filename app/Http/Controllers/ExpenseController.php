@@ -127,7 +127,7 @@ class ExpenseController extends Controller
         $validated['created_by'] = Auth::id();
         
         $e = Expense::create($validated);
-        return redirect()->route('expenses.show', $e)->with('success','Dépense enregistrée.');
+        return redirect()->route('expenses.index')->with('success','Dépense enregistrée.');
     }
 
     /**
@@ -188,7 +188,7 @@ class ExpenseController extends Controller
         unset($validated['title']);
         $validated['updated_by'] = Auth::id();
         $expense->update($validated);
-        return redirect()->route('expenses.show', $expense)->with('success','Mise à jour effectuée.');
+        return redirect()->route('expenses.index')->with('success','Mise à jour effectuée.');
     }
 
     /**

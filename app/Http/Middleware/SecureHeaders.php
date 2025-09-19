@@ -17,9 +17,12 @@ class SecureHeaders
         'X-Content-Type-Options' => 'nosniff',
         'X-XSS-Protection' => '1; mode=block',
         'X-Frame-Options' => 'SAMEORIGIN',
-        'Strict-Transport-Security' => 'max-age=31536000; includeSubDomains',
+        'Strict-Transport-Security' => 'max-age=31536000; includeSubDomains; preload',
         'Referrer-Policy' => 'strict-origin-when-cross-origin',
-        'Permissions-Policy' => 'geolocation=(), microphone=(), camera=()',
+        'Permissions-Policy' => 'geolocation=(), microphone=(), camera=(), payment=(), usb=(), magnetometer=(), gyroscope=(), speaker=()',
+        'Cross-Origin-Embedder-Policy' => 'require-corp',
+        'Cross-Origin-Opener-Policy' => 'same-origin',
+        'Cross-Origin-Resource-Policy' => 'same-origin',
     ];
 
     /**
@@ -38,18 +41,33 @@ class SecureHeaders
             $response->headers->set($key, $value);
         }
 
-        // En production, forcer HTTPS pour les cookies et les formulaires
+        // En production, ajouter des en-têtes de sécurité renforcés
         if (config('app.env') === 'production') {
+            // Content Security Policy renforcé
             $response->headers->set('Content-Security-Policy', 
                 "default-src 'self'; " .
-                "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://code.jquery.com https://www.gstatic.com; " .
-                "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com; " .
-                "font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com; " .
-                "img-src 'self' data: https:; " .
-                "connect-src 'self' https:; " .
+                "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://code.jquery.com https://www.gstatic.com https://cdnjs.cloudflare.com; " .
+                "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com https://cdnjs.cloudflare.com; " .
+                "font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com https://cdnjs.cloudflare.com; " .
+                "img-src 'self' data: https: blob:; " .
+                "connect-src 'self' https: wss:; " .
                 "form-action 'self'; " .
-                "frame-src 'self';"
+                "frame-src 'self'; " .
+                "object-src 'none'; " .
+                "base-uri 'self'; " .
+                "upgrade-insecure-requests;"
             );
+
+            // Headers supplémentaires pour la sécurité
+            $response->headers->set('X-Download-Options', 'noopen');
+            $response->headers->set('X-Permitted-Cross-Domain-Policies', 'none');
+            
+            // Cache Control pour les pages sensibles
+            if ($request->is('admin/*') || $request->is('members/*') || $request->is('tithes/*') || $request->is('donations/*')) {
+                $response->headers->set('Cache-Control', 'no-cache, no-store, must-revalidate');
+                $response->headers->set('Pragma', 'no-cache');
+                $response->headers->set('Expires', '0');
+            }
         }
 
         return $response;

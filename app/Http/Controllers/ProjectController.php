@@ -43,7 +43,7 @@ class ProjectController extends Controller
         // church_id will be set by BelongsToChurch trait if not provided
         $validated['church_id'] = Auth::user()->church_id;
         $p = Project::create($validated);
-        return redirect()->route('projects.show', $p)->with('success','Projet créé.');
+        return redirect()->route('projects.index')->with('success','Projet créé.');
     }
 
     /**
@@ -76,7 +76,7 @@ class ProjectController extends Controller
             'status' => ['required','in:planned,in_progress,completed,cancelled'],
         ]);
         $project->update($validated);
-        return redirect()->route('projects.show', $project)->with('success','Mise à jour effectuée.');
+        return redirect()->route('projects.index')->with('success','Mise à jour effectuée.');
     }
 
     /**

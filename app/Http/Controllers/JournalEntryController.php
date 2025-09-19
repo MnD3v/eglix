@@ -89,7 +89,7 @@ class JournalEntryController extends Controller
             } else {
                 Log::warning('[Journal] no images provided');
             }
-            return redirect()->route('journal.show', $entry)->with('success','Entrée ajoutée.');
+            return redirect()->route('journal.index')->with('success','Entrée ajoutée.');
         } catch (\Throwable $e) {
             Log::error('[Journal] store failed', ['error' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
             return back()->withErrors(['journal' => 'Erreur: '.$e->getMessage()])->withInput();
@@ -137,7 +137,7 @@ class JournalEntryController extends Controller
                 ]);
             }
         }
-        return redirect()->route('journal.show', $journal)->with('success','Entrée mise à jour.');
+        return redirect()->route('journal.index')->with('success','Entrée mise à jour.');
     }
 
     public function destroy(JournalEntry $journal)

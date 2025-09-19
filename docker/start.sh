@@ -34,6 +34,12 @@ php artisan event:clear || echo "⚠️ Event clear échoué, continuons..."
 # Try to discover packages safely
 php artisan package:discover --ansi || echo "⚠️ Package discover échoué, continuons..."
 
+# Exécuter le script de correction administration_functions si nécessaire
+if [ "${FIX_ADMINISTRATION_FUNCTIONS}" = "1" ] || [ "${FIX_ADMINISTRATION_FUNCTIONS}" = "true" ] || [ "${FIX_ADMINISTRATION_FUNCTIONS}" = "TRUE" ]; then
+    echo "[start.sh] FIX_ADMINISTRATION_FUNCTIONS est activé -> exécution du script de correction"
+    /usr/local/bin/fix-administration-functions.sh || echo "⚠️ Script de correction administration_functions échoué, continuons..."
+fi
+
 # Exécuter le script de migration forcée si nécessaire
 if [ "${FORCE_MIGRATIONS}" = "1" ] || [ "${FORCE_MIGRATIONS}" = "true" ] || [ "${FORCE_MIGRATIONS}" = "TRUE" ]; then
     echo "[start.sh] FORCE_MIGRATIONS est activé -> exécution du script de migration forcée"

@@ -145,7 +145,7 @@ class TitheController extends Controller
         if (!empty($redirect)) {
             return redirect($redirect)->with('success', 'Dîme enregistrée.');
         }
-        return redirect()->route('tithes.show', $tithe)->with('success', 'Dîme enregistrée.');
+        return redirect()->route('tithes.index')->with('success', 'Dîme enregistrée.');
     }
 
     /**
@@ -197,7 +197,7 @@ class TitheController extends Controller
         ]);
         $validated['updated_by'] = Auth::id();
         $tithe->update($validated);
-        return redirect()->route('tithes.show', $tithe)->with('success', 'Mise à jour effectuée.');
+        return redirect()->route('tithes.index')->with('success', 'Mise à jour effectuée.');
     }
 
     /**

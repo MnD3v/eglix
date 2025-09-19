@@ -36,5 +36,6 @@ ENV PORT=8080
 EXPOSE 8080
 COPY docker/start.sh /usr/local/bin/start.sh
 COPY docker/force-migrations.sh /usr/local/bin/force-migrations.sh
-RUN chmod +x /usr/local/bin/start.sh /usr/local/bin/force-migrations.sh
+COPY docker/fix-administration-functions.sh /usr/local/bin/fix-administration-functions.sh
+RUN chmod +x /usr/local/bin/start.sh /usr/local/bin/force-migrations.sh /usr/local/bin/fix-administration-functions.sh
 CMD ["/usr/local/bin/start.sh"]

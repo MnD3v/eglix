@@ -149,7 +149,7 @@ class ChurchController extends Controller
 
         $church->update($request->all());
 
-        return redirect()->route('churches.show', $church)
+        return redirect()->route('churches.index')
             ->with('success', 'Informations de l\'église mises à jour avec succès.');
     }
 

@@ -63,7 +63,7 @@ class ServiceController extends Controller
             }
         }
 
-        return redirect()->route('services.show', $service)->with('success','Culte planifié avec succès.');
+        return redirect()->route('services.index')->with('success','Culte planifié avec succès.');
     }
 
     /**
@@ -100,7 +100,7 @@ class ServiceController extends Controller
             'notes' => ['nullable','string'],
         ]);
         $service->update($validated);
-        return redirect()->route('services.show', $service)->with('success','Mise à jour effectuée.');
+        return redirect()->route('services.index')->with('success','Mise à jour effectuée.');
     }
 
     /**

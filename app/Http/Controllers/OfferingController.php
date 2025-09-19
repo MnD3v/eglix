@@ -115,7 +115,7 @@ class OfferingController extends Controller
         $validated['created_by'] = Auth::id();
         
         $o = Offering::create($validated);
-        return redirect()->route('offerings.show', $o)->with('success','Offrande enregistrée.');
+        return redirect()->route('offerings.index')->with('success','Offrande enregistrée.');
     }
 
     /**
@@ -166,7 +166,7 @@ class OfferingController extends Controller
         ]);
         $validated['updated_by'] = Auth::id();
         $offering->update($validated);
-        return redirect()->route('offerings.show', $offering)->with('success','Mise à jour effectuée.');
+        return redirect()->route('offerings.index')->with('success','Mise à jour effectuée.');
     }
 
     /**

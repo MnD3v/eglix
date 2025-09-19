@@ -227,6 +227,27 @@
 		</div>
 	</div>
 
+	<!-- Graphique des dîmes sur l'année -->
+	<div class="tithes-chart-section animate-on-scroll mb-4">
+		<div class="card card-soft">
+			<div class="card-body">
+				<div class="d-flex align-items-center justify-content-between mb-3">
+					<h3 class="card-title mb-0">
+						<i class="bi bi-graph-up me-2"></i>
+						Évolution des dîmes ({{ $chart['year'] ?? now()->year }})
+					</h3>
+					<div class="text-muted small">
+						<i class="bi bi-calendar3 me-1"></i>
+						Année {{ $chart['year'] ?? now()->year }}
+					</div>
+				</div>
+				<div style="height: 300px;">
+					<canvas id="memberTithesChart"></canvas>
+				</div>
+			</div>
+		</div>
+	</div>
+
 	<!-- Historique des dîmes -->
 	<div class="tithes-section animate-on-scroll">
 		<div class="tithes-header">
@@ -460,5 +481,109 @@ function showAlert(type, message) {
 		}
 	}, 5000);
 }
+
+// Graphique des dîmes du membre
+document.addEventListener('DOMContentLoaded', function() {
+	const chartElement = document.getElementById('memberTithesChart');
+	if (!chartElement) return;
+
+	const labels = @json($chart['labels_numeric'] ?? range(1,12));
+	const rawData = @json($chart['data'] ?? []);
+	const data = Array.from({ length: 12 }, (_, i) => Number(rawData[i] ?? 0));
+
+	const ctx = chartElement.getContext('2d');
+	const h = 300;
+	const gradient = ctx.createLinearGradient(0, 0, 0, h);
+	gradient.addColorStop(0, 'rgba(255,38,0,0.3)');
+	gradient.addColorStop(1, 'rgba(255,38,0,0.05)');
+
+	new Chart(ctx, {
+		type: 'line',
+		data: {
+			labels: labels.map(n => {
+				const monthNames = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Jun', 'Jul', 'Aoû', 'Sep', 'Oct', 'Nov', 'Déc'];
+				return monthNames[n - 1];
+			}),
+			datasets: [{
+				label: 'Dîmes (FCFA)',
+				data: data,
+				borderColor: '#FF2600',
+				backgroundColor: gradient,
+				fill: true,
+				tension: 0.4,
+				pointRadius: 5,
+				pointHoverRadius: 7,
+				pointBackgroundColor: '#FF2600',
+				pointBorderColor: '#fff',
+				pointBorderWidth: 2,
+				borderWidth: 3
+			}]
+		},
+		options: {
+			responsive: true,
+			maintainAspectRatio: false,
+			plugins: {
+				legend: {
+					display: true,
+					position: 'top',
+					labels: {
+						usePointStyle: true,
+						padding: 20,
+						font: {
+							size: 14,
+							weight: '500'
+						}
+					}
+				},
+				tooltip: {
+					backgroundColor: 'rgba(0, 0, 0, 0.8)',
+					titleColor: '#ffffff',
+					bodyColor: '#ffffff',
+					borderColor: '#FF2600',
+					borderWidth: 1,
+					cornerRadius: 8,
+					displayColors: false,
+					callbacks: {
+						label: function(context) {
+							return 'Dîmes: ' + new Intl.NumberFormat('fr-FR').format(context.parsed.y) + ' FCFA';
+						}
+					}
+				}
+			},
+			scales: {
+				x: {
+					grid: {
+						color: 'rgba(0, 0, 0, 0.1)',
+						drawBorder: false
+					},
+					ticks: {
+						font: {
+							size: 12
+						}
+					}
+				},
+				y: {
+					beginAtZero: true,
+					grid: {
+						color: 'rgba(0, 0, 0, 0.1)',
+						drawBorder: false
+					},
+					ticks: {
+						font: {
+							size: 12
+						},
+						callback: function(value) {
+							return new Intl.NumberFormat('fr-FR').format(value) + ' FCFA';
+						}
+					}
+				}
+			},
+			interaction: {
+				intersect: false,
+				mode: 'index'
+			}
+		}
+	});
+});
 </script>
 @endpush

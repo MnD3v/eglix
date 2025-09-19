@@ -60,7 +60,7 @@ class DonationController extends Controller
         $validated['created_by'] = Auth::id();
         
         $d = Donation::create($validated);
-        return redirect()->route('donations.show', $d)->with('success','Don enregistré.');
+        return redirect()->route('donations.index')->with('success','Don enregistré.');
     }
 
     /**
@@ -122,7 +122,7 @@ class DonationController extends Controller
         }
         $validated['updated_by'] = Auth::id();
         $donation->update($validated);
-        return redirect()->route('donations.show', $donation)->with('success','Mise à jour effectuée.');
+        return redirect()->route('donations.index')->with('success','Mise à jour effectuée.');
     }
 
     /**
