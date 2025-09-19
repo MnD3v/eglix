@@ -268,23 +268,25 @@
 </style>
 
 <div class="container py-4">
-    <!-- Page Header -->
-    <div class="page-header">
-        <div class="d-flex justify-content-between align-items-center">
-            <div>
-                <h1 class="page-title">
-                    <i class="bi bi-calendar-event me-3"></i>
-                    Événements
-                </h1>
-                <p class="page-subtitle">
-                    <i class="bi bi-calendar-check me-2"></i>
-                    Gérez les événements et activités de l'église
-                </p>
+    <!-- AppBar Événements -->
+    <div class="appbar events-appbar">
+        <div class="appbar-content">
+            <div class="appbar-left">
+                <div class="appbar-icon">
+                    <i class="bi bi-calendar-event"></i>
+                </div>
+                <div class="appbar-title-section">
+                    <h1 class="appbar-title">Événements</h1>
+                    <div class="appbar-subtitle">
+                        <i class="bi bi-calendar-check appbar-subtitle-icon"></i>
+                        <span class="appbar-subtitle-text">Gérez les événements et activités de l'église</span>
+                    </div>
+                </div>
             </div>
-            <div>
-                <a href="{{ route('events.create') }}" class="btn btn-primary">
-                    <i class="bi bi-plus-lg me-2"></i>
-                    <span class="btn-label">Nouvel événement</span>
+            <div class="appbar-right">
+                <a href="{{ route('events.create') }}" class="appbar-btn-primary">
+                    <i class="bi bi-plus"></i>
+                    <span>Nouvel événement</span>
                 </a>
             </div>
         </div>

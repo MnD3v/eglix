@@ -2,23 +2,25 @@
 
 @section('content')
 <div class="container-fluid px-4">
-    <!-- En-tête de page -->
-    <div class="accounts-header mb-4">
-        <div class="d-flex justify-content-between align-items-center">
-            <div>
-                <h1 class="accounts-title">
-                    <i class="bi bi-people-fill me-3"></i>
-                    Gestion des Comptes
-                </h1>
-                <p class="accounts-subtitle">
-                    <i class="bi bi-shield-check me-2"></i>
-                    Gérez les utilisateurs et leurs permissions
-                </p>
+    <!-- AppBar Gestion des Comptes -->
+    <div class="appbar accounts-appbar">
+        <div class="appbar-content">
+            <div class="appbar-left">
+                <div class="appbar-icon">
+                    <i class="bi bi-people-fill"></i>
+                </div>
+                <div class="appbar-title-section">
+                    <h1 class="appbar-title">Gestion des Comptes</h1>
+                    <div class="appbar-subtitle">
+                        <i class="bi bi-shield-check appbar-subtitle-icon"></i>
+                        <span class="appbar-subtitle-text">Gérez les utilisateurs et leurs permissions</span>
+                    </div>
+                </div>
             </div>
-            <div>
-                <a href="{{ route('user-management.create') }}" class="btn btn-new-user">
-                    <i class="bi bi-person-plus-fill me-2"></i>
-                    <span class="btn-label">Nouvel Utilisateur</span>
+            <div class="appbar-right">
+                <a href="{{ route('user-management.create') }}" class="appbar-btn-primary">
+                    <i class="bi bi-person-plus"></i>
+                    <span>Nouvel Utilisateur</span>
                 </a>
             </div>
         </div>

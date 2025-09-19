@@ -204,8 +204,14 @@ Route::delete('service-assignments/{assignment}', [ServiceProgramController::cla
 Route::get('agenda', function () {
     $from = now()->startOfMonth();
     $to = now()->copy()->addMonths(2)->endOfMonth();
-    $services = \App\Models\Service::whereBetween('date', [$from,$to])->orderBy('date')->get();
-    $events = \App\Models\ChurchEvent::whereBetween('date', [$from,$to])->orderBy('date')->get();
+    $services = \App\Models\Service::where('church_id', Auth::user()->church_id)
+        ->whereBetween('date', [$from,$to])
+        ->orderBy('date')
+        ->get();
+    $events = \App\Models\ChurchEvent::where('church_id', Auth::user()->church_id)
+        ->whereBetween('date', [$from,$to])
+        ->orderBy('date')
+        ->get();
     return view('agenda.index', compact('services','events','from','to'));
 })->name('agenda.index');
 

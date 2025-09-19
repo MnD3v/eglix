@@ -2,23 +2,25 @@
 
 @section('content')
 <div class="container py-4">
-    <!-- Page Header -->
-    <div class="page-header">
-        <div class="d-flex justify-content-between align-items-center">
-            <div>
-                <h1 class="page-title">
-                    <i class="bi bi-people me-3"></i>
-                    Membres
-                </h1>
-                <p class="page-subtitle">
-                    <i class="bi bi-person-check me-2"></i>
-                    Gérez les membres de votre église
-                </p>
+    <!-- AppBar Membres -->
+    <div class="appbar members-appbar">
+        <div class="appbar-content">
+            <div class="appbar-left">
+                <div class="appbar-icon">
+                    <i class="bi bi-people"></i>
+                </div>
+                <div class="appbar-title-section">
+                    <h1 class="appbar-title">Membres</h1>
+                    <div class="appbar-subtitle">
+                        <i class="bi bi-person-check appbar-subtitle-icon"></i>
+                        <span class="appbar-subtitle-text">Gérez les membres de votre église</span>
+                    </div>
+                </div>
             </div>
-            <div>
-                <a href="{{ route('members.create') }}" class="btn btn-primary">
-                    <i class="bi bi-person-plus-fill me-2"></i>
-                    <span class="btn-label">Nouveau membre</span>
+            <div class="appbar-right">
+                <a href="{{ route('members.create') }}" class="appbar-btn-primary">
+                    <i class="bi bi-person-plus"></i>
+                    <span>Nouveau membre</span>
                 </a>
             </div>
         </div>

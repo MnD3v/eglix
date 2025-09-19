@@ -191,11 +191,31 @@
 }
 </style>
 <div class="container py-4">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h1 class="h3">Administration</h1>
-        <div class="d-flex gap-2">
-            <a href="{{ route('administration-function-types.index') }}" class="btn btn-outline-primary"><i class="bi bi-tags"></i> <span class="btn-label">Types de fonctions</span></a>
-            <a href="{{ route('administration.create') }}" class="btn btn-primary"><i class="bi bi-plus-lg"></i> <span class="btn-label">Ajouter une fonction</span></a>
+    <!-- AppBar Administration -->
+    <div class="appbar administration-appbar">
+        <div class="appbar-content">
+            <div class="appbar-left">
+                <div class="appbar-icon">
+                    <i class="bi bi-person-badge"></i>
+                </div>
+                <div class="appbar-title-section">
+                    <h1 class="appbar-title">Gestion des Fonctions</h1>
+                    <div class="appbar-subtitle">
+                        <i class="bi bi-shield-check appbar-subtitle-icon"></i>
+                        <span class="appbar-subtitle-text">Gérez les fonctions d'administration et leurs permissions</span>
+                    </div>
+                </div>
+            </div>
+            <div class="appbar-right">
+                <a href="{{ route('administration-function-types.index') }}" class="appbar-btn-secondary">
+                    <i class="bi bi-tags"></i>
+                    <span>Types de fonctions</span>
+                </a>
+                <a href="{{ route('administration.create') }}" class="appbar-btn-primary">
+                    <i class="bi bi-person-plus"></i>
+                    <span>Nouvelle Fonction</span>
+                </a>
+            </div>
         </div>
     </div>
 

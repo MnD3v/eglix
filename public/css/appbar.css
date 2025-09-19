@@ -1,0 +1,259 @@
+/* ===========================================
+   COMPOSANT APP BAR RÉUTILISABLE
+   Style moderne inspiré de Material Design
+   =========================================== */
+
+.appbar {
+    background: #f8f9fa;
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 32px;
+    border: 1px solid #e8eaed;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.appbar-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 100%;
+}
+
+.appbar-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.appbar-icon {
+    width: 48px;
+    height: 48px;
+    background: #5f6368;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 20px;
+}
+
+.appbar-title-section {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.appbar-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: #202124;
+    margin: 0;
+    line-height: 1.2;
+}
+
+.appbar-subtitle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.appbar-subtitle-icon {
+    color: #5f6368;
+    font-size: 14px;
+}
+
+.appbar-subtitle-text {
+    color: #5f6368;
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.appbar-right {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.appbar-btn-secondary {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    background: white;
+    color: #5f6368;
+    text-decoration: none;
+    border-radius: 8px;
+    border: 1px solid #dadce0;
+    font-weight: 500;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.appbar-btn-secondary:hover {
+    background: #f8f9fa;
+    border-color: #5f6368;
+    color: #202124;
+    text-decoration: none;
+    transform: translateY(-1px);
+}
+
+.appbar-btn-primary {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    background: #1a73e8;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 3px rgba(26, 115, 232, 0.3);
+}
+
+.appbar-btn-primary:hover {
+    background: #1557b0;
+    color: white;
+    text-decoration: none;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px rgba(26, 115, 232, 0.4);
+}
+
+/* ===========================================
+   VARIATIONS DE COULEURS POUR DIFFÉRENTS SECTIONS
+   =========================================== */
+
+/* Administration */
+.administration-appbar .appbar-icon {
+    background: #5f6368;
+}
+
+/* Comptes/Users */
+.accounts-appbar .appbar-icon {
+    background: #1a73e8;
+}
+
+/* Membres */
+.members-appbar .appbar-icon {
+    background: #34a853;
+}
+
+/* Finances */
+.finance-appbar .appbar-icon {
+    background: #ea4335;
+}
+
+/* Événements */
+.events-appbar .appbar-icon {
+    background: #fbbc04;
+    color: #1a1a1a;
+}
+
+/* Rapports */
+.reports-appbar .appbar-icon {
+    background: #9c27b0;
+}
+
+/* ===========================================
+   RESPONSIVE DESIGN
+   =========================================== */
+
+@media (max-width: 768px) {
+    .appbar {
+        padding: 20px;
+        margin-bottom: 24px;
+    }
+    
+    .appbar-content {
+        flex-direction: column;
+        gap: 20px;
+        align-items: stretch;
+    }
+    
+    .appbar-left {
+        justify-content: center;
+        text-align: center;
+    }
+    
+    .appbar-title {
+        font-size: 24px;
+    }
+    
+    .appbar-right {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    
+    .appbar-btn-secondary,
+    .appbar-btn-primary {
+        flex: 1;
+        min-width: 140px;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .appbar-left {
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .appbar-title-section {
+        text-align: center;
+    }
+    
+    .appbar-right {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .appbar-btn-secondary,
+    .appbar-btn-primary {
+        width: 100%;
+    }
+}
+
+/* ===========================================
+   ANIMATIONS ET INTERACTIONS
+   =========================================== */
+
+.appbar-btn-primary:active {
+    transform: translateY(0);
+    box-shadow: 0 1px 3px rgba(26, 115, 232, 0.3);
+}
+
+.appbar-btn-secondary:active {
+    transform: translateY(0);
+}
+
+/* Focus states pour l'accessibilité */
+.appbar-btn-primary:focus,
+.appbar-btn-secondary:focus {
+    outline: 2px solid #1a73e8;
+    outline-offset: 2px;
+}
+
+/* ===========================================
+   UTILITAIRES
+   =========================================== */
+
+.appbar-icon-sm {
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+}
+
+.appbar-icon-lg {
+    width: 56px;
+    height: 56px;
+    font-size: 24px;
+}
+
+.appbar-title-sm {
+    font-size: 24px;
+}
+
+.appbar-title-lg {
+    font-size: 32px;
+}

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ChurchEvent;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ChurchEventController extends Controller
 {
@@ -12,7 +13,9 @@ class ChurchEventController extends Controller
      */
     public function index()
     {
-        $events = ChurchEvent::orderBy('date','desc')->paginate(12);
+        $events = ChurchEvent::where('church_id', Auth::user()->church_id)
+            ->orderBy('date','desc')
+            ->paginate(12);
         return view('events.index', compact('events'));
     }
 
@@ -41,6 +44,7 @@ class ChurchEventController extends Controller
             'images.*' => ['nullable','url','max:2048'],
         ]);
         $validated['images'] = array_values(array_filter($validated['images'] ?? [], fn($u) => !empty($u)));
+        $validated['church_id'] = Auth::user()->church_id;
         $e = ChurchEvent::create($validated);
         return redirect()->route('events.index')->with('success','Événement créé.');
     }
@@ -50,6 +54,11 @@ class ChurchEventController extends Controller
      */
     public function show(ChurchEvent $churchEvent)
     {
+        // Vérifier que l'événement appartient à l'église de l'utilisateur
+        if ($churchEvent->church_id !== Auth::user()->church_id) {
+            abort(403, 'Accès non autorisé à cet événement.');
+        }
+        
         return view('events.show', ['event' => $churchEvent]);
     }
 
@@ -58,6 +67,10 @@ class ChurchEventController extends Controller
      */
     public function edit(ChurchEvent $churchEvent)
     {
+        // Vérifier que l'événement appartient à l'église de l'utilisateur
+        if ($churchEvent->church_id !== Auth::user()->church_id) {
+            abort(403, 'Accès non autorisé à cet événement.');
+        }
         return view('events.edit', ['event' => $churchEvent]);
     }
 
@@ -66,6 +79,11 @@ class ChurchEventController extends Controller
      */
     public function update(Request $request, ChurchEvent $churchEvent)
     {
+        // Vérifier que l'événement appartient à l'église de l'utilisateur
+        if ($churchEvent->church_id !== Auth::user()->church_id) {
+            abort(403, 'Accès non autorisé à cet événement.');
+        }
+        
         $validated = $request->validate([
             'title' => ['required','string','max:150'],
             'date' => ['required','date'],
@@ -87,6 +105,11 @@ class ChurchEventController extends Controller
      */
     public function destroy(ChurchEvent $churchEvent)
     {
+        // Vérifier que l'événement appartient à l'église de l'utilisateur
+        if ($churchEvent->church_id !== Auth::user()->church_id) {
+            abort(403, 'Accès non autorisé à cet événement.');
+        }
+        
         $churchEvent->delete();
         return redirect()->route('events.index')->with('success','Événement supprimé.');
     }
