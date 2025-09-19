@@ -34,6 +34,12 @@ php artisan event:clear || echo "⚠️ Event clear échoué, continuons..."
 # Try to discover packages safely
 php artisan package:discover --ansi || echo "⚠️ Package discover échoué, continuons..."
 
+# Exécuter le script de migration forcée si nécessaire
+if [ "${FORCE_MIGRATIONS}" = "1" ] || [ "${FORCE_MIGRATIONS}" = "true" ] || [ "${FORCE_MIGRATIONS}" = "TRUE" ]; then
+    echo "[start.sh] FORCE_MIGRATIONS est activé -> exécution du script de migration forcée"
+    /usr/local/bin/force-migrations.sh || echo "⚠️ Script de migration forcée échoué, continuons..."
+fi
+
 # Ensure we have an .env; create from example if absent
 if [ ! -f .env ]; then
   cp .env.example .env || true

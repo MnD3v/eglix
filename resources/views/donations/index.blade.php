@@ -1,11 +1,26 @@
 @extends('layouts.app')
 @section('content')
 <div class="container py-4">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h1 class="h3 m-0">Dons</h1>
-        <a href="{{ route('donations.create') }}" class="btn btn-primary">
-            <i class="bi bi-plus-lg"></i> <span class="btn-label">Nouveau don</span>
-        </a>
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h1 class="page-title">
+                    <i class="bi bi-heart me-3"></i>
+                    Dons
+                </h1>
+                <p class="page-subtitle">
+                    <i class="bi bi-gift me-2"></i>
+                    Gérez les dons des membres et bienfaiteurs
+                </p>
+            </div>
+            <div>
+                <a href="{{ route('donations.create') }}" class="btn btn-primary">
+                    <i class="bi bi-plus-lg me-2"></i>
+                    <span class="btn-label">Nouveau don</span>
+                </a>
+            </div>
+        </div>
     </div>
 
             @if(session('success'))

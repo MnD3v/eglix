@@ -1,9 +1,26 @@
 @extends('layouts.app')
 @section('content')
 <div class="container py-4">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h1 class="h3">Projets</h1>
-        <a href="{{ route('projects.create') }}" class="btn btn-primary">Nouveau projet</a>
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h1 class="page-title">
+                    <i class="bi bi-kanban me-3"></i>
+                    Projets
+                </h1>
+                <p class="page-subtitle">
+                    <i class="bi bi-clipboard-check me-2"></i>
+                    Gérez les projets de l'église
+                </p>
+            </div>
+            <div>
+                <a href="{{ route('projects.create') }}" class="btn btn-primary">
+                    <i class="bi bi-plus-lg me-2"></i>
+                    <span class="btn-label">Nouveau projet</span>
+                </a>
+            </div>
+        </div>
     </div>
     @if(session('success'))<div class="alert alert-success">{{ session('success') }}</div>@endif
 

@@ -1,11 +1,29 @@
 @extends('layouts.app')
 @section('content')
 <div class="container py-4">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h1 class="h3">Cultes</h1>
-        <div class="d-flex gap-2">
-            <a href="{{ route('service-roles.index') }}" class="btn btn-outline-primary"><i class="bi bi-person-badge"></i> <span class="btn-label">Rôles</span></a>
-            <a href="{{ route('services.create') }}" class="btn btn-primary"><i class="bi bi-plus-lg"></i> <span class="btn-label">Nouveau culte</span></a>
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h1 class="page-title">
+                    <i class="bi bi-music-note-beamed me-3"></i>
+                    Cultes
+                </h1>
+                <p class="page-subtitle">
+                    <i class="bi bi-calendar-check me-2"></i>
+                    Gérez les cultes et services de l'église
+                </p>
+            </div>
+            <div class="d-flex gap-2">
+                <a href="{{ route('service-roles.index') }}" class="btn btn-outline-primary">
+                    <i class="bi bi-person-badge me-2"></i>
+                    <span class="btn-label">Rôles</span>
+                </a>
+                <a href="{{ route('services.create') }}" class="btn btn-primary">
+                    <i class="bi bi-plus-lg me-2"></i>
+                    <span class="btn-label">Nouveau culte</span>
+                </a>
+            </div>
         </div>
     </div>
     @if(session('success'))<div class="alert alert-success">{{ session('success') }}</div>@endif

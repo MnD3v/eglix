@@ -3,7 +3,7 @@
 @section('content')
 <div class="container py-4">
     <!-- Page Header -->
-    <div class="page-header">
+    <div class="page-header fade-in">
         <div class="d-flex justify-content-between align-items-center">
             <div>
                 <h1 class="page-title">
@@ -23,7 +23,7 @@
     </div>
 
     <!-- Filter Tabs -->
-    <div class="filter-tabs">
+    <div class="filter-tabs slide-in-up">
         <button class="filter-tab active" data-filter="all">Tous</button>
         <button class="filter-tab" data-filter="financial">Financier</button>
     </div>
@@ -34,7 +34,7 @@
             <!-- Membres actifs -->
             <div class="col-6 col-lg-3">
                 <a href="{{ route('members.index') }}" class="text-decoration-none">
-                    <div class="kpi-card">
+                    <div class="kpi-card stat-card animate-on-scroll">
                         <div class="kpi-header">
                             <div class="kpi-icon members">
                                 <i class="bi bi-people-fill"></i>
@@ -87,7 +87,7 @@
                     }
                 @endphp
                 <a href="{{ $href }}" class="text-decoration-none">
-                    <div class="kpi-card">
+                    <div class="kpi-card stat-card animate-on-scroll">
                         <div class="kpi-header">
                             <div class="kpi-icon {{ $color }}">
                                 <i class="bi {{ $icon }}"></i>
@@ -126,7 +126,7 @@
     <div class="charts-section" data-section="financial">
         <div class="row g-3">
             <div class="col-12">
-                <div class="chart-card">
+                <div class="chart-card animate-on-scroll">
                     <div class="chart-header">
                         <div class="chart-icon">
                             <i class="bi bi-graph-up"></i>
@@ -149,23 +149,7 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 
 <style>
-/* Page Header */
-.page-header {
-    margin-bottom: 2rem;
-}
-
-.page-title {
-    font-size: 2rem;
-    font-weight: 700;
-    color: #FFFFFF;
-    margin-bottom: 0.5rem;
-}
-
-.page-subtitle {
-    color: #FFFFFF;
-    font-size: 1rem;
-    margin-bottom: 0;
-}
+/* Les styles pour l'en-tête de page sont maintenant définis dans le layout principal */
 
 /* Filter Tabs */
 .filter-tabs {
@@ -567,10 +551,6 @@
 
 /* Responsive */
 @media (max-width: 768px) {
-    .page-title {
-        font-size: 1.5rem;
-    }
-    
     .filter-tabs {
         width: 100%;
         justify-content: center;

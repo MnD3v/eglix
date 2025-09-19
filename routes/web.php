@@ -141,6 +141,10 @@ Route::middleware(['auth'])->group(function () {
 });
 
 Route::resource('members', MemberController::class);
+// Routes pour les remarques des membres
+Route::post('members/{member}/remarks', [App\Http\Controllers\MemberRemarkController::class, 'store'])->name('members.remarks.store');
+Route::delete('members/{member}/remarks/{index}', [App\Http\Controllers\MemberRemarkController::class, 'destroy'])->name('members.remarks.destroy');
+Route::get('members/{member}/remarks', [App\Http\Controllers\MemberRemarkController::class, 'index'])->name('members.remarks.index');
 Route::resource('tithes', TitheController::class);
 Route::resource('offerings', OfferingController::class);
 // Types d'offrandes

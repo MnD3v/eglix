@@ -266,11 +266,21 @@
 <div class="container py-4">
     <!-- Page Header -->
     <div class="page-header">
-        <h1 class="page-title">Agenda Partagé</h1>
-        <p class="page-subtitle">Consultez tous les cultes et événements de l'église</p>
-        <div class="d-flex align-items-center gap-2 mt-2">
-            <i class="bi bi-calendar3 text-muted"></i>
-            <span class="text-muted">{{ $from->format('d/m/Y') }} — {{ $to->format('d/m/Y') }}</span>
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h1 class="page-title">
+                    <i class="bi bi-calendar4-week me-3"></i>
+                    Agenda Partagé
+                </h1>
+                <p class="page-subtitle">
+                    <i class="bi bi-calendar-check me-2"></i>
+                    Consultez tous les cultes et événements de l'église
+                </p>
+                <div class="d-flex align-items-center gap-2 mt-2">
+                    <i class="bi bi-calendar3 text-muted"></i>
+                    <span class="text-muted">{{ $from->format('d/m/Y') }} — {{ $to->format('d/m/Y') }}</span>
+                </div>
+            </div>
         </div>
     </div>
 

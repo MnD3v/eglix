@@ -61,6 +61,21 @@
             color: #718096 !important;
         }
 
+        /* Icônes des boutons d'ajout en blanc */
+        .btn-primary i,
+        .btn-primary .bi-plus-lg,
+        .btn-primary .bi-plus-circle,
+        .btn-primary .bi-person-plus-fill,
+        .btn-new-user i,
+        .btn-new-user .bi-plus-lg,
+        .btn-new-user .bi-person-plus-fill,
+        /* Tous les boutons avec icônes d'ajout */
+        .btn .bi-plus-lg,
+        .btn .bi-plus-circle,
+        .btn .bi-person-plus-fill {
+            color: white !important;
+        }
+
         /* Force primary color across common components */
         .btn-primary {
             --bs-btn-color: #fff;
@@ -192,6 +207,776 @@
             .mobile-brand { display: inline-flex; align-items: center; gap: 10px; margin-left: 10px; }
             .mobile-brand img { height: 28px; }
             .mobile-brand span { font-weight: 700; letter-spacing: .3px; }
+        }
+
+        /* Animations douces */
+        .fade-in {
+            animation: fadeIn 0.6s ease-in-out;
+        }
+
+        .slide-in-up {
+            animation: slideInUp 0.8s ease-out;
+        }
+
+        .slide-in-left {
+            animation: slideInLeft 0.7s ease-out;
+        }
+
+        .slide-in-right {
+            animation: slideInRight 0.7s ease-out;
+        }
+
+        .scale-in {
+            animation: scaleIn 0.5s ease-out;
+        }
+
+        .bounce-in {
+            animation: bounceIn 0.8s ease-out;
+        }
+
+        .card-soft {
+            transition: all 0.3s ease;
+        }
+
+        .card-soft:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn {
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .table tbody tr {
+            transition: all 0.2s ease;
+        }
+
+        .table tbody tr:hover {
+            background-color: rgba(255, 38, 0, 0.05);
+            transform: scale(1.01);
+        }
+
+        .modal {
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .modal-dialog {
+            animation: slideInUp 0.3s ease-out;
+        }
+
+        .alert {
+            animation: slideInDown 0.5s ease-out;
+        }
+
+        .badge {
+            transition: all 0.3s ease;
+        }
+
+        .badge:hover {
+            transform: scale(1.1);
+        }
+
+        .nav-link {
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            transform: translateX(5px);
+        }
+
+        .sidebar-nav .nav-link {
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-nav .nav-link:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            transform: translateX(8px);
+        }
+
+        .sidebar-nav .nav-link.active {
+            transform: translateX(10px);
+        }
+
+        /* Keyframes */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideInUp {
+            from { 
+                opacity: 0; 
+                transform: translateY(30px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0); 
+            }
+        }
+
+        @keyframes slideInLeft {
+            from { 
+                opacity: 0; 
+                transform: translateX(-30px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateX(0); 
+            }
+        }
+
+        @keyframes slideInRight {
+            from { 
+                opacity: 0; 
+                transform: translateX(30px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateX(0); 
+            }
+        }
+
+        @keyframes slideInDown {
+            from { 
+                opacity: 0; 
+                transform: translateY(-30px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0); 
+            }
+        }
+
+        @keyframes scaleIn {
+            from { 
+                opacity: 0; 
+                transform: scale(0.8); 
+            }
+            to { 
+                opacity: 1; 
+                transform: scale(1); 
+            }
+        }
+
+        @keyframes bounceIn {
+            0% { 
+                opacity: 0; 
+                transform: scale(0.3); 
+            }
+            50% { 
+                opacity: 1; 
+                transform: scale(1.05); 
+            }
+            70% { 
+                transform: scale(0.9); 
+            }
+            100% { 
+                opacity: 1; 
+                transform: scale(1); 
+            }
+        }
+
+        /* Animation pour les éléments qui apparaissent au scroll */
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+
+        .animate-on-scroll.animated {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Animation pour les cartes de statistiques */
+        .stat-card {
+            transition: all 0.4s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Animation pour les boutons d'action */
+        .btn-action {
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-action::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-action:hover::before {
+            left: 100%;
+        }
+
+        /* Animation pour les formulaires */
+        .form-control {
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            transform: scale(1.02);
+            box-shadow: 0 0 0 0.2rem rgba(255, 38, 0, 0.25);
+        }
+
+        /* Animation pour les icônes */
+        .bi {
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover .bi {
+            transform: scale(1.1);
+        }
+
+        /* Animation pour les tableaux */
+        .table-responsive {
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        /* Animation pour les modals */
+        .modal-content {
+            animation: scaleIn 0.3s ease-out;
+        }
+
+        /* Animation pour les alertes */
+        .alert {
+            animation: slideInDown 0.5s ease-out;
+        }
+
+        .alert-dismissible .btn-close {
+            transition: all 0.3s ease;
+        }
+
+        .alert-dismissible .btn-close:hover {
+            transform: scale(1.2);
+        }
+
+        /* Styles pour la page de détail des membres */
+        .member-profile-header {
+            position: relative;
+            background: #FF2600;
+            border-radius: 20px;
+            margin-bottom: 2rem;
+            overflow: hidden;
+            min-height: 200px;
+        }
+
+        .profile-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="75" cy="75" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="50" cy="10" r="0.5" fill="rgba(255,255,255,0.05)"/><circle cx="10" cy="60" r="0.5" fill="rgba(255,255,255,0.05)"/><circle cx="90" cy="40" r="0.5" fill="rgba(255,255,255,0.05)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .profile-content {
+            position: relative;
+            z-index: 2;
+            padding: 2rem;
+            color: white;
+        }
+
+        .profile-main {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 2rem;
+        }
+
+        .profile-info-section {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            flex: 1;
+        }
+
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .profile-name {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: white;
+        }
+
+        .profile-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .status-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .status-active {
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+
+        .status-inactive {
+            background: rgba(107, 114, 128, 0.2);
+            color: #6b7280;
+            border: 1px solid rgba(107, 114, 128, 0.3);
+        }
+
+        .meta-item {
+            font-size: 0.875rem;
+            opacity: 0.9;
+            display: flex;
+            align-items: center;
+        }
+
+        .profile-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .profile-actions .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+
+        /* Cartes d'informations */
+        .info-card, .stats-card, .remarks-section, .tithes-section {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .info-header, .stats-header, .remarks-header, .tithes-header {
+            background: #f8fafc;
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .info-title, .stats-title, .remarks-title, .tithes-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin: 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .info-content, .stats-content, .remarks-list, .tithes-content {
+            padding: 1.5rem;
+        }
+
+        .info-item {
+            margin-bottom: 1.5rem;
+        }
+
+        .info-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .info-label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #64748b;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .info-value {
+            font-size: 1rem;
+            color: #1e293b;
+            font-weight: 500;
+        }
+
+        /* Cartes de statistiques */
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: #f8fafc;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .stat-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .stat-item:hover {
+            background: #f1f5f9;
+            transform: translateX(5px);
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: #FF2600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.25rem;
+        }
+
+        .stat-info {
+            flex: 1;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: #64748b;
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-value {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: #1e293b;
+        }
+
+        /* Section des remarques */
+        .remarks-header, .tithes-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn-add-remark, .btn-add-tithe {
+            background: #FF2600;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-add-remark:hover, .btn-add-tithe:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 38, 0, 0.3);
+        }
+
+        .remark-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.5rem;
+            background: #f8fafc;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            border-left: 4px solid #FF2600;
+            transition: all 0.3s ease;
+        }
+
+        .remark-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .remark-item:hover {
+            background: #f1f5f9;
+            transform: translateX(5px);
+        }
+
+        .remark-content {
+            flex: 1;
+        }
+
+        .remark-text {
+            font-size: 1rem;
+            color: #1e293b;
+            margin-bottom: 0.5rem;
+            line-height: 1.5;
+        }
+
+        .remark-meta {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.875rem;
+            color: #64748b;
+        }
+
+        .remark-date, .remark-author {
+            display: flex;
+            align-items: center;
+        }
+
+        .btn-remove-remark {
+            background: #fee2e2;
+            color: #dc2626;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .btn-remove-remark:hover {
+            background: #dc2626;
+            color: white;
+            transform: scale(1.1);
+        }
+
+        /* Section des dîmes */
+        .tithe-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem;
+            background: #f8fafc;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            border-left: 4px solid #22c55e;
+            transition: all 0.3s ease;
+        }
+
+        .tithe-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .tithe-item:hover {
+            background: #f1f5f9;
+            transform: translateX(5px);
+        }
+
+        .tithe-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .tithe-date, .tithe-method, .tithe-reference {
+            display: flex;
+            align-items: center;
+            font-size: 0.875rem;
+            color: #64748b;
+        }
+
+        .tithe-amount {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #22c55e;
+        }
+
+        /* États vides */
+        .remarks-empty, .tithes-empty {
+            text-align: center;
+            padding: 3rem 2rem;
+        }
+
+        .empty-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #f1f5f9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 2rem;
+            color: #94a3b8;
+        }
+
+        .empty-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 0.5rem;
+        }
+
+        .empty-description {
+            color: #64748b;
+            margin-bottom: 2rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .profile-content {
+                padding: 1.5rem;
+            }
+
+            .profile-main {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 1.5rem;
+            }
+
+            .profile-info-section {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+                gap: 1rem;
+            }
+
+            .profile-name {
+                font-size: 1.5rem;
+                text-align: center;
+                width: 100%;
+            }
+
+            .profile-meta {
+                flex-direction: column;
+                align-items: center;
+                gap: 0.75rem;
+                width: 100%;
+            }
+
+            .profile-actions {
+                flex-direction: column;
+                width: 100%;
+                gap: 0.75rem;
+            }
+
+            .profile-actions .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .remarks-header, .tithes-header {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: stretch;
+            }
+
+            .remarks-header .btn, .tithes-header .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .remark-item, .tithe-item {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 1rem;
+            }
+
+            .remark-meta {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .tithe-item {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 1rem;
+            }
+
+            .tithe-info {
+                order: 1;
+            }
+
+            .tithe-amount {
+                order: 2;
+                text-align: center;
+                font-size: 1.5rem;
+            }
+
+            /* Amélioration des cartes sur mobile */
+            .info-card, .stats-card, .remarks-section, .tithes-section {
+                margin-bottom: 1.5rem;
+            }
+
+            .info-header, .stats-header, .remarks-header, .tithes-header {
+                padding: 1rem;
+            }
+
+            .info-content, .stats-content, .remarks-list, .tithes-content {
+                padding: 1rem;
+            }
+
+            /* Espacement des éléments d'information */
+            .info-item {
+                margin-bottom: 1rem;
+            }
+
+            .stat-item {
+                padding: 0.75rem;
+            }
+
+            .remark-item {
+                padding: 1rem;
+            }
+
+            .tithe-item {
+                padding: 1rem;
+            }
+        }
+
+        /* Très petits écrans */
+        @media (max-width: 480px) {
+            .container {
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+
+            .profile-content {
+                padding: 1rem;
+            }
+
+            .profile-avatar {
+                width: 60px;
+                height: 60px;
+                font-size: 1.4rem;
+            }
+
+            .profile-name {
+                font-size: 1.25rem;
+            }
+
+            .info-header, .stats-header, .remarks-header, .tithes-header {
+                padding: 0.75rem;
+            }
+
+            .info-content, .stats-content, .remarks-list, .tithes-content {
+                padding: 0.75rem;
+            }
+
+            .info-title, .stats-title, .remarks-title, .tithes-title {
+                font-size: 1.1rem;
+            }
         }
     </style>
 </head>
@@ -555,6 +1340,121 @@
     </script>
     <script src="{{ asset('js/app-init.js') }}"></script>
     @stack('scripts')
+    <script>
+    // Animations au scroll et d'entrée
+    document.addEventListener('DOMContentLoaded', function() {
+        // Animation d'entrée pour les éléments principaux
+        const mainElements = document.querySelectorAll('.page-header, .card-soft, .btn-primary');
+        mainElements.forEach((element, index) => {
+            element.style.opacity = '0';
+            element.style.transform = 'translateY(20px)';
+            setTimeout(() => {
+                element.style.transition = 'all 0.6s ease-out';
+                element.style.opacity = '1';
+                element.style.transform = 'translateY(0)';
+            }, index * 100);
+        });
+
+        // Animation au scroll pour les éléments avec la classe animate-on-scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animated');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.animate-on-scroll').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Animation pour les cartes de statistiques
+        const statCards = document.querySelectorAll('.stat-card');
+        statCards.forEach((card, index) => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(30px)';
+            setTimeout(() => {
+                card.style.transition = 'all 0.8s ease-out';
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+            }, index * 150);
+        });
+
+        // Animation pour les boutons d'action
+        const actionButtons = document.querySelectorAll('.btn-action');
+        actionButtons.forEach(button => {
+            button.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-2px) scale(1.05)';
+            });
+            button.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+
+        // Animation pour les modals
+        const modals = document.querySelectorAll('.modal');
+        modals.forEach(modal => {
+            modal.addEventListener('show.bs.modal', function() {
+                const modalDialog = this.querySelector('.modal-dialog');
+                modalDialog.style.transform = 'scale(0.8)';
+                modalDialog.style.opacity = '0';
+                setTimeout(() => {
+                    modalDialog.style.transition = 'all 0.3s ease-out';
+                    modalDialog.style.transform = 'scale(1)';
+                    modalDialog.style.opacity = '1';
+                }, 10);
+            });
+        });
+
+        // Animation pour les alertes
+        const alerts = document.querySelectorAll('.alert');
+        alerts.forEach(alert => {
+            alert.style.transform = 'translateY(-20px)';
+            alert.style.opacity = '0';
+            setTimeout(() => {
+                alert.style.transition = 'all 0.5s ease-out';
+                alert.style.transform = 'translateY(0)';
+                alert.style.opacity = '1';
+            }, 100);
+        });
+
+        // Animation pour les tableaux
+        const tables = document.querySelectorAll('.table-responsive');
+        tables.forEach(table => {
+            const rows = table.querySelectorAll('tbody tr');
+            rows.forEach((row, index) => {
+                row.style.opacity = '0';
+                row.style.transform = 'translateX(-20px)';
+                setTimeout(() => {
+                    row.style.transition = 'all 0.3s ease-out';
+                    row.style.opacity = '1';
+                    row.style.transform = 'translateX(0)';
+                }, index * 50);
+            });
+        });
+    });
+
+    // Fonction pour créer des animations personnalisées
+    function animateElement(element, animationType = 'fadeIn', delay = 0) {
+        setTimeout(() => {
+            element.classList.add(animationType);
+        }, delay);
+    }
+
+    // Fonction pour animer une liste d'éléments avec un délai
+    function animateList(elements, animationType = 'slide-in-up', staggerDelay = 100) {
+        elements.forEach((element, index) => {
+            setTimeout(() => {
+                element.classList.add(animationType);
+            }, index * staggerDelay);
+        });
+    }
+    </script>
     <script>
     (function(){
         const sidebar = document.querySelector('.sidebar');
