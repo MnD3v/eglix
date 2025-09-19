@@ -35,6 +35,19 @@ Route::get('/register', [AuthController::class, 'showRegister'])->name('register
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
+// Route temporaire pour diagnostic de sécurité (à supprimer après résolution)
+Route::get('/security-diagnostic', function () {
+    if (env('APP_ENV') !== 'production') {
+        return 'Diagnostic disponible uniquement en production';
+    }
+    
+    ob_start();
+    include base_path('script/render-security-diagnostic.php');
+    $output = ob_get_clean();
+    
+    return response($output)->header('Content-Type', 'text/plain');
+})->name('security.diagnostic');
+
 Route::middleware(['auth'])->group(function () {
     Route::get('/', function (Request $request) {
     $churchId = Auth::user()->church_id;

@@ -41,28 +41,31 @@ class SecureHeaders
             $response->headers->set($key, $value);
         }
 
-        // En production, ajouter des en-têtes de sécurité assouplis
+        // En production, ajouter des en-têtes de sécurité renforcés
         if (config('app.env') === 'production') {
-            // Content Security Policy assoupli pour permettre les liens externes
+            // Content Security Policy sécurisé pour les formulaires
             $response->headers->set('Content-Security-Policy', 
-                "default-src 'self' *; " .
-                "script-src 'self' 'unsafe-inline' 'unsafe-eval' *; " .
-                "style-src 'self' 'unsafe-inline' *; " .
-                "font-src 'self' *; " .
-                "img-src 'self' data: *; " .
-                "connect-src 'self' *; " .
-                "form-action 'self' *; " .
-                "frame-src 'self' *; " .
+                "default-src 'self'; " .
+                "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://code.jquery.com; " .
+                "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com; " .
+                "font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com; " .
+                "img-src 'self' data: https:; " .
+                "connect-src 'self' https:; " .
+                "form-action 'self'; " .
+                "frame-src 'self'; " .
                 "object-src 'none'; " .
-                "base-uri 'self' *;"
+                "base-uri 'self'; " .
+                "upgrade-insecure-requests;"
             );
 
-            // Headers supplémentaires pour la sécurité
+            // Headers supplémentaires pour la sécurité des formulaires
             $response->headers->set('X-Download-Options', 'noopen');
             $response->headers->set('X-Permitted-Cross-Domain-Policies', 'none');
             
-            // Cache Control pour les pages sensibles
-            if ($request->is('admin/*') || $request->is('members/*') || $request->is('tithes/*') || $request->is('donations/*')) {
+            // Cache Control pour les pages sensibles (formulaires)
+            if ($request->is('admin/*') || $request->is('members/*') || $request->is('tithes/*') || 
+                $request->is('donations/*') || $request->is('offerings/*') || $request->is('expenses/*') ||
+                $request->is('services/*') || $request->is('events/*') || $request->is('projects/*')) {
                 $response->headers->set('Cache-Control', 'no-cache, no-store, must-revalidate');
                 $response->headers->set('Pragma', 'no-cache');
                 $response->headers->set('Expires', '0');

@@ -17,6 +17,7 @@ return Application::configure(basePath: dirname(__DIR__))
         // Middleware pour les routes web
         $middleware->web(append: [
             \App\Http\Middleware\EnsureMigrationsAreRun::class,
+            \App\Http\Middleware\EnhancedCsrfProtection::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

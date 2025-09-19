@@ -20,8 +20,28 @@ class AppServiceProvider extends ServiceProvider
             return app('view');
         });
         
-        // Configuration HTTPS désactivée pour éviter les boucles de redirection
-        // Les redirections HTTPS sont gérées par le serveur/proxy (Render)
+        // Configuration HTTPS pour la sécurité des formulaires en production
+        if (env('APP_ENV') === 'production') {
+            // Forcer HTTPS pour tous les assets et URLs
+            $url->forceScheme('https');
+            
+            // Configurer les cookies sécurisés
+            config([
+                'session.secure' => true,
+                'session.same_site' => 'lax',
+                'session.http_only' => true,
+                'session.cookie_secure' => true,
+            ]);
+            
+            // Configurer les cookies de session sécurisés
+            if (config('session.driver') === 'cookie') {
+                config([
+                    'session.cookie_secure' => true,
+                    'session.cookie_http_only' => true,
+                    'session.cookie_same_site' => 'lax',
+                ]);
+            }
+        }
         
         // Ajouter le token CSRF à tous les formulaires
         \Illuminate\Support\Facades\Blade::directive('csrf_meta', function () {
