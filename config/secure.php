@@ -7,10 +7,11 @@ return [
     |--------------------------------------------------------------------------
     |
     | Cette option force l'utilisation de HTTPS pour toutes les URL générées.
-    | En production, cela devrait toujours être activé.
+    | DÉSACTIVÉ pour éviter les boucles de redirection avec Render.
+    | Les redirections HTTPS sont gérées par le serveur/proxy.
     |
     */
-    'force_https' => env('FORCE_HTTPS', env('APP_ENV') === 'production'),
+    'force_https' => false,
 
     /*
     |--------------------------------------------------------------------------
@@ -18,10 +19,10 @@ return [
     |--------------------------------------------------------------------------
     |
     | Cette option force l'utilisation de cookies sécurisés (HTTPS uniquement).
-    | En production, cela devrait toujours être activé.
+    | DÉSACTIVÉ pour éviter les conflits avec Render.
     |
     */
-    'secure_cookies' => env('SECURE_COOKIES', env('APP_ENV') === 'production'),
+    'secure_cookies' => false,
 
     /*
     |--------------------------------------------------------------------------
