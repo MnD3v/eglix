@@ -20,6 +20,9 @@ RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-av
 # Install Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer 
 
+WORKDIR /var/www/html
+COPY . /var/www/html
+
 # Install PHP deps only (no caching config at build time)
 RUN composer install \
       --no-dev \
@@ -28,6 +31,7 @@ RUN composer install \
       --optimize-autoloader \
       --no-scripts \
  && chown -R www-data:www-data storage bootstrap/cache
+
 ENV PORT=8080
 EXPOSE 8080
 COPY docker/start.sh /usr/local/bin/start.sh
