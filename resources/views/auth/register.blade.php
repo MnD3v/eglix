@@ -24,6 +24,19 @@
             align-items: center;
             justify-content: center;
             padding: 20px;
+            opacity: 0;
+            animation: fadeInBody 0.8s ease-out forwards;
+        }
+
+        @keyframes fadeInBody {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .container {
@@ -36,6 +49,20 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             min-height: 700px;
+            opacity: 0;
+            transform: scale(0.95) translateY(30px);
+            animation: slideInContainer 0.6s ease-out 0.2s forwards;
+        }
+
+        @keyframes slideInContainer {
+            from {
+                opacity: 0;
+                transform: scale(0.95) translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
         }
 
         .left-panel {
@@ -44,6 +71,20 @@
             flex-direction: column;
             justify-content: center;
             background: white;
+            opacity: 0;
+            transform: translateX(-30px);
+            animation: slideInLeft 0.8s ease-out 0.4s forwards;
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
 
         .logo-section {
@@ -51,6 +92,20 @@
             align-items: center;
             gap: 12px;
             margin-bottom: 40px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s ease-out 0.6s forwards;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .logo-icon {
@@ -77,17 +132,32 @@
             font-weight: 700;
             color: #111827;
             margin-bottom: 8px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s ease-out 0.8s forwards;
         }
 
         .welcome-subtitle {
             color: #6b7280;
             font-size: 16px;
             margin-bottom: 40px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s ease-out 1s forwards;
         }
 
         .form-group {
             margin-bottom: 24px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s ease-out forwards;
         }
+
+        .form-group:nth-child(1) { animation-delay: 1.2s; }
+        .form-group:nth-child(2) { animation-delay: 1.4s; }
+        .form-group:nth-child(3) { animation-delay: 1.6s; }
+        .form-group:nth-child(4) { animation-delay: 1.8s; }
+        .form-group:nth-child(5) { animation-delay: 2s; }
 
         .form-label {
             display: block;
@@ -103,14 +173,21 @@
             border: 2px solid #e5e7eb;
             border-radius: 12px;
             font-size: 16px;
-            transition: all 0.2s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             background: white;
+            transform: translateZ(0);
         }
 
         .form-input:focus {
             outline: none;
             border-color: #FF2600;
             box-shadow: 0 0 0 4px rgba(255, 38, 0, 0.12);
+            transform: translateY(-2px) translateZ(0);
+        }
+
+        .form-input:hover {
+            border-color: #d1d5db;
+            transform: translateY(-1px) translateZ(0);
         }
 
         .form-input::placeholder {
@@ -123,17 +200,24 @@
             border: 2px solid #e5e7eb;
             border-radius: 12px;
             font-size: 16px;
-            transition: all 0.2s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             background: white;
             resize: vertical;
             min-height: 100px;
             font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            transform: translateZ(0);
         }
 
         .form-textarea:focus {
             outline: none;
             border-color: #FF2600;
             box-shadow: 0 0 0 4px rgba(255, 38, 0, 0.12);
+            transform: translateY(-2px) translateZ(0);
+        }
+
+        .form-textarea:hover {
+            border-color: #d1d5db;
+            transform: translateY(-1px) translateZ(0);
         }
 
         .form-textarea::placeholder {
@@ -166,11 +250,19 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s ease-out 2.2s forwards;
         }
 
         .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(255, 38, 0, 0.3);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 15px 35px rgba(255, 38, 0, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(-1px) scale(0.98);
+            transition: all 0.1s ease;
         }
 
         .btn:disabled {
@@ -207,6 +299,9 @@
             margin-top: 32px;
             color: #6b7280;
             font-size: 14px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s ease-out 2.4s forwards;
         }
 
         .login-link a {
@@ -222,6 +317,20 @@
         .right-panel {
             display: flex;
             overflow: hidden;
+            opacity: 0;
+            transform: translateX(30px);
+            animation: slideInRight 0.8s ease-out 0.6s forwards;
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
 
         .image-container {
@@ -237,6 +346,20 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+            opacity: 0;
+            transform: scale(1.1);
+            animation: imageZoomIn 1.2s ease-out 0.8s forwards;
+        }
+
+        @keyframes imageZoomIn {
+            from {
+                opacity: 0;
+                transform: scale(1.1);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
         }
 
         /* Styles supprimés car remplacés par l'image */
@@ -246,6 +369,20 @@
             border-radius: 12px;
             margin-bottom: 24px;
             font-size: 14px;
+            opacity: 0;
+            transform: translateY(-10px) scale(0.95);
+            animation: alertSlideIn 0.5s ease-out forwards;
+        }
+
+        @keyframes alertSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
         }
 
         .alert-danger {
@@ -275,6 +412,18 @@
             .container {
                 grid-template-columns: 1fr;
                 margin: 10px;
+                animation: slideInContainerMobile 0.6s ease-out 0.2s forwards;
+            }
+            
+            @keyframes slideInContainerMobile {
+                from {
+                    opacity: 0;
+                    transform: scale(0.9) translateY(20px);
+                }
+                to {
+                    opacity: 1;
+                    transform: scale(1) translateY(0);
+                }
             }
             
             .right-panel {
@@ -283,6 +432,18 @@
             
             .left-panel {
                 padding: 40px 30px;
+                animation: slideInLeftMobile 0.8s ease-out 0.4s forwards;
+            }
+            
+            @keyframes slideInLeftMobile {
+                from {
+                    opacity: 0;
+                    transform: translateY(20px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
             }
             
             .welcome-title {
@@ -292,6 +453,16 @@
             .form-row {
                 grid-template-columns: 1fr;
             }
+
+            /* Réduire les délais d'animation sur mobile */
+            .form-group:nth-child(1) { animation-delay: 0.8s; }
+            .form-group:nth-child(2) { animation-delay: 1s; }
+            .form-group:nth-child(3) { animation-delay: 1.2s; }
+            .form-group:nth-child(4) { animation-delay: 1.4s; }
+            .form-group:nth-child(5) { animation-delay: 1.6s; }
+            
+            .btn { animation-delay: 1.8s; }
+            .login-link { animation-delay: 2s; }
         }
     </style>
 </head>

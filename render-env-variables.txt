@@ -1,0 +1,43 @@
+# Variables d'environnement à ajouter dans Render Dashboard
+# ========================================================
+
+# 1. VARIABLES CRITIQUES POUR LA MIGRATION FORCÉE
+FORCE_ADMIN_MIGRATION=true
+RENDER_ADMIN_MIGRATION=true
+
+# 2. CONFIGURATION DE L'APPLICATION
+APP_ENV=production
+APP_DEBUG=false
+LOG_LEVEL=error
+
+# 3. CONFIGURATION SUPER ADMIN
+SUPER_ADMIN_EMAIL=admin@eglix.com
+SUPER_ADMIN_PASSWORD=admin123!
+
+# 4. CONFIGURATION DE SÉCURITÉ
+SESSION_SECURE_COOKIE=true
+SESSION_HTTP_ONLY=true
+SESSION_SAME_SITE=strict
+
+# 5. CONFIGURATION DU CACHE
+CACHE_DRIVER=file
+SESSION_DRIVER=file
+QUEUE_CONNECTION=sync
+
+# 6. CONFIGURATION DES LOGS
+LOG_CHANNEL=stderr
+LOG_DEPRECATIONS_CHANNEL=null
+
+# 7. CONFIGURATION PHP
+PHP_VERSION=8.2
+COMPOSER_VERSION=2
+
+# 8. COMMANDES DE DÉPLOIEMENT (optionnel)
+BUILD_COMMAND=./script/render-deploy-with-admin-migration.sh
+START_COMMAND=php artisan serve --host=0.0.0.0 --port=$PORT
+
+# NOTES IMPORTANTES:
+# - DATABASE_URL est automatiquement fournie par Render
+# - APP_KEY doit être générée avec: php artisan key:generate
+# - Les variables FORCE_ADMIN_MIGRATION et RENDER_ADMIN_MIGRATION
+#   déclenchent automatiquement la migration forcée

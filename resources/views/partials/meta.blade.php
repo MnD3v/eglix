@@ -8,7 +8,7 @@
 <meta property="og:url" content="https://eglix.lafia.tech">
 <meta property="og:title" content="Eglix - Application de gestion d'église">
 <meta property="og:description" content="Gérez efficacement votre église avec Eglix: membres, finances, événements, rapports et plus encore.">
-<meta property="og:image" content="https://i.ibb.co/RTSq7fmj/eglix-background.png">
+<meta property="og:image" content="https://i.ibb.co/xtZwkwxq/eglix-landing.png">
 
 <!-- Twitter -->
 <meta property="twitter:card" content="summary_large_image">
