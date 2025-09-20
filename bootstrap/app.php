@@ -18,7 +18,14 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->web(append: [
             \App\Http\Middleware\EnsureMigrationsAreRun::class,
             \App\Http\Middleware\EnhancedCsrfProtection::class,
+            \App\Http\Middleware\CheckChurchSubscription::class,
         ]);
+        
+        // Enregistrement du middleware de validation d'upload
+        $middleware->alias([
+            'validate.image.upload' => \App\Http\Middleware\ValidateImageUpload::class,
+        ]);
+        
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

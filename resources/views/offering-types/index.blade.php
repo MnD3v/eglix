@@ -4,7 +4,7 @@
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h1 class="h3">Types d'offrande</h1>
         <div class="d-flex gap-2">
-            <a href="{{ route('offering-types.create') }}" class="btn btn-primary">Nouveau type</a>
+            <a href="{{ route('offering-types.create') }}" class="btn btn">Nouveau type</a>
         </div>
     </div>
     @if(session('success'))<div class="alert alert-success">{{ session('success') }}</div>@endif

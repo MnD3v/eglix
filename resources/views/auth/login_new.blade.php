@@ -145,7 +145,7 @@
             text-decoration: underline;
         }
 
-        .btn-primary {
+        .btn {
             width: 100%;
             padding: 16px;
             background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%);
@@ -159,7 +159,7 @@
             margin-bottom: 24px;
         }
 
-        .btn-primary:hover {
+        .btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 10px 25px rgba(139, 92, 246, 0.3);
         }
@@ -428,7 +428,7 @@
                     <a href="#" class="forgot-password">Mot de passe oublié ?</a>
                 </div>
 
-                <button type="submit" class="btn-primary">
+                <button type="submit" class="btn">
                     Se connecter
                 </button>
             </form>

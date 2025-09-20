@@ -15,7 +15,7 @@
                 </p>
             </div>
             <div>
-                <a href="{{ route('journal.create') }}" class="btn btn-primary">
+                <a href="{{ route('journal.create') }}" class="btn btn">
                     <i class="bi bi-plus-lg me-2"></i>
                     <span class="btn-label">Nouvelle entrée</span>
                 </a>
@@ -39,7 +39,7 @@
                 <input type="date" name="to" value="{{ request('to') }}" class="form-control" />
             </div>
             <div class="col-12 col-md-auto ms-md-auto d-flex gap-2 justify-content-end">
-                <button class="btn btn-primary" type="submit"><i class="bi bi-funnel"></i> <span class="btn-label">Filtrer</span></button>
+                <button class="btn btn" type="submit"><i class="bi bi-funnel"></i> <span class="btn-label">Filtrer</span></button>
                 <a class="btn btn-outline-secondary" href="{{ route('journal.index') }}"><i class="bi bi-arrow-counterclockwise"></i> <span class="btn-label">Réinitialiser</span></a>
             </div>
         </div>
@@ -52,8 +52,15 @@
             <div class="card card-soft h-100">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-start mb-2">
-                        <span class="badge bg-primary">{{ optional($e->occurred_at)->format('d/m/Y') }}</span>
-                        <div class="small text-muted">{{ $e->category ?? '—' }}</div>
+                        <span class="badge bg-custom">{{ optional($e->occurred_at)->format('d/m/Y') }}</span>
+                        <div class="d-flex align-items-center gap-2">
+                            @if($e->images->count() > 0)
+                                <span class="badge bg-info">
+                                    <i class="bi bi-image me-1"></i>{{ $e->images->count() }}
+                                </span>
+                            @endif
+                            <div class="small text-muted">{{ $e->category ?? '—' }}</div>
+                        </div>
                     </div>
                     <div class="fw-semibold">{{ $e->title }}</div>
                     <div class="text-muted mt-2" style="white-space: pre-wrap;">{{ \Illuminate\Support\Str::limit($e->description, 160) }}</div>

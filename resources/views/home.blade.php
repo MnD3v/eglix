@@ -14,10 +14,6 @@
                     <i class="bi bi-graph-up me-2"></i>
                     Vue d'ensemble des activités et finances de l'église
                 </p>
-                <div class="d-flex align-items-center gap-2 mt-2">
-                    <i class="bi bi-calendar3 text-muted"></i>
-                    <span class="text-muted">{{ optional($from ?? null)->format('d/m/Y') }} — {{ optional($to ?? null)->format('d/m/Y') }}</span>
-                </div>
             </div>
         </div>
     </div>
@@ -25,12 +21,11 @@
     <!-- Filter Tabs -->
     <div class="filter-tabs slide-in-up">
         <button class="filter-tab active" data-filter="all">Tous</button>
-        <button class="filter-tab" data-filter="financial">Financier</button>
     </div>
 
     <!-- KPIs Section -->
     <div class="kpis-section mb-4" data-section="financial">
-        <div class="row g-3">
+        <div class="row g-2 g-lg-3">
             <!-- Membres actifs -->
             <div class="col-6 col-lg-3">
                 <a href="{{ route('members.index') }}" class="text-decoration-none">
@@ -579,7 +574,7 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Gestion des onglets de filtrage
+    // Gestion des onglets de filtrage (simplifié)
     const filterTabs = document.querySelectorAll('.filter-tab');
     const sections = document.querySelectorAll('[data-section]');
     filterTabs.forEach(tab => {
@@ -588,13 +583,10 @@ document.addEventListener('DOMContentLoaded', function() {
             // Update active tab
             filterTabs.forEach(t => t.classList.remove('active'));
             this.classList.add('active');            
-            // Show/hide sections
+            
+            // Show all sections (only "Tous" button remains)
             sections.forEach(section => {
-                if (filter === 'all') {
-                    section.style.display = 'block';
-                } else {
-                    section.style.display = section.getAttribute('data-section') === filter ? 'block' : 'none';
-                }
+                section.style.display = 'block';
             });
         });
     });    

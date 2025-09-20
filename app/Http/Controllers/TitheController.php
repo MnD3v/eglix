@@ -108,8 +108,14 @@ class TitheController extends Controller
             ];
         }
 
+        // Calculer le total des dîmes selon les filtres
+        $totalTithes = Tithe::where('church_id', Auth::user()->church_id);
+        if ($fromFilter) { $totalTithes->where('paid_at', '>=', $fromFilter); }
+        if ($toFilter) { $totalTithes->where('paid_at', '<=', $toFilter); }
+        $totalAmount = $totalTithes->sum('amount');
+
         $filters = [ 'from' => $fromInput, 'to' => $toInput ];
-        return view('tithes.index', compact('tithes', 'search', 'chart', 'filters'));
+        return view('tithes.index', compact('tithes', 'search', 'chart', 'filters', 'totalAmount'));
     }
 
     /**
@@ -212,5 +218,27 @@ class TitheController extends Controller
         
         $tithe->delete();
         return redirect()->route('tithes.index')->with('success', 'Dîme supprimée.');
+    }
+
+    /**
+     * Get total amount for AJAX requests
+     */
+    public function getTotal(Request $request)
+    {
+        $fromInput = $request->query('from');
+        $toInput = $request->query('to');
+        $fromFilter = $fromInput ? Carbon::parse($fromInput)->startOfDay() : null;
+        $toFilter = $toInput ? Carbon::parse($toInput)->endOfDay() : null;
+
+        $query = Tithe::where('church_id', Auth::user()->church_id);
+        if ($fromFilter) { $query->where('paid_at', '>=', $fromFilter); }
+        if ($toFilter) { $query->where('paid_at', '<=', $toFilter); }
+        
+        $totalAmount = $query->sum('amount');
+        
+        return response()->json([
+            'total' => $totalAmount,
+            'formatted' => number_format($totalAmount, 0, ',', ' ') . ' FCFA'
+        ]);
     }
 }

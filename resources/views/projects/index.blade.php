@@ -15,9 +15,9 @@
                 </p>
             </div>
             <div>
-                <a href="{{ route('projects.create') }}" class="btn btn-primary">
-                    <i class="bi bi-plus-lg me-2"></i>
-                    <span class="btn-label">Nouveau projet</span>
+                <a href="{{ route('projects.create') }}" class="btn-add">
+                    <i class="bi bi-plus-lg" style="color: white !important;"></i>
+                    <span class="btn-text">Nouveau projet</span>
                 </a>
             </div>
         </div>
@@ -49,7 +49,17 @@
             </div>
         </div>
         @empty
-        <div class="col-12"><div class="text-center text-muted py-5">Aucun projet</div></div>
+        <div class="col-12">
+            <div class="text-center text-muted py-5">
+                <i class="bi bi-kanban" style="font-size: 3rem; opacity: 0.3;"></i>
+                <h4 class="mt-3">Aucun projet</h4>
+                <p>Commencez par créer votre premier projet.</p>
+                <a href="{{ route('projects.create') }}" class="btn-add-empty">
+                    <i class="bi bi-plus-circle" style="color: white !important;"></i>
+                    Créer un projet
+                </a>
+            </div>
+        </div>
         @endforelse
     </div>
 

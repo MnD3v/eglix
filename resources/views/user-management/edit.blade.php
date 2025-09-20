@@ -175,7 +175,7 @@
                                 <i class="bi bi-x-circle me-2"></i>
                                 Annuler
                             </a>
-                            <button type="submit" class="btn btn-primary">
+                            <button type="submit" class="btn btn">
                                 <i class="bi bi-check-circle me-2"></i>
                                 Mettre à jour
                             </button>

@@ -21,12 +21,25 @@ class Church extends Model
         'website',
         'logo',
         'settings',
-        'is_active'
+        'is_active',
+        'subscription_start_date',
+        'subscription_end_date',
+        'subscription_status',
+        'subscription_amount',
+        'subscription_currency',
+        'subscription_plan',
+        'subscription_notes',
+        'payment_reference',
+        'payment_date'
     ];
 
     protected $casts = [
         'settings' => 'array',
-        'is_active' => 'boolean'
+        'is_active' => 'boolean',
+        'subscription_start_date' => 'date',
+        'subscription_end_date' => 'date',
+        'subscription_amount' => 'decimal:2',
+        'payment_date' => 'date'
     ];
 
     /**
@@ -171,6 +184,14 @@ class Church extends Model
     }
 
     /**
+     * Get the subscriptions for the church
+     */
+    public function subscriptions(): HasMany
+    {
+        return $this->hasMany(Subscription::class);
+    }
+
+    /**
      * Get the church admin user
      */
     public function admin()
@@ -187,5 +208,50 @@ class Church extends Model
             ->where('id', $user->id)
             ->where('is_church_admin', true)
             ->exists();
+    }
+
+    /**
+     * Check if the church subscription is active
+     */
+    public function hasActiveSubscription(): bool
+    {
+        return $this->subscription_status === 'active' 
+            && $this->subscription_end_date 
+            && $this->subscription_end_date->isFuture();
+    }
+
+    /**
+     * Check if the church subscription is expired
+     */
+    public function isSubscriptionExpired(): bool
+    {
+        return $this->subscription_status === 'expired' 
+            || ($this->subscription_end_date && $this->subscription_end_date->isPast());
+    }
+
+    /**
+     * Get subscription days remaining
+     */
+    public function getSubscriptionDaysRemaining(): int
+    {
+        if (!$this->subscription_end_date) {
+            return 0;
+        }
+        
+        return max(0, now()->diffInDays($this->subscription_end_date, false));
+    }
+
+    /**
+     * Get subscription status badge
+     */
+    public function getSubscriptionStatusBadge(): string
+    {
+        if ($this->hasActiveSubscription()) {
+            return '<span class="badge bg-success">Actif</span>';
+        } elseif ($this->isSubscriptionExpired()) {
+            return '<span class="badge bg-danger">Expiré</span>';
+        } else {
+            return '<span class="badge bg-warning">Suspendu</span>';
+        }
     }
 }

@@ -83,13 +83,13 @@
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
-.btn-primary.action-btn {
+.btn.action-btn {
     background: #4a6cf7;
     border-color: transparent;
     color: white;
 }
 
-.btn-primary.action-btn:hover {
+.btn.action-btn:hover {
     background: #3d5bd9;
     color: white;
 }
@@ -180,13 +180,13 @@
     border: 1px solid;
 }
 
-.btn-primary.btn-sm {
+.btn.btn-sm {
     background: #4a6cf7;
     border-color: transparent;
     color: white;
 }
 
-.btn-primary.btn-sm:hover {
+.btn.btn-sm:hover {
     background: #3d5bd9;
     transform: translateY(-1px);
     box-shadow: 0 2px 8px rgba(74, 108, 247, 0.3);
@@ -253,7 +253,7 @@
                     <input type="date" class="form-control" name="to" value="{{ $to }}" id="toDate">
                 </div>
                 <div class="col-md-3">
-                    <button type="submit" class="btn btn-primary w-100">
+                    <button type="submit" class="btn btn w-100">
                         <i class="bi bi-funnel"></i> Appliquer
                     </button>
                 </div>

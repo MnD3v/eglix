@@ -99,7 +99,7 @@
 
                         <div class="d-flex justify-content-end gap-2 mt-4">
                             <a href="{{ route('administration.index') }}" class="btn btn-outline-secondary">Annuler</a>
-                            <button type="submit" class="btn btn-primary">
+                            <button type="submit" class="btn btn">
                                 <i class="bi bi-check-lg"></i> Mettre à jour
                             </button>
                         </div>

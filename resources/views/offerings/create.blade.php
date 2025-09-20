@@ -48,7 +48,9 @@
         </div>
         <div class="mt-3 d-flex gap-2">
             <a href="{{ route('offerings.index') }}" class="btn btn-outline-secondary">Annuler</a>
-            <button class="btn btn-primary">Enregistrer</button>
+            <button type="submit" class="btn btn">
+                <span class="btn-text">Enregistrer</span>
+            </button>
         </div>
     </form>
     <script>

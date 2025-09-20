@@ -18,9 +18,9 @@
                 </div>
             </div>
             <div class="appbar-right">
-                <a href="{{ route('members.create') }}" class="appbar-btn-primary">
+                <a href="{{ route('members.create') }}" class="btn-add">
                     <i class="bi bi-person-plus"></i>
-                    <span>Nouveau membre</span>
+                    <span class="btn-text">Nouveau membre</span>
                 </a>
             </div>
         </div>
@@ -118,7 +118,7 @@
             @if(!empty($search))
             <a class="btn btn-outline-secondary" href="{{ route('members.index') }}">Effacer</a>
             @endif
-            <button class="btn btn-primary" type="submit">Rechercher</button>
+            <button class="btn btn" type="submit">Rechercher</button>
         </div>
     </form>
 
@@ -128,8 +128,21 @@
                 <div class="card card-soft h-100 position-relative">
                     <div class="card-body d-flex gap-3 card-link" data-href="{{ route('members.show', $member) }}" style="cursor: pointer;">
                         <div class="flex-shrink-0">
-                            @php $initials = strtoupper(mb_substr($member->first_name ?? '',0,1).mb_substr($member->last_name ?? '',0,1)); @endphp
-                            <div class="rounded-circle d-flex align-items-center justify-content-center" style="width:48px;height:48px;background:#E0F2FE;color:#0EA5E9;font-weight:700;">{{ $initials }}</div>
+                            @if($member->photo_url || $member->profile_photo)
+                                @php
+                                    $photoUrl = $member->photo_url ?: asset('storage/' . $member->profile_photo);
+                                @endphp
+                                <img src="{{ $photoUrl }}" 
+                                     alt="Photo de {{ $member->first_name }} {{ $member->last_name }}" 
+                                     class="rounded-circle" 
+                                     style="width:48px;height:48px;object-fit:cover;border:2px solid #E0F2FE;"
+                                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                @php $initials = strtoupper(mb_substr($member->first_name ?? '',0,1).mb_substr($member->last_name ?? '',0,1)); @endphp
+                                <div class="rounded-circle d-flex align-items-center justify-content-center" style="width:48px;height:48px;background:#E0F2FE;color:#0EA5E9;font-weight:700;display:none;">{{ $initials }}</div>
+                            @else
+                                @php $initials = strtoupper(mb_substr($member->first_name ?? '',0,1).mb_substr($member->last_name ?? '',0,1)); @endphp
+                                <div class="rounded-circle d-flex align-items-center justify-content-center" style="width:48px;height:48px;background:#E0F2FE;color:#0EA5E9;font-weight:700;">{{ $initials }}</div>
+                            @endif
                         </div>
                         <div class="flex-grow-1">
                             <div class="d-flex justify-content-between align-items-start">
@@ -146,7 +159,7 @@
                     <div class="card-footer d-flex justify-content-between gap-2">
                         <div class="btn-group">
                             <a class="btn btn-sm btn-outline-secondary" href="{{ route('members.edit', $member) }}">Modifier</a>
-                            <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#addTitheModal-{{ $member->id }}">
+                            <button class="btn btn-sm btn" data-bs-toggle="modal" data-bs-target="#addTitheModal-{{ $member->id }}">
                                 <i class="bi bi-cash-coin me-1"></i>Ajouter dîme
                             </button>
                         </div>
@@ -197,7 +210,7 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>
-                                <button type="submit" class="btn btn-primary">Enregistrer</button>
+                                <button type="submit" class="btn btn">Enregistrer</button>
                             </div>
                         </form>
                     </div>

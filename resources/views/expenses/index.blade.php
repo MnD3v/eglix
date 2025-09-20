@@ -15,7 +15,7 @@
                 </p>
             </div>
             <div>
-                <a href="{{ route('expenses.create') }}" class="btn btn-primary">
+                <a href="{{ route('expenses.create') }}" class="btn btn">
                     <i class="bi bi-plus-lg me-2"></i>
                     <span class="btn-label">Nouvelle dépense</span>
                 </a>
@@ -36,7 +36,7 @@
                 <input type="date" name="to" value="{{ $filters['to'] ?? '' }}" class="form-control" />
             </div>
             <div class="col-12 col-sm-4 col-md-6 d-flex gap-2">
-                <button class="btn btn-primary" type="submit"><i class="bi bi-funnel"></i> <span class="btn-label">Filtrer</span></button>
+                <button class="btn btn" type="submit"><i class="bi bi-funnel"></i> <span class="btn-label">Filtrer</span></button>
                 <a class="btn btn-outline-secondary" href="{{ route('expenses.index') }}"><i class="bi bi-arrow-counterclockwise"></i> <span class="btn-label">Réinitialiser</span></a>
             </div>
         </div>
@@ -59,7 +59,7 @@
             <div class="card card-soft h-100">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-start mb-2">
-                        <span class="badge bg-primary">{{ optional($e->paid_at)->format('d/m/Y') }}</span>
+                        <span class="badge bg-custom">{{ optional($e->paid_at)->format('d/m/Y') }}</span>
                         <div class="fw-bold numeric">{{ number_format(round($e->amount), 0, ',', ' ') }} FCFA</div>
                     </div>
                     <div class="fw-semibold">{{ $e->project?->name ?? '—' }}</div>

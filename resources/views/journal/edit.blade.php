@@ -35,7 +35,7 @@
             </div>
         </div>
         <div class="mt-3 d-flex gap-2">
-            <button class="btn btn-primary">Mettre à jour</button>
+            <button class="btn btn">Mettre à jour</button>
             <a class="btn btn-outline-secondary" href="{{ route('journal.show', $entry) }}">Annuler</a>
         </div>
     </form>

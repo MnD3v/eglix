@@ -1,6 +1,50 @@
 @extends('layouts.app')
 
 @section('content')
+<style>
+/* Styles spécifiques pour la page des détails de membre */
+.status-badge.status-active {
+    background-color: rgba(255, 255, 255, 0.2) !important;
+    color: white !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+}
+
+.status-badge.status-active i {
+    color: white !important;
+}
+
+.profile-actions .btn-outline-light {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    border-color: rgba(255, 255, 255, 0.3) !important;
+    color: white !important;
+}
+
+.profile-actions .btn-outline-light:hover {
+    background-color: rgba(255, 255, 255, 0.2) !important;
+    border-color: rgba(255, 255, 255, 0.5) !important;
+    color: white !important;
+}
+
+.profile-actions .btn-outline-light i {
+    color: white !important;
+}
+
+.profile-actions .btn {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    border-color: rgba(255, 255, 255, 0.3) !important;
+    color: white !important;
+}
+
+.profile-actions .btn:hover {
+    background-color: rgba(255, 255, 255, 0.2) !important;
+    border-color: rgba(255, 255, 255, 0.5) !important;
+    color: white !important;
+}
+
+.profile-actions .btn i {
+    color: white !important;
+}
+</style>
 <div class="container py-4">
     @include('partials.back-button')
 	@if(session('success'))
@@ -36,7 +80,7 @@
 					<a class="btn btn-outline-light" href="{{ route('members.edit', $member) }}">
 						<i class="bi bi-pencil me-2"></i>Modifier
 					</a>
-					<a class="btn btn-primary" href="{{ route('tithes.create', ['member_id'=>$member->id]) }}">
+					<a class="btn btn" href="{{ route('tithes.create', ['member_id'=>$member->id]) }}">
 						<i class="bi bi-cash-coin me-2"></i>Enregistrer une dîme
 					</a>
 				</div>
@@ -189,7 +233,7 @@
 				<i class="bi bi-chat-square-text me-2"></i>
 				Remarques disciplinaires
 			</h3>
-			<button class="btn btn-primary btn-add-remark" data-bs-toggle="modal" data-bs-target="#addRemarkModal">
+			<button class="btn btn btn-add-remark" data-bs-toggle="modal" data-bs-target="#addRemarkModal">
 				<i class="bi bi-plus-circle me-2"></i>Ajouter une remarque
 			</button>
 		</div>
@@ -255,7 +299,7 @@
 				<i class="bi bi-cash-coin me-2"></i>
 				Historique des dîmes
 			</h3>
-			<a class="btn btn-primary btn-add-tithe" href="{{ route('tithes.create', ['member_id'=>$member->id]) }}">
+			<a class="btn btn btn-add-tithe" href="{{ route('tithes.create', ['member_id'=>$member->id]) }}">
 				<i class="bi bi-plus-circle me-2"></i>Ajouter une dîme
 			</a>
 		</div>
@@ -290,7 +334,7 @@
 				</div>
 				<h4 class="empty-title">Aucune dîme</h4>
 				<p class="empty-description">Ce membre n'a pas encore enregistré de dîmes.</p>
-				<a class="btn btn-primary" href="{{ route('tithes.create', ['member_id'=>$member->id]) }}">
+				<a class="btn btn" href="{{ route('tithes.create', ['member_id'=>$member->id]) }}">
 					<i class="bi bi-plus-circle me-2"></i>Enregistrer la première dîme
 				</a>
 			</div>
@@ -317,7 +361,7 @@
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-					<button type="submit" class="btn btn-primary">
+					<button type="submit" class="btn btn">
 						<i class="bi bi-plus me-1"></i>Ajouter la remarque
 					</button>
 				</div>
@@ -329,6 +373,7 @@
 @endsection
 
 @push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
 	const addRemarkForm = document.getElementById('addRemarkForm');
@@ -482,108 +527,86 @@ function showAlert(type, message) {
 	}, 5000);
 }
 
-// Graphique des dîmes du membre
-document.addEventListener('DOMContentLoaded', function() {
-	const chartElement = document.getElementById('memberTithesChart');
-	if (!chartElement) return;
+// Graphique des dîmes du membre - Version simple comme dans tithes/index
+document.addEventListener('DOMContentLoaded', function(){
+    const el = document.getElementById('memberTithesChart');
+    if (!el) return;
 
-	const labels = @json($chart['labels_numeric'] ?? range(1,12));
-	const rawData = @json($chart['data'] ?? []);
-	const data = Array.from({ length: 12 }, (_, i) => Number(rawData[i] ?? 0));
+    const labels = @json($chart['labels_numeric'] ?? range(1,12));
+    const raw = @json($chart['data'] ?? []);
+    const data = Array.from({ length: 12 }, (_, i) => Number(raw[i] ?? 0));
 
-	const ctx = chartElement.getContext('2d');
-	const h = 300;
-	const gradient = ctx.createLinearGradient(0, 0, 0, h);
-	gradient.addColorStop(0, 'rgba(255,38,0,0.3)');
-	gradient.addColorStop(1, 'rgba(255,38,0,0.05)');
+    const ctx = el.getContext('2d');
+    const h = 300;
+    const gradient = ctx.createLinearGradient(0, 0, 0, h);
+    gradient.addColorStop(0, 'rgba(255,38,0,0.3)');
+    gradient.addColorStop(1, 'rgba(255,38,0,0.05)');
 
-	new Chart(ctx, {
-		type: 'line',
-		data: {
-			labels: labels.map(n => {
-				const monthNames = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Jun', 'Jul', 'Aoû', 'Sep', 'Oct', 'Nov', 'Déc'];
-				return monthNames[n - 1];
-			}),
-			datasets: [{
-				label: 'Dîmes (FCFA)',
-				data: data,
-				borderColor: '#FF2600',
-				backgroundColor: gradient,
-				fill: true,
-				tension: 0.4,
-				pointRadius: 5,
-				pointHoverRadius: 7,
-				pointBackgroundColor: '#FF2600',
-				pointBorderColor: '#fff',
-				pointBorderWidth: 2,
-				borderWidth: 3
-			}]
-		},
-		options: {
-			responsive: true,
-			maintainAspectRatio: false,
-			plugins: {
-				legend: {
-					display: true,
-					position: 'top',
-					labels: {
-						usePointStyle: true,
-						padding: 20,
-						font: {
-							size: 14,
-							weight: '500'
-						}
-					}
-				},
-				tooltip: {
-					backgroundColor: 'rgba(0, 0, 0, 0.8)',
-					titleColor: '#ffffff',
-					bodyColor: '#ffffff',
-					borderColor: '#FF2600',
-					borderWidth: 1,
-					cornerRadius: 8,
-					displayColors: false,
-					callbacks: {
-						label: function(context) {
-							return 'Dîmes: ' + new Intl.NumberFormat('fr-FR').format(context.parsed.y) + ' FCFA';
-						}
-					}
-				}
-			},
-			scales: {
-				x: {
-					grid: {
-						color: 'rgba(0, 0, 0, 0.1)',
-						drawBorder: false
-					},
-					ticks: {
-						font: {
-							size: 12
-						}
-					}
-				},
-				y: {
-					beginAtZero: true,
-					grid: {
-						color: 'rgba(0, 0, 0, 0.1)',
-						drawBorder: false
-					},
-					ticks: {
-						font: {
-							size: 12
-						},
-						callback: function(value) {
-							return new Intl.NumberFormat('fr-FR').format(value) + ' FCFA';
-						}
-					}
-				}
-			},
-			interaction: {
-				intersect: false,
-				mode: 'index'
-			}
-		}
-	});
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Jun', 'Jul', 'Aoû', 'Sep', 'Oct', 'Nov', 'Déc'],
+            datasets: [{
+                label: 'Dîmes (FCFA)',
+                data,
+                borderColor: '#FF2600',
+                backgroundColor: gradient,
+                fill: true,
+                tension: 0.4,
+                pointRadius: 5,
+                pointHoverRadius: 7,
+                pointBackgroundColor: '#FF2600',
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2,
+                borderWidth: 3
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top',
+                    labels: {
+                        usePointStyle: true,
+                        padding: 20,
+                        font: {
+                            size: 14,
+                            weight: '500'
+                        }
+                    }
+                },
+                tooltip: { 
+                    backgroundColor: 'rgba(0,0,0,0.8)',
+                    titleColor: '#fff',
+                    bodyColor: '#fff',
+                    borderColor: '#FF2600',
+                    borderWidth: 1,
+                    callbacks: { 
+                        label: (ctx) => `${ctx.dataset.label}: ${Math.round(Number(ctx.parsed.y)).toLocaleString('fr-FR')} FCFA`
+                    }
+                }
+            },
+            scales: {
+                y: { 
+                    beginAtZero: true, 
+                    grid: { color: 'rgba(0,0,0,0.05)', drawBorder: false },
+                    ticks: { 
+                        color: '#6B7280',
+                        callback: function(value) {
+                            return new Intl.NumberFormat('fr-FR').format(value) + ' FCFA';
+                        }
+                    }
+                },
+                x: { 
+                    grid: { display: false },
+                    ticks: { color: '#6B7280' }
+                }
+            },
+            animation: { duration: 800, easing: 'easeInOutQuart' }
+        }
+    });
 });
 </script>
 @endpush

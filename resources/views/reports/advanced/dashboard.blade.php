@@ -255,7 +255,7 @@
 }
 
 /* Boutons avec style minimaliste */
-.btn-primary {
+.btn {
     background: #1a1a1a;
     border-color: #1a1a1a;
     color: #ffffff;
@@ -265,7 +265,7 @@
     transition: all 0.2s ease;
 }
 
-.btn-primary:hover {
+.btn:hover {
     background: #333;
     border-color: #333;
     color: #ffffff;
@@ -408,7 +408,7 @@
                     <input type="date" class="form-control" name="to" value="{{ $to }}" id="toDate">
                 </div>
                 <div class="col-md-3">
-                    <button type="submit" class="btn btn-primary w-100">
+                    <button type="submit" class="btn btn w-100">
                         Appliquer
                     </button>
                 </div>
@@ -592,7 +592,7 @@
                 <div class="export-icon">🔗</div>
                 <h4>JSON Structuré</h4>
                 <p>Données brutes pour intégration avec d'autres systèmes</p>
-                <a href="{{ route('reports.advanced.export.json', ['from' => $from, 'to' => $to]) }}" class="btn btn-primary">
+                <a href="{{ route('reports.advanced.export.json', ['from' => $from, 'to' => $to]) }}" class="btn btn">
                     Télécharger
                 </a>
             </div>

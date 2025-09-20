@@ -14,21 +14,22 @@ return new class extends Migration
         Schema::create('subscriptions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('church_id')->constrained()->onDelete('cascade');
-            $table->foreignId('member_id')->constrained()->onDelete('cascade');
             
             // Informations sur l'abonnement
-            $table->string('subscription_type')->default('annual'); // annual, monthly, quarterly
+            $table->string('plan_name')->default('basic'); // basic, premium, enterprise
             $table->decimal('amount', 10, 2); // Montant de l'abonnement
             $table->string('currency', 3)->default('XOF'); // Devise (XOF pour le franc CFA)
+            $table->integer('max_members')->default(100); // Limite de membres
+            $table->boolean('has_advanced_reports')->default(false);
+            $table->boolean('has_api_access')->default(false);
             
             // Dates importantes
             $table->date('start_date'); // Date de début de l'abonnement
             $table->date('end_date'); // Date de fin de l'abonnement
             $table->date('payment_date')->nullable(); // Date du paiement physique
-            $table->date('renewal_date')->nullable(); // Date de renouvellement prévue
             
             // Statut et gestion
-            $table->enum('status', ['active', 'expired', 'suspended', 'cancelled'])->default('active');
+            $table->enum('is_active', ['active', 'expired', 'suspended'])->default('active');
             $table->enum('payment_status', ['pending', 'paid', 'overdue', 'cancelled'])->default('pending');
             $table->enum('payment_method', ['cash', 'bank_transfer', 'mobile_money', 'check'])->default('cash');
             
@@ -44,9 +45,8 @@ return new class extends Migration
             $table->timestamps();
             
             // Index pour optimiser les requêtes
-            $table->index(['church_id', 'status']);
-            $table->index(['member_id', 'status']);
-            $table->index(['end_date', 'status']);
+            $table->index(['church_id', 'is_active']);
+            $table->index(['end_date', 'is_active']);
             $table->index(['payment_status', 'payment_date']);
         });
     }

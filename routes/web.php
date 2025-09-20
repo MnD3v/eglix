@@ -9,21 +9,20 @@ use App\Models\Member;
 use App\Models\Tithe;
 use App\Models\Donation;
 use App\Models\Offering;
+use App\Models\Expense;
 use App\Http\Controllers\OfferingController;
 use App\Models\OfferingType;
 use App\Http\Controllers\DonationController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\ProjectController;
-use App\Http\Controllers\ServiceController;
-use App\Http\Controllers\ChurchEventController;
-use App\Http\Controllers\ServiceRoleController;
-use App\Http\Controllers\ServiceProgramController;
 use App\Http\Controllers\JournalEntryController;
 use App\Http\Controllers\AdministrationController;
 use App\Http\Controllers\AdministrationFunctionTypeController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ChurchController;
 use App\Http\Controllers\UserManagementController;
+use App\Http\Controllers\SubscriptionController;
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\AdvancedReportsController;
 use Illuminate\Support\Facades\Auth;
@@ -34,6 +33,16 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+// Routes de test Firebase (à supprimer en production)
+Route::get('/firebase-test', [App\Http\Controllers\FirebaseTestController::class, 'page'])->name('firebase.test');
+Route::get('/firebase-test/api', [App\Http\Controllers\FirebaseTestController::class, 'test'])->name('firebase.test.api');
+
+// Route temporaire pour afficher tous les utilisateurs (à supprimer en production)
+Route::get('/users-list', function() {
+    $users = App\Models\User::with('church', 'role')->get();
+    return view('users-list', compact('users'));
+})->name('users.list');
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/', function (Request $request) {
@@ -46,7 +55,7 @@ Route::middleware(['auth'])->group(function () {
     $to = $request->filled('to')
         ? \Carbon\Carbon::parse($request->get('to'))->endOfDay()
         : now()->copy()->endOfYear();
-    $monthStart = $to->copy()->startOfMonth();
+    $monthStart = now()->copy()->startOfMonth();
     $prevStart = (clone $monthStart)->subMonth();
     $prevEnd = (clone $monthStart)->subDay()->endOfDay();
     $monthTotal = Tithe::where('church_id', $churchId)->where('paid_at', '>=', $monthStart)->sum('amount');
@@ -108,11 +117,86 @@ Route::middleware(['auth'])->group(function () {
         ->groupBy('type')
         ->pluck('total', 'type')
         ->map(fn($amount) => (float)$amount);
+    // Calculs des totaux pour différentes périodes
+    $weekStart = now()->copy()->startOfWeek();
+    $yearStart = now()->copy()->startOfYear();
+    
+    // Totaux pour la période sélectionnée (par défaut: année)
+    $totalTithes = Tithe::where('church_id', $churchId)->whereBetween('paid_at', [$from, $to])->sum('amount');
+    $totalOfferings = Offering::where('church_id', $churchId)->whereBetween('received_at', [$from, $to])->sum('amount');
+    $totalDonations = Donation::where('church_id', $churchId)->whereBetween('received_at', [$from, $to])->sum('amount');
+    $totalExpenses = Expense::where('church_id', $churchId)->whereBetween('paid_at', [$from, $to])->sum('amount');
+    
+    // Totaux pour le mois en cours
+    $monthTithes = Tithe::where('church_id', $churchId)->where('paid_at', '>=', $monthStart)->sum('amount');
+    $monthOfferings = Offering::where('church_id', $churchId)->where('received_at', '>=', $monthStart)->sum('amount');
+    $monthDonations = Donation::where('church_id', $churchId)->where('received_at', '>=', $monthStart)->sum('amount');
+    $monthExpenses = Expense::where('church_id', $churchId)->where('paid_at', '>=', $monthStart)->sum('amount');
+    
+    // Totaux pour la semaine en cours
+    $weekTithes = Tithe::where('church_id', $churchId)->where('paid_at', '>=', $weekStart)->sum('amount');
+    $weekOfferings = Offering::where('church_id', $churchId)->where('received_at', '>=', $weekStart)->sum('amount');
+    $weekDonations = Donation::where('church_id', $churchId)->where('received_at', '>=', $weekStart)->sum('amount');
+    $weekExpenses = Expense::where('church_id', $churchId)->where('paid_at', '>=', $weekStart)->sum('amount');
+    
+    // Totaux pour l'année en cours
+    $yearTithes = Tithe::where('church_id', $churchId)->where('paid_at', '>=', $yearStart)->sum('amount');
+    $yearOfferings = Offering::where('church_id', $churchId)->where('received_at', '>=', $yearStart)->sum('amount');
+    $yearDonations = Donation::where('church_id', $churchId)->where('received_at', '>=', $yearStart)->sum('amount');
+    $yearExpenses = Expense::where('church_id', $churchId)->where('paid_at', '>=', $yearStart)->sum('amount');
+    
     $stats = [
         'active_members' => $activeMembers,
         'month_total' => $monthTotal,
         'month_donations' => $monthDonations,
         'month_offerings' => $monthOfferings,
+        // Totaux par période
+        'totals' => [
+            'period' => [
+                'tithes' => $totalTithes,
+                'offerings' => $totalOfferings,
+                'donations' => $totalDonations,
+                'expenses' => $totalExpenses,
+                'income' => $totalTithes + $totalOfferings + $totalDonations,
+                'outcome' => $totalExpenses,
+                'balance' => ($totalTithes + $totalOfferings + $totalDonations) - $totalExpenses,
+            ],
+            'month' => [
+                'tithes' => $monthTithes,
+                'offerings' => $monthOfferings,
+                'donations' => $monthDonations,
+                'expenses' => $monthExpenses,
+                'income' => $monthTithes + $monthOfferings + $monthDonations,
+                'outcome' => $monthExpenses,
+                'balance' => ($monthTithes + $monthOfferings + $monthDonations) - $monthExpenses,
+            ],
+            'week' => [
+                'tithes' => $weekTithes,
+                'offerings' => $weekOfferings,
+                'donations' => $weekDonations,
+                'expenses' => $weekExpenses,
+                'income' => $weekTithes + $weekOfferings + $weekDonations,
+                'outcome' => $weekExpenses,
+                'balance' => ($weekTithes + $weekOfferings + $weekDonations) - $weekExpenses,
+            ],
+            'year' => [
+                'tithes' => $yearTithes,
+                'offerings' => $yearOfferings,
+                'donations' => $yearDonations,
+                'expenses' => $yearExpenses,
+                'income' => $yearTithes + $yearOfferings + $yearDonations,
+                'outcome' => $yearExpenses,
+                'balance' => ($yearTithes + $yearOfferings + $yearDonations) - $yearExpenses,
+            ],
+        ],
+        // Compatibilité avec l'ancien code
+        'total_tithes' => $totalTithes,
+        'total_offerings' => $totalOfferings,
+        'total_donations' => $totalDonations,
+        'total_expenses' => $totalExpenses,
+        'total_income' => $totalTithes + $totalOfferings + $totalDonations,
+        'total_outcome' => $totalExpenses,
+        'net_balance' => ($totalTithes + $totalOfferings + $totalDonations) - $totalExpenses,
     ];
     $kpis = [
         [
@@ -132,7 +216,7 @@ Route::middleware(['auth'])->group(function () {
         ],
         [
             'label' => 'Dépenses',
-            'value' => (float) ($year['expenses'] ?? 0) + 0 - 0, // placeholder, not used
+            'value' => (float) DB::table('expenses')->where('church_id', $churchId)->where('paid_at','>=',$monthStart)->sum('amount'),
             'delta' => $prev['expenses'] == 0 ? null : round(((DB::table('expenses')->where('church_id', $churchId)->where('paid_at','>=',$monthStart)->sum('amount') - $prev['expenses']) / max($prev['expenses'], 0.0001)) * 100, 2),
             'is_expense' => true,
             'current' => (float) DB::table('expenses')->where('church_id', $churchId)->where('paid_at','>=',$monthStart)->sum('amount'),
@@ -141,11 +225,14 @@ Route::middleware(['auth'])->group(function () {
     return view('home', compact('stats','recentTithes','recentDonations','recentOfferings','chart','offeringsByType','from','to','kpis'));
 });
 
-Route::resource('members', MemberController::class);
+Route::resource('members', MemberController::class)->middleware('validate.image.upload');
 // Routes pour les remarques des membres
 Route::post('members/{member}/remarks', [App\Http\Controllers\MemberRemarkController::class, 'store'])->name('members.remarks.store');
 Route::delete('members/{member}/remarks/{index}', [App\Http\Controllers\MemberRemarkController::class, 'destroy'])->name('members.remarks.destroy');
 Route::get('members/{member}/remarks', [App\Http\Controllers\MemberRemarkController::class, 'index'])->name('members.remarks.index');
+
+// Routes pour les dîmes (spécifiques avant les routes de ressource)
+Route::get('tithes/total', [TitheController::class, 'getTotal'])->name('tithes.total');
 Route::resource('tithes', TitheController::class);
 Route::resource('offerings', OfferingController::class);
 // Types d'offrandes
@@ -156,11 +243,7 @@ Route::post('offerings-bulk', [OfferingController::class, 'bulkStore'])->name('o
 Route::resource('donations', DonationController::class);
 Route::resource('expenses', ExpenseController::class);
 Route::resource('projects', ProjectController::class);
-Route::resource('services', ServiceController::class);
-Route::resource('service-roles', ServiceRoleController::class);
-Route::post('service-roles/reset-defaults', [ServiceRoleController::class, 'resetDefaults'])->name('service-roles.reset-defaults');
-Route::resource('events', ChurchEventController::class);
-Route::resource('journal', JournalEntryController::class);
+Route::resource('journal', JournalEntryController::class)->middleware('validate.image.upload');
 Route::resource('administration', AdministrationController::class);
 Route::resource('administration-function-types', AdministrationFunctionTypeController::class);
 Route::post('administration-function-types/{administrationFunctionType}/toggle', [AdministrationFunctionTypeController::class, 'toggle'])->name('administration-function-types.toggle');
@@ -195,25 +278,9 @@ Route::prefix('reports/advanced')->name('reports.advanced.')->group(function () 
 });
 
 // Routes pour la programmation des cultes
-Route::get('services/{service}/program', [ServiceProgramController::class, 'show'])->name('services.program');
-Route::post('services/{service}/assign', [ServiceProgramController::class, 'assign'])->name('services.assign');
-Route::delete('service-assignments/{assignment}', [ServiceProgramController::class, 'unassign'])->name('service-assignments.destroy');
 
 
 
-Route::get('agenda', function () {
-    $from = now()->startOfMonth();
-    $to = now()->copy()->addMonths(2)->endOfMonth();
-    $services = \App\Models\Service::where('church_id', Auth::user()->church_id)
-        ->whereBetween('date', [$from,$to])
-        ->orderBy('date')
-        ->get();
-    $events = \App\Models\ChurchEvent::where('church_id', Auth::user()->church_id)
-        ->whereBetween('date', [$from,$to])
-        ->orderBy('date')
-        ->get();
-    return view('agenda.index', compact('services','events','from','to'));
-})->name('agenda.index');
 
     // Routes pour la gestion des églises
     Route::resource('churches', ChurchController::class);
@@ -221,4 +288,25 @@ Route::get('agenda', function () {
     // Routes pour la gestion des utilisateurs
     Route::resource('user-management', UserManagementController::class);
     Route::post('user-management/{user}/reset-password', [UserManagementController::class, 'resetPassword'])->name('user-management.reset-password');
+    
+    // Route simple pour afficher l'abonnement
+    Route::get('subscriptions', [SubscriptionController::class, 'index'])->name('subscriptions.index');
+    
+    // Routes de renouvellement d'abonnement
+    Route::get('subscription/renewal', [App\Http\Controllers\SubscriptionRenewalController::class, 'renewal'])->name('subscription.renewal');
+    Route::post('subscription/process-renewal', [App\Http\Controllers\SubscriptionRenewalController::class, 'processRenewal'])->name('subscription.process-renewal');
+    
+    // Routes de demande d'abonnement
+    Route::get('subscription/request', [App\Http\Controllers\SubscriptionRequestController::class, 'index'])->name('subscription.request');
+    Route::post('subscription/request', [App\Http\Controllers\SubscriptionRequestController::class, 'sendRequest'])->name('subscription.request.send');
+    
+    // Routes d'administration globale (accès direct)
+    Route::get('admin-0202', [AdminController::class, 'index'])->name('admin.index');
+    Route::get('admin/churches/{church}', [AdminController::class, 'showChurch'])->name('admin.church-details');
+    Route::get('admin/churches/{church}/subscriptions/create', [AdminController::class, 'createSubscription'])->name('admin.create-subscription');
+    Route::post('admin/churches/{church}/subscriptions', [AdminController::class, 'storeSubscription'])->name('admin.store-subscription');
+    Route::post('admin/churches/{church}/mark-paid', [AdminController::class, 'markSubscriptionPaid'])->name('admin.mark-subscription-paid');
+    Route::post('admin/churches/{church}/suspend', [AdminController::class, 'suspendSubscription'])->name('admin.suspend-subscription');
+    Route::post('admin/churches/{church}/renew', [AdminController::class, 'renewSubscription'])->name('admin.renew-subscription');
+    Route::get('admin/export/churches', [AdminController::class, 'exportChurches'])->name('admin.export-churches');
 });

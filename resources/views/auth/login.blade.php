@@ -18,7 +18,7 @@
 
         body {
             font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #f8fafc;
+            background: #ffffff;
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -138,7 +138,7 @@
             text-decoration: underline;
         }
 
-        .btn-primary {
+        .btn {
             width: 100%;
             padding: 16px;
             background: linear-gradient(135deg, #FF2600 0%, #ff4d33 100%);
@@ -152,19 +152,19 @@
             margin-bottom: 24px;
         }
 
-        .btn-primary:hover {
+        .btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 10px 25px rgba(255, 38, 0, 0.3);
         }
 
-        .btn-primary:disabled {
+        .btn:disabled {
             opacity: 0.7;
             cursor: not-allowed;
             transform: none;
             box-shadow: none;
         }
 
-        .btn-primary:disabled:hover {
+        .btn:disabled:hover {
             transform: none;
             box-shadow: none;
         }
@@ -224,7 +224,7 @@
 
         .btn-google:hover {
             border-color: #d1d5db;
-            background: #f9fafb;
+            background: #ffffff;
         }
 
         .google-icon {
@@ -376,7 +376,7 @@
                     <a href="#" class="forgot-password">Mot de passe oublié ?</a>
                 </div>
 
-                <button type="submit" class="btn-primary" id="loginBtn">
+                <button type="submit" class="btn" id="loginBtn">
                     <span class="btn-text">Se connecter</span>
                     <span class="btn-loader" style="display: none;">
                         <svg class="spinner" width="20" height="20" viewBox="0 0 24 24">

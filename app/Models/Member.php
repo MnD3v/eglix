@@ -21,6 +21,7 @@ class Member extends Model
         'marital_status',
         'function',
         'profile_photo',
+        'photo_url',
         'birth_date',
         'baptized_at',
         'status',

@@ -16,7 +16,7 @@
                 </p>
             </div>
             <div class="d-flex gap-2">
-                <a href="{{ route('offerings.create') }}" class="btn btn-primary">
+                <a href="{{ route('offerings.create') }}" class="btn btn">
                     <i class="bi bi-plus-lg me-2"></i>
                     <span class="btn-label">Ajouter une offrande</span>
                 </a>
@@ -41,7 +41,7 @@
                 <input type="date" name="to" value="{{ $filters['to'] ?? '' }}" class="form-control" />
             </div>
             <div class="col-12 col-sm-4 col-md-6 d-flex gap-2">
-                <button class="btn btn-primary" type="submit">Filtrer</button>
+                <button class="btn btn" type="submit">Filtrer</button>
                 <a class="btn btn-outline-secondary" href="{{ route('offerings.index') }}">Réinitialiser</a>
             </div>
         </div>
@@ -64,7 +64,7 @@
             <div class="card card-soft h-100">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-start mb-2">
-                        <span class="badge bg-primary">{{ optional($o->received_at)->format('d/m/Y') }}</span>
+                        <span class="badge bg-custom">{{ optional($o->received_at)->format('d/m/Y') }}</span>
                         <div class="fw-bold numeric">{{ number_format(round($o->amount), 0, ',', ' ') }} FCFA</div>
                     </div>
                     <div class="fw-semibold">{{ ucfirst(str_replace('_',' ', $o->type ?? '—')) }}</div>

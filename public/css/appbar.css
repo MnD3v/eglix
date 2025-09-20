@@ -4,12 +4,13 @@
    =========================================== */
 
 .appbar {
-    background: #f8f9fa;
+    background: #000000;
     border-radius: 16px;
     padding: 24px;
-    margin-bottom: 32px;
-    border: 1px solid #e8eaed;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    margin: 0 0 32px 0;
+    border: 1px solid #333333;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    color: white;
 }
 
 .appbar-content {
@@ -28,7 +29,7 @@
 .appbar-icon {
     width: 48px;
     height: 48px;
-    background: #5f6368;
+    background: rgba(255,255,255,0.2);
     border-radius: 12px;
     display: flex;
     align-items: center;
@@ -46,7 +47,7 @@
 .appbar-title {
     font-size: 28px;
     font-weight: 700;
-    color: #202124;
+    color: white;
     margin: 0;
     line-height: 1.2;
 }
@@ -58,12 +59,12 @@
 }
 
 .appbar-subtitle-icon {
-    color: #5f6368;
+    color: rgba(255,255,255,0.7);
     font-size: 14px;
 }
 
 .appbar-subtitle-text {
-    color: #5f6368;
+    color: rgba(255,255,255,0.7);
     font-size: 14px;
     font-weight: 400;
 }
@@ -79,20 +80,20 @@
     align-items: center;
     gap: 8px;
     padding: 12px 20px;
-    background: white;
-    color: #5f6368;
+    background: rgba(255,255,255,0.2);
+    color: white;
     text-decoration: none;
     border-radius: 8px;
-    border: 1px solid #dadce0;
+    border: 1px solid rgba(255,255,255,0.3);
     font-weight: 500;
     font-size: 14px;
     transition: all 0.2s ease;
 }
 
 .appbar-btn-secondary:hover {
-    background: #f8f9fa;
-    border-color: #5f6368;
-    color: #202124;
+    background: rgba(255,255,255,0.3);
+    border-color: rgba(255,255,255,0.5);
+    color: white;
     text-decoration: none;
     transform: translateY(-1px);
 }
@@ -102,22 +103,22 @@
     align-items: center;
     gap: 8px;
     padding: 12px 20px;
-    background: #1a73e8;
+    background: #ff2600;
     color: white;
     text-decoration: none;
     border-radius: 8px;
     font-weight: 500;
     font-size: 14px;
     transition: all 0.2s ease;
-    box-shadow: 0 1px 3px rgba(26, 115, 232, 0.3);
+    box-shadow: 0 1px 3px rgba(255, 38, 0, 0.3);
 }
 
 .appbar-btn-primary:hover {
-    background: #1557b0;
+    background: #e02200;
     color: white;
     text-decoration: none;
     transform: translateY(-1px);
-    box-shadow: 0 2px 6px rgba(26, 115, 232, 0.4);
+    box-shadow: 0 2px 6px rgba(255, 38, 0, 0.4);
 }
 
 /* ===========================================
@@ -131,12 +132,12 @@
 
 /* Comptes/Users */
 .accounts-appbar .appbar-icon {
-    background: #1a73e8;
+    background: #ff2600;
 }
 
 /* Membres */
 .members-appbar .appbar-icon {
-    background: #34a853;
+    background: #ff2600;
 }
 
 /* Finances */
@@ -162,7 +163,7 @@
 @media (max-width: 768px) {
     .appbar {
         padding: 20px;
-        margin-bottom: 24px;
+        margin: 0 0 24px 0;
     }
     
     .appbar-content {
@@ -220,7 +221,7 @@
 
 .appbar-btn-primary:active {
     transform: translateY(0);
-    box-shadow: 0 1px 3px rgba(26, 115, 232, 0.3);
+    box-shadow: 0 1px 3px rgba(255, 38, 0, 0.3);
 }
 
 .appbar-btn-secondary:active {
@@ -230,7 +231,7 @@
 /* Focus states pour l'accessibilité */
 .appbar-btn-primary:focus,
 .appbar-btn-secondary:focus {
-    outline: 2px solid #1a73e8;
+    outline: 2px solid #ff2600;
     outline-offset: 2px;
 }
 

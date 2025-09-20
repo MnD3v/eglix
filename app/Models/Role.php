@@ -157,18 +157,6 @@ class Role extends Model
             'projects.edit' => 'Modifier les projets',
             'projects.delete' => 'Supprimer les projets',
             
-            // Cultes
-            'services.view' => 'Voir les cultes',
-            'services.create' => 'Créer des cultes',
-            'services.edit' => 'Modifier les cultes',
-            'services.delete' => 'Supprimer les cultes',
-            'services.roles' => 'Gérer les rôles de culte',
-            
-            // Événements
-            'events.view' => 'Voir les événements',
-            'events.create' => 'Créer des événements',
-            'events.edit' => 'Modifier les événements',
-            'events.delete' => 'Supprimer les événements',
             
             // Rapports
             'reports.view' => 'Voir les rapports',
@@ -186,8 +174,6 @@ class Role extends Model
             'journal.edit' => 'Modifier le journal',
             'journal.delete' => 'Supprimer le journal',
             
-            // Agenda
-            'agenda.view' => 'Voir l\'agenda',
             
             // Utilisateurs
             'users.view' => 'Voir les utilisateurs',

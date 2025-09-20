@@ -4,7 +4,7 @@
 <div class="container py-4">
     <!-- Page Header -->
     <div class="page-header">
-        <div class="d-flex justify-content-between align-items-center">
+        <div class="d-flex flex-column flex-lg-row justify-content-between align-items-start align-items-lg-center gap-3">
             <div>
                 <h1 class="page-title">
                     <i class="bi bi-cash-coin me-3"></i>
@@ -15,8 +15,12 @@
                     Gérez les dîmes des membres
                 </p>
             </div>
-            <div>
-                <a href="{{ route('tithes.create') }}" class="btn btn-primary">
+            <div class="d-flex flex-column gap-3 w-100 w-lg-auto">
+                <div class="text-start total-amount">
+                    <div class="h4 mb-0 text-white" id="total-amount">{{ number_format($totalAmount, 0, ',', ' ') }} FCFA</div>
+                    <small class="text-white-50">Total des dîmes</small>
+                </div>
+                <a href="{{ route('tithes.create') }}" class="btn btn-sm btn w-100">
                     <i class="bi bi-plus-lg me-2"></i>
                     <span class="btn-label">Nouvelle dîme</span>
                 </a>
@@ -29,28 +33,28 @@
     @endif
 
     <form method="GET" class="mb-3">
-        <div class="row g-3 align-items-end">
-            <div class="col-12 col-md-6">
+        <div class="row g-2 g-lg-3 align-items-end">
+            <div class="col-12 col-lg-6">
                 <div class="input-group">
                     <span class="input-group-text"><i class="bi bi-search"></i></span>
                     <input type="text" class="form-control" placeholder="Rechercher par membre, méthode, référence..." name="q" value="{{ $search ?? '' }}">
                     @if(!empty($search))
                     <a class="btn btn-outline-secondary" href="{{ route('tithes.index') }}">Effacer</a>
                     @endif
-                    <button class="btn btn-primary" type="submit"><i class="bi bi-search"></i> <span class="btn-label">Rechercher</span></button>
+                    <button class="btn btn" type="submit"><i class="bi bi-search"></i> <span class="btn-label d-none d-lg-inline">Rechercher</span></button>
                 </div>
             </div>
-            <div class="col-6 col-md-3">
+            <div class="col-6 col-lg-3">
                 <label class="form-label small text-muted">Du</label>
                 <input type="date" name="from" value="{{ $filters['from'] ?? '' }}" class="form-control" />
             </div>
-            <div class="col-6 col-md-3">
+            <div class="col-6 col-lg-3">
                 <label class="form-label small text-muted">Au</label>
                 <input type="date" name="to" value="{{ $filters['to'] ?? '' }}" class="form-control" />
             </div>
-            <div class="col-12 col-md-auto ms-md-auto d-flex gap-2 justify-content-end">
-                <button class="btn btn-primary" type="submit"><i class="bi bi-funnel"></i> <span class="btn-label">Filtrer</span></button>
-                <a class="btn btn-outline-secondary" href="{{ route('tithes.index') }}"><i class="bi bi-arrow-counterclockwise"></i> <span class="btn-label">Réinitialiser</span></a>
+            <div class="col-12 col-lg-auto ms-lg-auto d-flex gap-2 justify-content-end">
+                <button class="btn btn" type="submit"><i class="bi bi-funnel"></i> <span class="btn-label d-none d-lg-inline">Filtrer</span></button>
+                <a class="btn btn-outline-secondary" href="{{ route('tithes.index') }}"><i class="bi bi-arrow-counterclockwise"></i> <span class="btn-label d-none d-lg-inline">Réinitialiser</span></a>
             </div>
         </div>
     </form>
@@ -66,13 +70,13 @@
         </div>
     </div>
 
-    <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-3">
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-2 g-lg-3">
         @forelse($tithes as $tithe)
         <div class="col">
             <div class="card card-soft h-100">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-start mb-2">
-                        <span class="badge bg-primary">{{ optional($tithe->paid_at)->format('d/m/Y') }}</span>
+                        <span class="badge bg-custom">{{ optional($tithe->paid_at)->format('d/m/Y') }}</span>
                         <div class="text-end fw-bold numeric">{{ number_format(round($tithe->amount), 0, ',', ' ') }} FCFA</div>
                     </div>
                     <div class="fw-semibold">
@@ -108,6 +112,59 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function(){
+    // Fonction pour mettre à jour le total des dîmes
+    function updateTotal() {
+        const fromInput = document.querySelector('input[name="from"]');
+        const toInput = document.querySelector('input[name="to"]');
+        const totalElement = document.getElementById('total-amount');
+        
+        if (!totalElement) return;
+        
+        // Afficher un indicateur de chargement
+        totalElement.innerHTML = '<i class="bi bi-hourglass-split"></i> Calcul...';
+        
+        // Construire l'URL avec les paramètres
+        const params = new URLSearchParams();
+        if (fromInput && fromInput.value) {
+            params.append('from', fromInput.value);
+        }
+        if (toInput && toInput.value) {
+            params.append('to', toInput.value);
+        }
+        
+        // Faire la requête AJAX
+        fetch(`{{ route('tithes.total') }}?${params.toString()}`)
+            .then(response => response.json())
+            .then(data => {
+                totalElement.textContent = data.formatted;
+            })
+            .catch(error => {
+                console.error('Erreur lors du calcul du total:', error);
+                totalElement.textContent = 'Erreur';
+            });
+    }
+    
+    // Écouter les changements sur les filtres de date
+    const fromInput = document.querySelector('input[name="from"]');
+    const toInput = document.querySelector('input[name="to"]');
+    
+    if (fromInput) {
+        fromInput.addEventListener('change', updateTotal);
+    }
+    if (toInput) {
+        toInput.addEventListener('change', updateTotal);
+    }
+    
+    // Écouter la soumission du formulaire de filtrage
+    const filterForm = document.querySelector('form[method="GET"]');
+    if (filterForm) {
+        filterForm.addEventListener('submit', function(e) {
+            // Laisser le formulaire se soumettre normalement
+            // Le total sera mis à jour par le serveur
+        });
+    }
+    
+    // Graphique des dîmes
     const el = document.getElementById('tithesLineChart');
     if (!el) return;
 

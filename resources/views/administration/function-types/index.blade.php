@@ -4,7 +4,7 @@
 <div class="container py-4">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h1 class="h3">Types de fonctions</h1>
-        <a href="{{ route('administration-function-types.create') }}" class="btn btn-primary"><i class="bi bi-plus-lg"></i> <span class="btn-label">Nouveau type</span></a>
+        <a href="{{ route('administration-function-types.create') }}" class="btn btn"><i class="bi bi-plus-lg"></i> <span class="btn-label">Nouveau type</span></a>
     </div>
 
     @if(session('success'))
@@ -62,7 +62,7 @@
             <div class="text-center text-muted py-5">
                 <i class="bi bi-tags" style="font-size: 3rem; opacity: 0.3;"></i>
                 <p class="mt-3">Aucun type de fonction</p>
-                <a href="{{ route('administration-function-types.create') }}" class="btn btn-primary">Créer le premier type</a>
+                <a href="{{ route('administration-function-types.create') }}" class="btn btn">Créer le premier type</a>
             </div>
         </div>
         @endforelse

@@ -145,7 +145,7 @@
         .strength-medium { color: #f59e0b; }
         .strength-strong { color: #059669; }
 
-        .btn-primary {
+        .btn {
             width: 100%;
             padding: 16px;
             background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%);
@@ -163,15 +163,31 @@
             gap: 8px;
         }
 
-        .btn-primary:hover {
+        .btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 10px 25px rgba(139, 92, 246, 0.3);
         }
 
-        .btn-primary:disabled {
+        .btn:disabled {
             opacity: 0.6;
             cursor: not-allowed;
             transform: none;
+        }
+
+        .btn-loader {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .spinner {
+            animation: spin 1.5s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
 
         .login-link {
@@ -431,9 +447,20 @@
                     </div>
                 </div>
 
-                <button type="submit" class="btn-primary">
-                    <i class="bi bi-building"></i>
-                    Créer mon église
+                <button type="submit" class="btn" id="registerBtn">
+                    <span class="btn-text">
+                        <i class="bi bi-building"></i>
+                        Créer mon église
+                    </span>
+                    <span class="btn-loader" style="display: none;">
+                        <svg class="spinner" width="20" height="20" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-dasharray="60" stroke-dashoffset="60">
+                                <animate attributeName="stroke-dasharray" dur="1.5s" values="0 60;60 0" repeatCount="indefinite"/>
+                                <animate attributeName="stroke-dashoffset" dur="1.5s" values="0;-60" repeatCount="indefinite"/>
+                            </circle>
+                        </svg>
+                        Création en cours...
+                    </span>
                 </button>
             </form>
 
@@ -510,6 +537,21 @@
             }
             
             strengthDiv.textContent = `Force du mot de passe: ${strengthText}`;
+        });
+
+        // Gestion du loading lors de la soumission du formulaire
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const submitBtn = document.getElementById('registerBtn');
+            const btnText = submitBtn.querySelector('.btn-text');
+            const btnLoader = submitBtn.querySelector('.btn-loader');
+            
+            // Désactiver le bouton et afficher le loading
+            submitBtn.disabled = true;
+            btnText.style.display = 'none';
+            btnLoader.style.display = 'flex';
+            
+            // Empêcher la double soumission
+            submitBtn.style.pointerEvents = 'none';
         });
     </script>
 </body>

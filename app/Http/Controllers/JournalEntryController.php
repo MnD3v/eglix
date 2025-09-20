@@ -66,26 +66,74 @@ class JournalEntryController extends Controller
 
             // Accept direct URLs (from Firebase) via image_urls[]
             if (is_array($request->image_urls ?? null) && count($request->image_urls) > 0) {
+                $firebaseUrls = [];
+                $localUrls = [];
+                
                 foreach ($request->image_urls as $url) {
                     if (!empty($url)) {
+                        if (str_starts_with($url, 'local://')) {
+                            // URL locale simulée, ne pas sauvegarder en base
+                            $localUrls[] = $url;
+                            Log::info('[Journal] local URL detected (not saved to DB)', ['url' => $url]);
+                        } else {
+                            // URL Firebase réelle
+                            JournalImage::create([
+                                'journal_entry_id' => $entry->id,
+                                'path' => $url,
+                            ]);
+                            $firebaseUrls[] = $url;
+                        }
+                    }
+                }
+                
+                if (!empty($firebaseUrls)) {
+                    Log::info('[Journal] saved firebase image urls', ['count' => count($firebaseUrls)]);
+                }
+                
+                if (!empty($localUrls)) {
+                    Log::info('[Journal] local URLs detected (will use file upload fallback)', ['count' => count($localUrls)]);
+                }
+            } elseif ($request->hasFile('images')) {
+                // Fallback: store locally so that DB is populated even if Firebase upload is blocked
+                $uploadErrors = [];
+                $successfulUploads = 0;
+                
+                foreach ($request->file('images') as $index => $file) {
+                    if (!$file->isValid()) {
+                        $uploadErrors[] = "Fichier " . ($index + 1) . ": " . $file->getErrorMessage();
+                        continue;
+                    }
+                    
+                    try {
+                        $path = $file->store('journal', 'public');
                         JournalImage::create([
                             'journal_entry_id' => $entry->id,
-                            'path' => $url,
+                            'path' => $path,
+                        ]);
+                        $successfulUploads++;
+                    } catch (\Exception $e) {
+                        $uploadErrors[] = "Fichier " . ($index + 1) . " ({$file->getClientOriginalName()}): " . $e->getMessage();
+                        Log::error('Journal image upload failed', [
+                            'file' => $file->getClientOriginalName(),
+                            'error' => $e->getMessage(),
+                            'entry_id' => $entry->id
                         ]);
                     }
                 }
-                Log::info('[Journal] saved firebase image urls', ['count' => count($request->image_urls)]);
-            } elseif ($request->hasFile('images')) {
-                // Fallback: store locally so that DB is populated even if Firebase upload is blocked
-                foreach ($request->file('images') as $file) {
-                    if (!$file->isValid()) { continue; }
-                    $path = $file->store('journal', 'public');
-                    JournalImage::create([
-                        'journal_entry_id' => $entry->id,
-                        'path' => $path,
+                
+                if ($successfulUploads > 0) {
+                    Log::info('[Journal] saved local images', [
+                        'successful' => $successfulUploads,
+                        'total' => count($request->file('images'))
                     ]);
                 }
-                Log::info('[Journal] saved local images');
+                
+                if (!empty($uploadErrors)) {
+                    Log::warning('[Journal] some images failed to upload', [
+                        'errors' => $uploadErrors,
+                        'entry_id' => $entry->id
+                    ]);
+                }
             } else {
                 Log::warning('[Journal] no images provided');
             }

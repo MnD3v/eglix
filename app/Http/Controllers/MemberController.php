@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Member;
+use App\Services\FirebaseStorageService;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
@@ -72,15 +73,25 @@ class MemberController extends Controller
             'notes' => ['nullable','string'],
             'profile_photo' => ['nullable','image','mimes:jpg,jpeg,png,webp','max:4096'],
         ]);
+
+        // Upload photo to Firebase if provided
         if ($request->hasFile('profile_photo')) {
+            $firebaseService = new FirebaseStorageService();
+            $photoUrl = $firebaseService->uploadFileDirect($request->file('profile_photo'));
+            
+            if ($photoUrl) {
+                // Upload réussi, stocker l'URL dans la BD
+                $validated['photo_url'] = $photoUrl;
+            }
+            
+            // Stocker aussi localement comme backup
             $validated['profile_photo'] = $request->file('profile_photo')->store('members', 'public');
         }
 
         // Ajouter l'ID de l'église
         $validated['church_id'] = Auth::user()->church_id;
-
-        $validated['church_id'] = \Illuminate\Support\Facades\Auth::user()->church_id;
-        $validated['created_by'] = \Illuminate\Support\Facades\Auth::id();
+        $validated['created_by'] = Auth::id();
+        
         $member = Member::create($validated);
         return redirect()->route('members.index')->with('success', 'Membre enregistré.');
     }
@@ -173,11 +184,18 @@ class MemberController extends Controller
             'notes' => ['nullable','string'],
             'profile_photo' => ['nullable','image','mimes:jpg,jpeg,png,webp','max:4096'],
         ]);
+
+        // Upload photo to Firebase if provided
         if ($request->hasFile('profile_photo')) {
-            $validated['profile_photo'] = $request->file('profile_photo')->store('members', 'public');
+            $firebaseService = new FirebaseStorageService();
+            $photoUrl = $firebaseService->uploadFileDirect($request->file('profile_photo'));
+            
+            if ($photoUrl) {
+                $validated['photo_url'] = $photoUrl;
+            }
         }
 
-        $validated['updated_by'] = \Illuminate\Support\Facades\Auth::id();
+        $validated['updated_by'] = Auth::id();
         $member->update($validated);
         return redirect()->route('members.index')->with('success', 'Mise à jour effectuée.');
     }

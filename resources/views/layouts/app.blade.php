@@ -11,9 +11,238 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=Syne:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="{{ asset('css/appbar.css') }}" rel="stylesheet">
     <style>
+        /* Couleurs personnalisées - Toutes les couleurs primaires sont maintenant #ff2600 */
+        .btn {
+            background: #ff2600 !important;
+            border-color: #ff2600 !important;
+            color: white !important;
+        }
+        
+        .btn:hover {
+            background: #e02200 !important;
+            border-color: #e02200 !important;
+            color: white !important;
+        }
+        
+        .bg-custom { 
+            background-color: #ff2600 !important; 
+            color: white !important;
+        }
+        
+        .text-custom { 
+            color: #ff2600 !important; 
+        }
+        
+        .badge.bg-custom { 
+            background-color: #ff2600 !important; 
+            color: white !important;
+        }
+        
+        /* Boutons d'ajout - Design cohérent et moderne */
+        .btn-add {
+            background: linear-gradient(135deg, #ff2600 0%, #e02200 100%);
+            border: none;
+            border-radius: 12px;
+            padding: 12px 24px;
+            font-weight: 600;
+            color: white;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 38, 0, 0.25);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-add:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 38, 0, 0.35);
+            color: white;
+            text-decoration: none;
+        }
+        
+        .btn-add:active {
+            transform: translateY(0);
+            box-shadow: 0 4px 15px rgba(255, 38, 0, 0.25);
+        }
+        
+        .btn-add i {
+            font-size: 16px;
+            color: white;
+        }
+        
+        .btn-add .btn-text {
+            color: white;
+            font-weight: 600;
+        }
+        
+        /* Effet de brillance au survol */
+        .btn-add::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .btn-add:hover::before {
+            left: 100%;
+        }
+        
+        /* Variantes de taille */
+        .btn-add.btn-sm {
+            padding: 8px 16px;
+            font-size: 12px;
+            border-radius: 8px;
+        }
+        
+        .btn-add.btn-lg {
+            padding: 16px 32px;
+            font-size: 16px;
+            border-radius: 16px;
+        }
+        
+        /* Bouton d'état vide */
+        .btn-add-empty {
+            background: linear-gradient(135deg, #ff2600 0%, #e02200 100%);
+            border: none;
+            border-radius: 12px;
+            padding: 16px 32px;
+            font-weight: 600;
+            color: white;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(255, 38, 0, 0.3);
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            margin-top: 20px;
+        }
+        
+        .btn-add-empty:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(255, 38, 0, 0.4);
+            color: white;
+            text-decoration: none;
+        }
+        
+        .btn-add-empty i {
+            font-size: 20px;
+            color: white;
+        }
+        .btn-loading {
+            position: relative;
+            pointer-events: none;
+            opacity: 0.7;
+        }
+        
+        .btn-loading::after {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            top: 50%;
+            left: 50%;
+            margin-left: -8px;
+            margin-top: -8px;
+            border: 2px solid transparent;
+            border-top-color: #ffffff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        .btn-loading .btn-text {
+            opacity: 0;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .form-loading {
+            position: relative;
+            pointer-events: none;
+            opacity: 0.7;
+        }
+        
+        .form-loading::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.8);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .form-loading::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            margin-left: -20px;
+            margin-top: -20px;
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #ff2600;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            z-index: 1001;
+        }
+        
+        /* Loader pour les boutons de soumission */
+        .submit-loading {
+            position: relative;
+            pointer-events: none;
+            opacity: 0.7;
+        }
+        
+        .submit-loading .btn-text {
+            opacity: 0;
+        }
+        
+        .submit-loading::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            top: 50%;
+            left: 50%;
+            margin-left: -10px;
+            margin-top: -10px;
+            border: 2px solid transparent;
+            border-top-color: #ffffff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        .btn-secondary {
+            background: #6c757d !important;
+            border-color: #6c757d !important;
+            color: white !important;
+        }
+        
+        .btn-outline-secondary {
+            background: transparent !important;
+            border-color: #6c757d !important;
+            color: #6c757d !important;
+        }
+        
         :root {
             --bs-primary: #FF2600; /* brand red */
             --bs-primary-rgb: 255, 38, 0;
@@ -24,10 +253,10 @@
             --bs-primary-bg-subtle: #FFE1DB;
             --bs-primary-border-subtle: #FFC0B5;
         }
-        body { font-family: 'DM Sans', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif; background-color: #F8FAFC; }
-        /* Numeric typography using Syne across the app */
+        body { font-family: 'DM Sans', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif; background-color: #ffffff; }
+        /* Numeric typography using Plus Jakarta Sans across the app */
         .numeric, .kpi-value, .badge, .text-end, .amount, .money, .stat-number, .table td.text-end, .card .card-body strong {
-            font-family: 'Syne', 'DM Sans', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+            font-family: 'Plus Jakarta Sans', 'DM Sans', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
             font-variant-numeric: tabular-nums lining-nums;
             letter-spacing: .02em;
         }
@@ -37,36 +266,164 @@
 
         /* Styles globaux pour les titres de page */
         .page-header {
-            padding: 1.5rem 0;
-            margin-bottom: 2rem;
+            background: #000000;
+            color: white;
+            border-radius: 12px;
+            padding: 1.5rem 2rem;
+            margin: 0 0 2rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/><circle cx="10" cy="60" r="0.5" fill="white" opacity="0.1"/><circle cx="90" cy="40" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .page-header > * {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Styles cohérents pour les contenants de titres */
+        .card-header {
+            padding: 1rem 1.25rem;
+            background: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+            font-weight: 600;
+        }
+
+        .section-header {
+            padding: 1rem 1.25rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .content-header {
+            padding: 0.75rem 1rem;
+            background: #f8f9fa;
+            border-left: 4px solid #ff2600;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        /* Styles cohérents pour les KPIs */
+        .kpi-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .kpi-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #333;
+            margin: 0;
+        }
+
+        .kpi-card {
+            padding: 1.25rem;
+            border-radius: 12px;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        /* Boutons dans les page-headers */
+        .page-header .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            border-radius: 8px;
+            background: #ff2600;
+            border: none;
+            color: white;
+        }
+
+        .page-header .btn-sm:hover {
+            background: #e02200;
+            color: white;
         }
 
         .page-title {
-            font-size: 1.8rem;
-            font-weight: 600;
-            color: #2d3748;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: white;
             margin-bottom: 0.5rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
         }
 
-        .page-subtitle {
-            font-size: 1rem;
-            color: #718096;
-            margin-bottom: 0;
+        .page-title i {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 0.75rem;
+            font-size: 1.5rem;
+            color: white !important;
+        }
+
+        /* Styles pour le total des dîmes */
+        .total-amount {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 1rem 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .total-amount .h4 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: white;
+            margin: 0;
+        }
+
+        .total-amount small {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
         }
 
         .page-header .text-muted {
-            color: #718096 !important;
+            color: rgba(255,255,255,0.7) !important;
         }
 
-        .page-header i {
-            color: #718096 !important;
+        .page-header i:not(.page-title i) {
+            color: rgba(255,255,255,0.7) !important;
+        }
+
+        /* Responsive design pour les titres */
+        @media (max-width: 768px) {
+            .page-header {
+                padding: 1.5rem;
+                margin: 0 0 1.5rem 0;
+            }
+            
+            .page-title {
+                font-size: 2rem;
+                flex-direction: column;
+                text-align: center;
+                gap: 0.75rem;
+            }
+            
+            .page-subtitle {
+                text-align: center;
+            }
         }
 
         /* Icônes des boutons d'ajout en blanc */
-        .btn-primary i,
-        .btn-primary .bi-plus-lg,
-        .btn-primary .bi-plus-circle,
-        .btn-primary .bi-person-plus-fill,
+        .btn i,
+        .btn .bi-plus-lg,
+        .btn .bi-plus-circle,
+        .btn .bi-person-plus-fill,
         .btn-new-user i,
         .btn-new-user .bi-plus-lg,
         .btn-new-user .bi-person-plus-fill,
@@ -78,7 +435,7 @@
         }
 
         /* Force primary color across common components */
-        .btn-primary {
+        .btn {
             --bs-btn-color: #fff;
             --bs-btn-bg: #FF2600;
             --bs-btn-border-color: #FF2600;
@@ -101,8 +458,8 @@
             --bs-btn-active-bg: #e52200;
             --bs-btn-active-border-color: #e52200;
         }
-        .text-primary { color: #FF2600 !important; }
-        .bg-primary { background-color: #FF2600 !important; }
+        .text-custom { color: #FF2600 !important; }
+        .bg-custom { background-color: #FF2600 !important; }
         .border-primary { border-color: #FF2600 !important; }
         .link-primary { color: #FF2600 !important; }
         .page-item.active .page-link {
@@ -111,8 +468,8 @@
         }
         .form-check-input:checked { background-color: #FF2600; border-color: #FF2600; }
         .nav-pills .nav-link.active, .nav-pills .show>.nav-link { background-color: #FF2600; }
-        .progress-bar.bg-primary { background-color: #FF2600 !important; }
-        .badge.bg-primary { background-color: #FF2600 !important; }
+        .progress-bar.bg-custom { background-color: #FF2600 !important; }
+        .badge.bg-custom { background-color: #FF2600 !important; }
         .alert-primary { color: #661000; background-color: #FFE1DB; border-color: #FFC0B5; }
 
         /* Buttons: show icon + text on desktop, icon-only on mobile (outside sidebar) */
@@ -153,7 +510,7 @@
             bottom: 0;
             left: 0;
             width: 220px;
-            background-color: #0B1220; /* deeper slate */
+            background-color: #000000; /* noir pur */
             padding-top: 16px;
             z-index: 1030;
             overflow-y: auto; /* scrollable */
@@ -203,7 +560,7 @@
             .sidebar-backdrop { position: fixed; inset: 0; background: rgba(2,6,23,.45); z-index: 1025; display: none; }
             .sidebar-backdrop.show { display: block; }
             main.dashboard-main { margin-left: 0; }
-            .mobile-topbar { position: sticky; top: 0; z-index: 1040; background: #0B1220; color: #fff; height: 56px; display: flex; align-items: center; padding: 0 12px; }
+            .mobile-topbar { position: sticky; top: 0; z-index: 1040; background: #000000; color: #fff; height: 56px; display: flex; align-items: center; padding: 0 12px; }
             .sidebar-toggle { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border: 1px solid rgba(255,255,255,.15); border-radius: 8px; color: #fff; background: transparent; }
             .mobile-brand { display: inline-flex; align-items: center; gap: 10px; margin-left: 10px; }
             .mobile-brand img { height: 28px; }
@@ -587,7 +944,7 @@
         }
 
         .info-header, .stats-header, .remarks-header, .tithes-header {
-            background: #f8fafc;
+            background: #ffffff;
             padding: 1.5rem;
             border-bottom: 1px solid rgba(0, 0, 0, 0.05);
         }
@@ -634,7 +991,7 @@
             align-items: center;
             gap: 1rem;
             padding: 1rem;
-            background: #f8fafc;
+            background: #ffffff;
             border-radius: 12px;
             margin-bottom: 1rem;
             transition: all 0.3s ease;
@@ -645,7 +1002,7 @@
         }
 
         .stat-item:hover {
-            background: #f1f5f9;
+            background: #ffffff;
             transform: translateX(5px);
         }
 
@@ -703,7 +1060,7 @@
             align-items: center;
             gap: 1rem;
             padding: 1.5rem;
-            background: #f8fafc;
+            background: #ffffff;
             border-radius: 12px;
             margin-bottom: 1rem;
             border-left: 4px solid #FF2600;
@@ -715,7 +1072,7 @@
         }
 
         .remark-item:hover {
-            background: #f1f5f9;
+            background: #ffffff;
             transform: translateX(5px);
         }
 
@@ -767,7 +1124,7 @@
             justify-content: space-between;
             align-items: center;
             padding: 1.5rem;
-            background: #f8fafc;
+            background: #ffffff;
             border-radius: 12px;
             margin-bottom: 1rem;
             border-left: 4px solid #22c55e;
@@ -779,7 +1136,7 @@
         }
 
         .tithe-item:hover {
-            background: #f1f5f9;
+            background: #ffffff;
             transform: translateX(5px);
         }
 
@@ -813,7 +1170,7 @@
             width: 80px;
             height: 80px;
             border-radius: 50%;
-            background: #f1f5f9;
+            background: #ffffff;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -945,6 +1302,375 @@
                 padding: 1rem;
             }
         }
+        
+        /* Amélioration générale de l'organisation mobile */
+        @media (max-width: 991.98px) {
+            /* Container et padding */
+            .container {
+                padding-left: 12px;
+                padding-right: 12px;
+            }
+            
+            /* Page header mobile */
+            .page-header {
+                padding: 1rem 1.25rem !important;
+                margin: 0 0 1.5rem 0 !important;
+            }
+            
+            .page-title {
+                font-size: 1.75rem !important;
+                margin-bottom: 0.5rem;
+            }
+            
+            .page-subtitle {
+                font-size: 0.9rem !important;
+            }
+            
+            /* Contenants de titres mobile */
+            .card-header {
+                padding: 0.75rem 1rem !important;
+            }
+            
+            .section-header {
+                padding: 0.75rem 1rem !important;
+                margin-bottom: 0.75rem !important;
+            }
+            
+            .content-header {
+                padding: 0.5rem 0.75rem !important;
+                margin-bottom: 0.75rem !important;
+            }
+            
+            /* KPIs mobile */
+            .kpi-header {
+                gap: 0.75rem !important;
+                margin-bottom: 0.75rem !important;
+            }
+            
+            .kpi-title {
+                font-size: 0.9rem !important;
+            }
+            
+            .kpi-card {
+                padding: 1rem !important;
+            }
+            
+            /* Boutons dans page-headers mobile */
+            .page-header .btn-sm {
+                padding: 0.375rem 0.75rem !important;
+                font-size: 0.8rem !important;
+                border-radius: 10px !important;
+            }
+            
+            .page-header .btn {
+                padding: 0.5rem 1rem !important;
+                font-size: 0.875rem !important;
+            }
+            
+            /* Total amount mobile */
+            .total-amount {
+                padding: 0.75rem 1rem !important;
+                border-radius: 6px !important;
+            }
+            
+            .total-amount .h4 {
+                font-size: 1.5rem !important;
+            }
+            
+            /* Cartes et grilles */
+            .row.g-3 {
+                --bs-gutter-x: 0.75rem;
+                --bs-gutter-y: 0.75rem;
+            }
+            
+            .card {
+                margin-bottom: 0.75rem;
+            }
+            
+            .card-body {
+                padding: 1rem !important;
+            }
+            
+            /* Boutons mobile */
+            .btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.875rem;
+            }
+            
+            .btn-sm {
+                padding: 0.375rem 0.75rem;
+                font-size: 0.8rem;
+            }
+            
+            /* Formulaires mobile */
+            .form-control, .form-select {
+                font-size: 16px; /* Évite le zoom sur iOS */
+                padding: 0.75rem;
+            }
+            
+            .input-group .form-control {
+                padding: 0.75rem;
+            }
+            
+            /* Tables responsive */
+            .table-responsive {
+                border-radius: 8px;
+                margin-bottom: 1rem;
+            }
+            
+            .table {
+                font-size: 0.875rem;
+            }
+            
+            /* Navigation mobile */
+            .mobile-topbar {
+                padding: 0 16px;
+            }
+            
+            /* Espacement des sections */
+            .mb-4 {
+                margin-bottom: 1.5rem !important;
+            }
+            
+            .mb-3 {
+                margin-bottom: 1rem !important;
+            }
+            
+            /* KPIs et statistiques */
+            .kpi-card {
+                margin-bottom: 0.75rem;
+            }
+            
+            .kpi-value {
+                font-size: 1.25rem !important;
+            }
+            
+            /* Modals mobile */
+            .modal-dialog {
+                margin: 0.5rem;
+            }
+            
+            .modal-content {
+                border-radius: 12px;
+            }
+            
+            /* Alertes mobile */
+            .alert {
+                padding: 0.75rem;
+                font-size: 0.875rem;
+                margin-bottom: 1rem;
+            }
+            
+            /* Filtres et formulaires de recherche */
+            .filter-tabs {
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+            
+            .filter-tab {
+                padding: 0.5rem 1rem;
+                font-size: 0.875rem;
+            }
+            
+            /* Grilles responsive */
+            .row-cols-1.row-cols-sm-2.row-cols-lg-3 {
+                --bs-gutter-x: 0.75rem;
+                --bs-gutter-y: 0.75rem;
+            }
+            
+            /* Pagination mobile */
+            .pagination {
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+            
+            .pagination .page-link {
+                padding: 0.5rem 0.75rem;
+                font-size: 0.875rem;
+            }
+        }
+        
+        /* Optimisations desktop */
+        @media (min-width: 992px) {
+            /* Container desktop */
+            .container {
+                padding-left: 15px;
+                padding-right: 15px;
+            }
+            
+            /* Page header desktop */
+            .page-header {
+                padding: 1.75rem 2.25rem !important;
+                margin: 0 0 2rem 0 !important;
+            }
+            
+            .page-title {
+                font-size: 2.25rem !important;
+                margin-bottom: 0.75rem;
+            }
+            
+            .page-subtitle {
+                font-size: 1rem !important;
+            }
+            
+            /* Contenants de titres desktop */
+            .card-header {
+                padding: 1.25rem 1.5rem !important;
+            }
+            
+            .section-header {
+                padding: 1.25rem 1.5rem !important;
+                margin-bottom: 1.25rem !important;
+            }
+            
+            .content-header {
+                padding: 1rem 1.25rem !important;
+                margin-bottom: 1.25rem !important;
+            }
+            
+            /* KPIs desktop */
+            .kpi-header {
+                gap: 1.25rem !important;
+                margin-bottom: 1.25rem !important;
+            }
+            
+            .kpi-title {
+                font-size: 1.1rem !important;
+            }
+            
+            .kpi-card {
+                padding: 1.5rem !important;
+            }
+            
+            /* Boutons dans page-headers desktop */
+            .page-header .btn-sm {
+                padding: 0.5rem 1rem !important;
+                font-size: 0.875rem !important;
+                border-radius: 12px !important;
+            }
+            
+            .page-header .btn {
+                padding: 0.75rem 1.5rem !important;
+                font-size: 1rem !important;
+            }
+            
+            /* Total amount desktop */
+            .total-amount {
+                padding: 1rem 1.5rem !important;
+                border-radius: 8px !important;
+            }
+            
+            .total-amount .h4 {
+                font-size: 1.75rem !important;
+            }
+            
+            /* Cartes et grilles desktop */
+            .row.g-3 {
+                --bs-gutter-x: 1rem;
+                --bs-gutter-y: 1rem;
+            }
+            
+            .card {
+                margin-bottom: 1rem;
+            }
+            
+            .card-body {
+                padding: 1.25rem !important;
+            }
+            
+            /* Boutons desktop */
+            .btn {
+                padding: 0.75rem 1.5rem;
+                font-size: 1rem;
+            }
+            
+            .btn-sm {
+                padding: 0.5rem 1rem;
+                font-size: 0.875rem;
+            }
+            
+            /* Formulaires desktop */
+            .form-control, .form-select {
+                font-size: 1rem;
+                padding: 0.75rem;
+            }
+            
+            .input-group .form-control {
+                padding: 0.75rem;
+            }
+            
+            /* Tables desktop */
+            .table-responsive {
+                border-radius: 12px;
+                margin-bottom: 1.5rem;
+            }
+            
+            .table {
+                font-size: 1rem;
+            }
+            
+            /* Espacement des sections desktop */
+            .mb-4 {
+                margin-bottom: 2rem !important;
+            }
+            
+            .mb-3 {
+                margin-bottom: 1.5rem !important;
+            }
+            
+            /* KPIs et statistiques desktop */
+            .kpi-card {
+                margin-bottom: 1rem;
+            }
+            
+            .kpi-value {
+                font-size: 1.5rem !important;
+            }
+            
+            /* Modals desktop */
+            .modal-dialog {
+                margin: 1.75rem auto;
+            }
+            
+            .modal-content {
+                border-radius: 16px;
+            }
+            
+            /* Alertes desktop */
+            .alert {
+                padding: 1rem 1.25rem;
+                font-size: 1rem;
+                margin-bottom: 1.5rem;
+            }
+            
+            /* Filtres et formulaires de recherche desktop */
+            .filter-tabs {
+                flex-wrap: nowrap;
+                gap: 0.75rem;
+            }
+            
+            .filter-tab {
+                padding: 0.75rem 1.5rem;
+                font-size: 1rem;
+            }
+            
+            /* Grilles responsive desktop */
+            .row-cols-1.row-cols-sm-2.row-cols-lg-3 {
+                --bs-gutter-x: 1rem;
+                --bs-gutter-y: 1rem;
+            }
+            
+            /* Pagination desktop */
+            .pagination {
+                justify-content: flex-start;
+                flex-wrap: nowrap;
+            }
+            
+            .pagination .page-link {
+                padding: 0.75rem 1rem;
+                font-size: 1rem;
+            }
+        }
 
         /* Très petits écrans */
         @media (max-width: 480px) {
@@ -1020,23 +1746,17 @@
         @if(Auth::user() && Auth::user()->hasPermission('donations.view'))
         <a href="{{ route('donations.index') }}" class="{{ request()->is('donations*') ? 'active' : '' }}" title="Dons"><i class="bi bi-heart"></i><span class="sidebar-text">Dons</span></a>
         @endif
+        @if(Auth::user() && Auth::user()->hasPermission('subscriptions.view'))
+        <a href="{{ route('subscriptions.index') }}" class="{{ request()->is('subscriptions*') ? 'active' : '' }}" title="Abonnements"><i class="bi bi-calendar-check"></i><span class="sidebar-text">Abonnements</span></a>
+        @endif
         @if(Auth::user() && Auth::user()->hasPermission('expenses.view'))
         <a href="{{ route('expenses.index') }}" class="{{ request()->is('expenses*') ? 'active' : '' }}" title="Dépenses"><i class="bi bi-credit-card"></i><span class="sidebar-text">Dépenses</span></a>
         @endif
         @if(Auth::user() && Auth::user()->hasPermission('projects.view'))
         <a href="{{ route('projects.index') }}" class="{{ request()->is('projects*') ? 'active' : '' }}" title="Projets"><i class="bi bi-kanban"></i><span class="sidebar-text">Projets</span></a>
         @endif
-        @if(Auth::user() && Auth::user()->hasPermission('services.view'))
-        <a href="{{ route('services.index') }}" class="{{ request()->is('services*') ? 'active' : '' }}" title="Cultes"><i class="bi bi-music-note-beamed"></i><span class="sidebar-text">Cultes</span></a>
-        @endif
-        @if(Auth::user() && Auth::user()->hasPermission('events.view'))
-        <a href="{{ route('events.index') }}" class="{{ request()->is('events*') ? 'active' : '' }}" title="Événements"><i class="bi bi-calendar-event"></i><span class="sidebar-text">Événements</span></a>
-        @endif
         @if(Auth::user() && Auth::user()->hasPermission('reports.view'))
         <a href="{{ route('reports.index') }}" class="{{ request()->is('reports*') ? 'active' : '' }}" title="Rapports"><i class="bi bi-graph-up"></i><span class="sidebar-text">Rapports</span></a>
-        @endif
-        @if(Auth::user() && Auth::user()->hasPermission('agenda.view'))
-        <a href="{{ route('agenda.index') }}" class="{{ request()->is('agenda*') ? 'active' : '' }}" title="Agenda"><i class="bi bi-calendar4-week"></i><span class="sidebar-text">Agenda</span></a>
         @endif
         @if(Auth::user() && Auth::user()->hasPermission('journal.view'))
         <a href="{{ route('journal.index') }}" class="{{ request()->is('journal*') ? 'active' : '' }}" title="Journal"><i class="bi bi-journal-text"></i><span class="sidebar-text">Journal</span></a>
@@ -1100,6 +1820,70 @@
             }
         });
         
+        // Fonction pour ajouter un loader aux boutons de soumission
+        function addSubmitLoader(form) {
+            const submitBtn = form.querySelector('button[type="submit"], input[type="submit"]');
+            if (submitBtn) {
+                submitBtn.classList.add('submit-loading');
+                submitBtn.disabled = true;
+                
+                // Ajouter une classe au formulaire
+                form.classList.add('form-loading');
+            }
+        }
+        
+        // Fonction pour ajouter un loader aux boutons spécifiques
+        function addButtonLoader(button) {
+            button.classList.add('btn-loading');
+            button.disabled = true;
+        }
+        
+        // Fonction pour retirer les loaders
+        function removeLoaders() {
+            document.querySelectorAll('.btn-loading, .submit-loading, .form-loading').forEach(element => {
+                element.classList.remove('btn-loading', 'submit-loading', 'form-loading');
+                element.disabled = false;
+            });
+        }
+        
+        // Ajouter des loaders automatiquement aux formulaires
+        document.addEventListener('DOMContentLoaded', function() {
+            // Tous les formulaires de création/modification
+            document.querySelectorAll('form').forEach(form => {
+                form.addEventListener('submit', function(e) {
+                    addSubmitLoader(this);
+                });
+            });
+            
+            // Boutons spécifiques avec classe .btn-submit
+            document.querySelectorAll('.btn-submit').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    addButtonLoader(this);
+                });
+            });
+        });
+        
+        // Fonction globale pour ajouter un loader aux liens de déconnexion
+        function addLogoutLoader(element) {
+            const originalText = element.innerHTML;
+            element.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Déconnexion...';
+            element.style.pointerEvents = 'none';
+            
+            // Créer un formulaire temporaire pour la déconnexion
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '{{ route("logout") }}';
+            
+            const csrfToken = document.createElement('input');
+            csrfToken.type = 'hidden';
+            csrfToken.name = '_token';
+            csrfToken.value = '{{ csrf_token() }}';
+            
+            form.appendChild(csrfToken);
+            document.body.appendChild(form);
+            form.submit();
+        }
+        
         // Fonction de confirmation de déconnexion
         function confirmLogout() {
             const modal = new bootstrap.Modal(document.getElementById('confirmModal'));
@@ -1124,6 +1908,11 @@
             
             // Ajouter le nouvel événement
             newModalOk.addEventListener('click', function() {
+                // Ajouter le loader au bouton
+                const originalText = newModalOk.innerHTML;
+                newModalOk.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Déconnexion...';
+                newModalOk.disabled = true;
+                
                 // Créer un formulaire temporaire pour la déconnexion
                 const form = document.createElement('form');
                 form.method = 'POST';
@@ -1230,7 +2019,7 @@
         }
         
         .select2-container .select2-results__option[aria-selected=true] {
-            background-color: #f1f5f9;
+            background-color: #ffffff;
             font-weight: 500;
         }
         
@@ -1238,7 +2027,7 @@
             padding: 8px 16px;
             font-weight: 600;
             color: #64748b;
-            background-color: #f8fafc;
+            background-color: #ffffff;
         }
         
         /* Icône de recherche dans le champ */
@@ -1277,7 +2066,7 @@
         /* Style pour le champ de recherche dans le dropdown */
         .select2-search--dropdown {
             padding: 12px;
-            background-color: #f8fafc;
+            background-color: #ffffff;
             border-bottom: 1px solid #e2e8f0;
         }
         
@@ -1417,7 +2206,7 @@
     // Animations au scroll et d'entrée
     document.addEventListener('DOMContentLoaded', function() {
         // Animation d'entrée pour les éléments principaux
-        const mainElements = document.querySelectorAll('.page-header, .card-soft, .btn-primary');
+        const mainElements = document.querySelectorAll('.page-header, .card-soft, .btn');
         mainElements.forEach((element, index) => {
             element.style.opacity = '0';
             element.style.transform = 'translateY(20px)';

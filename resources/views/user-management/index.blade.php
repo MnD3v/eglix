@@ -18,9 +18,9 @@
                 </div>
             </div>
             <div class="appbar-right">
-                <a href="{{ route('user-management.create') }}" class="appbar-btn-primary">
+                <a href="{{ route('user-management.create') }}" class="btn-add">
                     <i class="bi bi-person-plus"></i>
-                    <span>Nouvel Utilisateur</span>
+                    <span class="btn-text">Nouvel utilisateur</span>
                 </a>
             </div>
         </div>
@@ -56,7 +56,7 @@
                         <div class="d-flex justify-content-between align-items-center mb-2">
                             <span class="text-muted">Type :</span>
                             @if($user->is_church_admin)
-                                <span class="badge bg-primary">Administrateur</span>
+                                <span class="badge bg-custom">Administrateur</span>
                             @else
                                 <span class="badge bg-info">Utilisateur</span>
                             @endif
@@ -125,8 +125,8 @@
                 <i class="bi bi-people display-1 text-muted"></i>
                 <h3 class="mt-3 text-muted">Aucun utilisateur trouvé</h3>
                 <p class="text-muted">Commencez par créer le premier utilisateur de votre église.</p>
-                <a href="{{ route('user-management.create') }}" class="btn btn-primary btn-lg">
-                    <i class="bi bi-person-plus-fill me-2"></i>
+                <a href="{{ route('user-management.create') }}" class="btn-add-empty">
+                    <i class="bi bi-person-plus-fill"></i>
                     Créer un utilisateur
                 </a>
             </div>
@@ -244,7 +244,7 @@
     color: #475569 !important;
 }
 
-.badge.bg-primary {
+.badge.bg-custom {
     background-color: #ddd6fe !important;
     color: #5b21b6 !important;
 }

@@ -43,7 +43,7 @@
         </div>
         <div class="mt-3 d-flex gap-2">
             <a href="{{ route('projects.index') }}" class="btn btn-outline-secondary">Annuler</a>
-            <button class="btn btn-primary">Enregistrer</button>
+            <button class="btn btn">Enregistrer</button>
         </div>
     </form>
 </div>

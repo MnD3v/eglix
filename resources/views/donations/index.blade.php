@@ -15,9 +15,9 @@
                 </p>
             </div>
             <div>
-                <a href="{{ route('donations.create') }}" class="btn btn-primary">
-                    <i class="bi bi-plus-lg me-2"></i>
-                    <span class="btn-label">Nouveau don</span>
+                <a href="{{ route('donations.create') }}" class="btn-add">
+                    <i class="bi bi-plus-lg" style="color: white !important;"></i>
+                    <span class="btn-text">Nouveau don</span>
                 </a>
             </div>
         </div>
@@ -53,7 +53,7 @@
                                 
                                 @if($donation->donation_type === 'money')
                                     <div class="mb-2 d-flex align-items-center justify-content-between">
-                                        <span class="badge bg-primary">Argent</span>
+                                        <span class="badge bg-custom">Argent</span>
                                         <span class="fw-bold numeric">{{ number_format(round($donation->amount), 0, ',', ' ') }} FCFA</span>
                                     </div>
                                     @if($donation->payment_method)
@@ -103,7 +103,10 @@
                     <i class="bi bi-heart display-1 text-muted"></i>
                     <h4 class="mt-3 text-muted">Aucun don</h4>
                     <p class="text-muted">Commencez par enregistrer votre premier don.</p>
-                    <a href="{{ route('donations.create') }}" class="btn btn-primary"><i class="bi bi-plus-circle me-2"></i>Créer un don</a>
+                    <a href="{{ route('donations.create') }}" class="btn-add-empty">
+                        <i class="bi bi-plus-circle" style="color: white !important;"></i>
+                        Créer un don
+                    </a>
                 </div>
             </div>
         @endforelse

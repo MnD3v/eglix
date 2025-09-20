@@ -150,7 +150,7 @@
         .strength-medium { color: #f59e0b; }
         .strength-strong { color: #059669; }
 
-        .btn-primary {
+        .btn {
             width: 100%;
             padding: 16px;
             background: linear-gradient(135deg, #FF2600 0%, #ff4d33 100%);
@@ -168,19 +168,19 @@
             gap: 8px;
         }
 
-        .btn-primary:hover {
+        .btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 10px 25px rgba(255, 38, 0, 0.3);
         }
 
-        .btn-primary:disabled {
+        .btn:disabled {
             opacity: 0.7;
             cursor: not-allowed;
             transform: none;
             box-shadow: none;
         }
 
-        .btn-primary:disabled:hover {
+        .btn:disabled:hover {
             transform: none;
             box-shadow: none;
         }
@@ -389,7 +389,7 @@
                     </div>
                 </div>
 
-                <button type="submit" class="btn-primary" id="registerBtn">
+                <button type="submit" class="btn" id="registerBtn">
                     <span class="btn-text">
                         <i class="bi bi-building"></i>
                         Créer mon église
@@ -462,6 +462,21 @@
             }
             
             strengthDiv.textContent = `Force du mot de passe: ${strengthText}`;
+        });
+
+        // Gestion du loading lors de la soumission du formulaire
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const submitBtn = document.getElementById('registerBtn');
+            const btnText = submitBtn.querySelector('.btn-text');
+            const btnLoader = submitBtn.querySelector('.btn-loader');
+            
+            // Désactiver le bouton et afficher le loading
+            submitBtn.disabled = true;
+            btnText.style.display = 'none';
+            btnLoader.style.display = 'flex';
+            
+            // Empêcher la double soumission
+            submitBtn.style.pointerEvents = 'none';
         });
     </script>
 </body>

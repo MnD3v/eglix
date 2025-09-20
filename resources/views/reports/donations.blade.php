@@ -39,7 +39,7 @@
                         <input type="date" class="form-control" name="to" value="{{ $to }}" id="toDate">
                     </div>
                     <div class="col-md-3">
-                        <button type="submit" class="btn btn-primary w-100">
+                        <button type="submit" class="btn btn w-100">
                             <i class="bi bi-funnel"></i> Appliquer
                         </button>
                     </div>
@@ -68,7 +68,7 @@
         <div class="col-md-3">
             <div class="card card-soft text-center">
                 <div class="card-body">
-                    <i class="bi bi-gift-fill text-primary" style="font-size: 2.5rem;"></i>
+                    <i class="bi bi-gift-fill text-custom" style="font-size: 2.5rem;"></i>
                     <h4 class="mt-3 mb-1" style="color: #202124;">{{ number_format($totalAmount ?? 0, 0, ',', ' ') }} FCFA</h4>
                     <p class="text-muted mb-0">Total des dons</p>
                 </div>
@@ -143,7 +143,7 @@
                             <td class="fw-semibold text-success">{{ number_format($donation->amount, 0, ',', ' ') }} FCFA</td>
                             <td>
                                 @if($donation->project)
-                                    <span class="badge bg-primary">{{ $donation->project->name }}</span>
+                                    <span class="badge bg-custom">{{ $donation->project->name }}</span>
                                 @else
                                     <span class="text-muted">Aucun</span>
                                 @endif

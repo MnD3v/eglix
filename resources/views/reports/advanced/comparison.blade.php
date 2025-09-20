@@ -164,7 +164,7 @@
     font-weight: 500;
 }
 
-.btn-primary {
+.btn {
     background: #1a1a1a;
     border-color: #1a1a1a;
     color: #ffffff;
@@ -174,7 +174,7 @@
     transition: all 0.2s ease;
 }
 
-.btn-primary:hover {
+.btn:hover {
     background: #333;
     border-color: #333;
     color: #ffffff;
@@ -268,7 +268,7 @@
             </div>
             <div class="row g-3 mt-3">
                 <div class="col-md-6">
-                    <button type="submit" class="btn btn-primary w-100">
+                    <button type="submit" class="btn btn w-100">
                         Comparer les périodes
                     </button>
                 </div>

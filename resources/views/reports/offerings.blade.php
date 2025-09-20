@@ -39,7 +39,7 @@
                         <input type="date" class="form-control" name="to" value="{{ $to }}" id="toDate">
                     </div>
                     <div class="col-md-3">
-                        <button type="submit" class="btn btn-primary w-100">
+                        <button type="submit" class="btn btn w-100">
                             <i class="bi bi-funnel"></i> Appliquer
                         </button>
                     </div>
@@ -68,7 +68,7 @@
         <div class="col-md-3">
             <div class="card card-soft text-center">
                 <div class="card-body">
-                    <i class="bi bi-gift text-primary" style="font-size: 2.5rem;"></i>
+                    <i class="bi bi-gift text-custom" style="font-size: 2.5rem;"></i>
                     <h4 class="mt-3 mb-1" style="color: #202124;">{{ number_format($totalAmount ?? 0, 0, ',', ' ') }} FCFA</h4>
                     <p class="text-muted mb-0">Total des offrandes</p>
                 </div>
@@ -134,7 +134,7 @@
                                 </div>
                             </td>
                             <td>
-                                <span class="badge bg-primary">{{ $offering->type }}</span>
+                                <span class="badge bg-custom">{{ $offering->type }}</span>
                             </td>
                             <td>{{ $offering->received_at->format('d/m/Y') }}</td>
                             <td class="fw-semibold text-success">{{ number_format($offering->amount, 0, ',', ' ') }} FCFA</td>

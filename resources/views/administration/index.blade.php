@@ -149,13 +149,13 @@
     box-shadow: 0 2px 8px rgba(0,0,0,0.15);
 }
 
-.btn-primary.action-btn {
+.btn.action-btn {
     background: #ffffff;
     border-color: #dadce0;
     color: #5f6368;
 }
 
-.btn-primary.action-btn:hover {
+.btn.action-btn:hover {
     background: #f8f9fa;
     border-color: #5f6368;
     color: #202124;
@@ -211,9 +211,9 @@
                     <i class="bi bi-tags"></i>
                     <span>Types de fonctions</span>
                 </a>
-                <a href="{{ route('administration.create') }}" class="appbar-btn-primary">
+                <a href="{{ route('administration.create') }}" class="btn-add">
                     <i class="bi bi-person-plus"></i>
-                    <span>Nouvelle Fonction</span>
+                    <span class="btn-text">Nouvelle fonction</span>
                 </a>
             </div>
         </div>
@@ -322,7 +322,7 @@
                 </select>
             </div>
             <div class="col-12 col-md-2">
-                <button class="btn btn-primary w-100" type="submit"><i class="bi bi-funnel"></i> <span class="btn-label">Filtrer</span></button>
+                <button class="btn btn w-100" type="submit"><i class="bi bi-funnel"></i> <span class="btn-label">Filtrer</span></button>
             </div>
         </div>
     </form>
@@ -418,7 +418,10 @@
             <div class="text-center text-muted py-5">
                 <i class="bi bi-person-badge" style="font-size: 3rem; opacity: 0.3;"></i>
                 <p class="mt-3">Aucune fonction administrative</p>
-                <a href="{{ route('administration.create') }}" class="btn btn-primary">Ajouter la première fonction</a>
+                <a href="{{ route('administration.create') }}" class="btn-add-empty">
+                    <i class="bi bi-person-plus"></i>
+                    Ajouter la première fonction
+                </a>
             </div>
         </div>
         @endforelse

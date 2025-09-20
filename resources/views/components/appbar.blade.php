@@ -28,7 +28,7 @@
         <div class="appbar-right">
             @foreach($actions as $action)
                 @if(isset($action['type']) && $action['type'] === 'primary')
-                    <a href="{{ $action['url'] }}" class="appbar-btn-primary">
+                    <a href="{{ $action['url'] }}" class="appbar-btn">
                         <i class="{{ $action['icon'] ?? 'bi-plus' }}"></i>
                         <span>{{ $action['label'] }}</span>
                     </a>

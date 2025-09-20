@@ -156,9 +156,20 @@
                                 <i class="bi bi-x-circle me-2"></i>
                                 Annuler
                             </a>
-                            <button type="submit" class="btn btn-primary">
-                                <i class="bi bi-check-circle me-2"></i>
-                                Créer l'utilisateur
+                            <button type="submit" class="btn" id="createUserBtn" style="background: #ff2600; color: white;">
+                                <span class="btn-text">
+                                    <i class="bi bi-check-circle me-2" style="color: white;"></i>
+                                    Créer l'utilisateur
+                                </span>
+                                <span class="btn-loader" style="display: none;">
+                                    <svg class="spinner" width="20" height="20" viewBox="0 0 24 24" style="color: white;">
+                                        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-dasharray="60" stroke-dashoffset="60">
+                                            <animate attributeName="stroke-dasharray" dur="1.5s" values="0 60;60 0" repeatCount="indefinite"/>
+                                            <animate attributeName="stroke-dashoffset" dur="1.5s" values="0;-60" repeatCount="indefinite"/>
+                                        </circle>
+                                    </svg>
+                                    Création en cours...
+                                </span>
                             </button>
                         </div>
                     </form>
@@ -237,6 +248,22 @@
     border-radius: 8px;
     font-weight: 500;
     padding: 0.75rem 1.5rem;
+}
+
+.btn-loader {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.spinner {
+    animation: spin 1.5s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
 }
 
 @media (max-width: 768px) {

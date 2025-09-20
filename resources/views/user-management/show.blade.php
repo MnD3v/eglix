@@ -66,7 +66,7 @@
                             <label class="form-label fw-bold">Type de compte</label>
                             <p class="form-control-plaintext">
                                 @if($user->is_church_admin)
-                                    <span class="badge bg-primary">Administrateur</span>
+                                    <span class="badge bg-custom">Administrateur</span>
                                 @else
                                     <span class="badge bg-info">Utilisateur</span>
                                 @endif
@@ -240,7 +240,7 @@
                     </div>
 
                     <div class="d-flex gap-3">
-                        <a href="{{ route('user-management.edit', $user) }}" class="btn btn-primary">
+                        <a href="{{ route('user-management.edit', $user) }}" class="btn btn">
                             <i class="bi bi-pencil-square me-2"></i>
                             Modifier l'utilisateur
                         </a>
