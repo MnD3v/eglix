@@ -44,7 +44,13 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials, $remember)) {
             $request->session()->regenerate();
-            return redirect()->intended('/');
+            
+            // Log pour diagnostiquer les problèmes de session
+            \Log::info('Connexion réussie pour: ' . $request->email);
+            \Log::info('Session ID après connexion: ' . $request->session()->getId());
+            \Log::info('User ID connecté: ' . Auth::id());
+            
+            return redirect()->intended('/')->with('success', 'Connexion réussie !');
         }
 
         return redirect()->back()

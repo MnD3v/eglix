@@ -44,7 +44,7 @@ Route::get('/users-list', function() {
     return view('users-list', compact('users'));
 })->name('users.list');
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'auth.ensure'])->group(function () {
     Route::get('/', function (Request $request) {
     $churchId = Auth::user()->church_id;
     $activeMembers = Member::where('church_id', $churchId)->where('status', 'active')->count();

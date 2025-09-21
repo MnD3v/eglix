@@ -589,18 +589,13 @@
             const btnLoader = loginBtn.querySelector('.btn-loader');
 
             form.addEventListener('submit', function(e) {
-                // Activer l'état de chargement
+                // Activer l'état de chargement immédiatement
                 loginBtn.disabled = true;
                 btnText.style.display = 'none';
                 btnLoader.style.display = 'flex';
                 
-                // Empêcher la double soumission
-                e.preventDefault();
-                
-                // Soumettre le formulaire après un court délai pour voir l'animation
-                setTimeout(() => {
-                    form.submit();
-                }, 100);
+                // Ne pas empêcher la soumission normale du formulaire
+                // Le formulaire se soumettra normalement et redirigera
             });
 
             // Gérer les erreurs de validation (si le formulaire est rechargé avec des erreurs)

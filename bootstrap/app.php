@@ -21,9 +21,10 @@ return Application::configure(basePath: dirname(__DIR__))
             \App\Http\Middleware\CheckChurchSubscription::class,
         ]);
         
-        // Enregistrement du middleware de validation d'upload
+        // Enregistrement des middlewares
         $middleware->alias([
             'validate.image.upload' => \App\Http\Middleware\ValidateImageUpload::class,
+            'auth.ensure' => \App\Http\Middleware\EnsureUserIsAuthenticated::class,
         ]);
         
     })

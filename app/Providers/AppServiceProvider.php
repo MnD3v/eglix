@@ -52,6 +52,9 @@ class AppServiceProvider extends ServiceProvider
         
         // Auto-correction des colonnes subscription au démarrage
         $this->autoFixSubscriptionColumns();
+        
+        // Correction du stockage des sessions pour Render
+        $this->fixSessionStorage();
     }
     
     /**
@@ -134,6 +137,55 @@ class AppServiceProvider extends ServiceProvider
             
         } catch (\Exception $e) {
             Log::error('❌ Erreur lors de l\'auto-correction des colonnes subscription: ' . $e->getMessage());
+        }
+    }
+    
+    /**
+     * Correction du stockage des sessions pour Render
+     */
+    private function fixSessionStorage()
+    {
+        try {
+            // Sur Render, forcer l'utilisation des sessions en base de données
+            if (env('RENDER', false) || env('APP_ENV') === 'production') {
+                Log::info('🔧 Configuration des sessions pour Render...');
+                
+                // Vérifier si la table sessions existe
+                try {
+                    DB::select('SELECT 1 FROM sessions LIMIT 1');
+                    Log::info('✅ Table sessions existe');
+                } catch (\Exception $e) {
+                    Log::info('❌ Table sessions n\'existe pas, création...');
+                    
+                    // Créer la table sessions
+                    DB::statement('
+                        CREATE TABLE IF NOT EXISTS sessions (
+                            id VARCHAR(255) PRIMARY KEY,
+                            user_id BIGINT NULL,
+                            ip_address VARCHAR(45) NULL,
+                            user_agent TEXT NULL,
+                            payload TEXT NOT NULL,
+                            last_activity INTEGER NOT NULL
+                        )
+                    ');
+                    
+                    Log::info('✅ Table sessions créée');
+                }
+                
+                // Forcer la configuration des sessions
+                config(['session.driver' => 'database']);
+                config(['session.table' => 'sessions']);
+                config(['session.lifetime' => 120]);
+                config(['session.expire_on_close' => false]);
+                config(['session.secure' => true]);
+                config(['session.http_only' => true]);
+                config(['session.same_site' => 'lax']);
+                
+                Log::info('✅ Configuration des sessions mise à jour pour Render');
+            }
+            
+        } catch (\Exception $e) {
+            Log::error('❌ Erreur lors de la correction des sessions: ' . $e->getMessage());
         }
     }
 }
