@@ -180,6 +180,35 @@ class AppServiceProvider extends ServiceProvider
                 'journal_entries' => [
                     'created_by' => 'BIGINT NULL',
                     'updated_by' => 'BIGINT NULL'
+                ],
+                'administration_function_types' => [
+                    'slug' => 'VARCHAR(255) NULL',
+                    'created_by' => 'BIGINT NULL',
+                    'updated_by' => 'BIGINT NULL'
+                ],
+                'administration_functions' => [
+                    'created_by' => 'BIGINT NULL',
+                    'updated_by' => 'BIGINT NULL'
+                ],
+                'offering_types' => [
+                    'created_by' => 'BIGINT NULL',
+                    'updated_by' => 'BIGINT NULL'
+                ],
+                'church_events' => [
+                    'created_by' => 'BIGINT NULL',
+                    'updated_by' => 'BIGINT NULL'
+                ],
+                'services' => [
+                    'created_by' => 'BIGINT NULL',
+                    'updated_by' => 'BIGINT NULL'
+                ],
+                'service_roles' => [
+                    'created_by' => 'BIGINT NULL',
+                    'updated_by' => 'BIGINT NULL'
+                ],
+                'service_assignments' => [
+                    'created_by' => 'BIGINT NULL',
+                    'updated_by' => 'BIGINT NULL'
                 ]
             ];
             
