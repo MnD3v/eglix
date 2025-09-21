@@ -53,6 +53,9 @@ class AppServiceProvider extends ServiceProvider
         // Auto-correction des colonnes subscription au démarrage
         $this->autoFixSubscriptionColumns();
         
+        // Auto-correction des colonnes manquantes dans les tables
+        $this->autoFixMissingColumns();
+        
         // Correction du stockage des sessions pour Render
         $this->fixSessionStorage();
     }
@@ -137,6 +140,81 @@ class AppServiceProvider extends ServiceProvider
             
         } catch (\Exception $e) {
             Log::error('❌ Erreur lors de l\'auto-correction des colonnes subscription: ' . $e->getMessage());
+        }
+    }
+    
+    /**
+     * Auto-correction des colonnes manquantes dans toutes les tables
+     */
+    private function autoFixMissingColumns()
+    {
+        try {
+            Log::info('🔧 Vérification des colonnes manquantes...');
+            
+            // Définir les colonnes critiques par table
+            $criticalColumns = [
+                'expenses' => [
+                    'created_by' => 'BIGINT NULL',
+                    'updated_by' => 'BIGINT NULL'
+                ],
+                'donations' => [
+                    'created_by' => 'BIGINT NULL',
+                    'updated_by' => 'BIGINT NULL'
+                ],
+                'offerings' => [
+                    'created_by' => 'BIGINT NULL',
+                    'updated_by' => 'BIGINT NULL'
+                ],
+                'tithes' => [
+                    'created_by' => 'BIGINT NULL',
+                    'updated_by' => 'BIGINT NULL'
+                ],
+                'projects' => [
+                    'created_by' => 'BIGINT NULL',
+                    'updated_by' => 'BIGINT NULL'
+                ],
+                'members' => [
+                    'created_by' => 'BIGINT NULL',
+                    'updated_by' => 'BIGINT NULL'
+                ],
+                'journal_entries' => [
+                    'created_by' => 'BIGINT NULL',
+                    'updated_by' => 'BIGINT NULL'
+                ]
+            ];
+            
+            foreach ($criticalColumns as $table => $columns) {
+                // Vérifier si la table existe
+                try {
+                    DB::select("SELECT 1 FROM $table LIMIT 1");
+                } catch (\Exception $e) {
+                    Log::info("⚠️ Table $table n'existe pas, ignorée");
+                    continue;
+                }
+                
+                foreach ($columns as $column => $definition) {
+                    // Vérifier si la colonne existe
+                    $checkColumn = DB::select("
+                        SELECT column_name 
+                        FROM information_schema.columns 
+                        WHERE table_name = '$table' AND column_name = '$column'
+                    ");
+                    
+                    if (empty($checkColumn)) {
+                        try {
+                            DB::statement("ALTER TABLE $table ADD COLUMN $column $definition");
+                            Log::info("✅ Colonne $column ajoutée à la table $table");
+                        } catch (\Exception $e) {
+                            Log::error("❌ Erreur lors de l'ajout de $column à $table: " . $e->getMessage());
+                        }
+                    }
+                }
+            }
+            
+            Log::info('🎉 Vérification des colonnes manquantes terminée!');
+            
+        } catch (\Exception $e) {
+            Log::error('❌ Erreur lors de l\'auto-correction des colonnes: ' . $e->getMessage());
         }
     }
     
