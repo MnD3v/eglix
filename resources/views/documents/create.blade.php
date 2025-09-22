@@ -9,7 +9,7 @@
             <div class="page-title-box">
                 <div class="page-title-right">
                     <ol class="breadcrumb m-0">
-                        <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Tableau de bord</a></li>
+                        <li class="breadcrumb-item"><a href="{{ url('/') }}">Tableau de bord</a></li>
                         <li class="breadcrumb-item"><a href="{{ route('documents.index') }}">Documents</a></li>
                         <li class="breadcrumb-item active">Ajouter</li>
                     </ol>
