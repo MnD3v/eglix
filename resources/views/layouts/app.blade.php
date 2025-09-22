@@ -1761,6 +1761,9 @@
         @if(Auth::user() && Auth::user()->hasPermission('journal.view'))
         <a href="{{ route('journal.index') }}" class="{{ request()->is('journal*') ? 'active' : '' }}" title="Journal"><i class="bi bi-journal-text"></i><span class="sidebar-text">Journal</span></a>
         @endif
+        @if(Auth::user() && Auth::user()->hasPermission('documents.view'))
+        <a href="{{ route('documents.index') }}" class="{{ request()->is('documents*') || request()->is('document-folders*') ? 'active' : '' }}" title="Documents"><i class="bi bi-folder2-open"></i><span class="sidebar-text">Documents</span></a>
+        @endif
         @if(Auth::user() && (Auth::user()->isChurchAdmin() || Auth::user()->hasPermission('administration.view')))
         <a href="{{ route('administration.index') }}" class="{{ request()->is('administration*') ? 'active' : '' }}" title="Administration"><i class="bi bi-person-badge"></i><span class="sidebar-text">Administration</span></a>
         @endif

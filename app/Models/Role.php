@@ -174,6 +174,13 @@ class Role extends Model
             'journal.edit' => 'Modifier le journal',
             'journal.delete' => 'Supprimer le journal',
             
+            // Documents
+            'documents.view' => 'Voir les documents',
+            'documents.create' => 'Créer des documents',
+            'documents.edit' => 'Modifier les documents',
+            'documents.delete' => 'Supprimer les documents',
+            'documents.download' => 'Télécharger les documents',
+            'documents.folders' => 'Gérer les dossiers de documents',
             
             // Utilisateurs
             'users.view' => 'Voir les utilisateurs',

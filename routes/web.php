@@ -25,6 +25,8 @@ use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\AdvancedReportsController;
+use App\Http\Controllers\DocumentController;
+use App\Http\Controllers\DocumentFolderController;
 use Illuminate\Support\Facades\Auth;
 
 // Routes d'authentification
@@ -275,6 +277,29 @@ Route::prefix('reports/advanced')->name('reports.advanced.')->group(function () 
     
     // API pour données temps réel
     Route::get('/api/data', [AdvancedReportsController::class, 'apiData'])->name('api.data');
+});
+
+// Routes pour la gestion des documents
+Route::prefix('documents')->name('documents.')->group(function () {
+    Route::get('/', [DocumentController::class, 'index'])->name('index');
+    Route::get('/create', [DocumentController::class, 'create'])->name('create');
+    Route::post('/', [DocumentController::class, 'store'])->name('store');
+    Route::get('/{document}', [DocumentController::class, 'show'])->name('show');
+    Route::get('/{document}/edit', [DocumentController::class, 'edit'])->name('edit');
+    Route::put('/{document}', [DocumentController::class, 'update'])->name('update');
+    Route::delete('/{document}', [DocumentController::class, 'destroy'])->name('destroy');
+    Route::get('/{document}/download', [DocumentController::class, 'download'])->name('download');
+});
+
+// Routes pour la gestion des dossiers de documents
+Route::prefix('document-folders')->name('document-folders.')->group(function () {
+    Route::get('/', [DocumentFolderController::class, 'index'])->name('index');
+    Route::get('/create', [DocumentFolderController::class, 'create'])->name('create');
+    Route::post('/', [DocumentFolderController::class, 'store'])->name('store');
+    Route::get('/{documentFolder}', [DocumentFolderController::class, 'show'])->name('show');
+    Route::get('/{documentFolder}/edit', [DocumentFolderController::class, 'edit'])->name('edit');
+    Route::put('/{documentFolder}', [DocumentFolderController::class, 'update'])->name('update');
+    Route::delete('/{documentFolder}', [DocumentFolderController::class, 'destroy'])->name('destroy');
 });
 
 // Routes pour la programmation des cultes

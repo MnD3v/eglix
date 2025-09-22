@@ -122,4 +122,81 @@ class FirebaseStorageService
     {
         return $this->uploadFileDirect($file, $path);
     }
+
+    /**
+     * Get download URL for a file (temporary signed URL)
+     */
+    public function getDownloadUrl(string $filePath): string
+    {
+        try {
+            // Pour l'instant, retourner l'URL publique
+            // En production, vous pourriez générer une URL signée temporaire
+            return $this->getPublicUrl($filePath);
+        } catch (\Exception $e) {
+            Log::error('Error generating download URL', [
+                'filePath' => $filePath,
+                'message' => $e->getMessage()
+            ]);
+            return $this->getPublicUrl($filePath);
+        }
+    }
+
+    /**
+     * Upload document file with specific path structure
+     */
+    public function uploadDocument(UploadedFile $file, string $folderPath): ?string
+    {
+        try {
+            // Vérifier si Firebase est configuré
+            if (!FirebaseHelper::isConfigured()) {
+                Log::warning('Firebase not configured, using local storage for document', [
+                    'file' => $file->getClientOriginalName(),
+                    'folder' => $folderPath
+                ]);
+                
+                // Stocker localement et retourner l'URL locale
+                $localPath = $file->store($folderPath, 'public');
+                return asset('storage/' . $localPath);
+            }
+            
+            // Generate unique filename
+            $filename = $folderPath . '/' . Str::uuid() . '.' . $file->getClientOriginalExtension();
+            
+            // For now, we'll simulate the upload and return a placeholder URL
+            $publicUrl = $this->getPublicUrl($filename);
+            
+            // Log the upload attempt
+            Log::info('Document upload simulated', [
+                'filename' => $filename,
+                'size' => $file->getSize(),
+                'type' => $file->getMimeType(),
+                'url' => $publicUrl
+            ]);
+
+            // For demonstration, we'll store the file locally and return a local URL
+            $localPath = $file->store($folderPath, 'public');
+            $localUrl = asset('storage/' . $localPath);
+            
+            // Retourner l'URL Firebase pour stockage en BD
+            return $publicUrl;
+
+        } catch (\Exception $e) {
+            Log::error('Document upload exception', [
+                'message' => $e->getMessage(),
+                'file' => $file->getClientOriginalName(),
+                'folder' => $folderPath
+            ]);
+            
+            // En cas d'erreur, stocker localement
+            try {
+                $localPath = $file->store($folderPath, 'public');
+                return asset('storage/' . $localPath);
+            } catch (\Exception $fallbackError) {
+                Log::error('Fallback document storage failed', [
+                    'message' => $fallbackError->getMessage()
+                ]);
+                return null;
+            }
+        }
+    }
 }

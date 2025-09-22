@@ -9,6 +9,7 @@ use Illuminate\Routing\UrlGenerator;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Gate;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -58,6 +59,9 @@ class AppServiceProvider extends ServiceProvider
         
         // Correction du stockage des sessions pour Render
         $this->fixSessionStorage();
+        
+        // Enregistrer les politiques d'autorisation
+        $this->registerPolicies();
     }
     
     /**
@@ -293,6 +297,25 @@ class AppServiceProvider extends ServiceProvider
             
         } catch (\Exception $e) {
             Log::error('❌ Erreur lors de la correction des sessions: ' . $e->getMessage());
+        }
+    }
+    
+    /**
+     * Enregistrer les politiques d'autorisation
+     */
+    private function registerPolicies()
+    {
+        try {
+            Log::info('🔧 Enregistrement des politiques d\'autorisation...');
+            
+            // Enregistrer les politiques pour les documents
+            Gate::policy(\App\Models\Document::class, \App\Policies\DocumentPolicy::class);
+            Gate::policy(\App\Models\DocumentFolder::class, \App\Policies\DocumentFolderPolicy::class);
+            
+            Log::info('✅ Politiques d\'autorisation enregistrées');
+            
+        } catch (\Exception $e) {
+            Log::error('❌ Erreur lors de l\'enregistrement des politiques: ' . $e->getMessage());
         }
     }
 }
