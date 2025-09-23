@@ -232,6 +232,19 @@ SQLSTATE[42S21]: Column already exists: 1060 Duplicate column name 'created_by'
 - Vérifiez l'existence des colonnes avant de les ajouter
 - Gestion des deadlocks avec retry automatique
 
+### Problème 9 : Migrations d'Abonnement en Conflit
+
+**Erreur** :
+```
+SQLSTATE[42S21]: Column already exists: 1060 Duplicate column name 'subscription_start_date'
+```
+
+**Solution** :
+- Corrigez toutes les migrations d'abonnement en une fois
+- Utilisez `php artisan fix:all-subscription-migrations`
+- Vérifiez l'existence des colonnes avant de les ajouter
+- Gestion des deadlocks avec retry automatique
+
 ## 🚀 Configuration Recommandée
 
 ### Pour MySQL
@@ -306,6 +319,7 @@ QUEUE_CONNECTION=database
 - [ ] Deadlocks MySQL résolus
 - [ ] Colonnes dupliquées résolues
 - [ ] Migrations d'audit corrigées
+- [ ] Migrations d'abonnement corrigées
 - [ ] Test local réussi
 - [ ] Script de déploiement testé
 

@@ -22,6 +22,7 @@
     "php artisan fix:mysql-deadlocks || true",
     "php artisan fix:duplicate-columns || true",
     "php artisan fix:all-audit-migrations || true",
+    "php artisan fix:all-subscription-migrations || true",
     "php artisan storage:link || true"
   ]
 

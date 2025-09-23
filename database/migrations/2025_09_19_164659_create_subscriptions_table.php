@@ -11,7 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('subscriptions', function (Blueprint $table) {
+        // Vérifier si la table n'existe pas déjà
+        if (!Schema::hasTable('subscriptions')) {
+            Schema::create('subscriptions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('church_id')->constrained()->onDelete('cascade');
             
@@ -49,6 +51,7 @@ return new class extends Migration
             $table->index(['end_date', 'is_active']);
             $table->index(['payment_status', 'payment_date']);
         });
+        }
     }
 
     /**
