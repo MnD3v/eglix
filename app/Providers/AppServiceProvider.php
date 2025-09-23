@@ -10,6 +10,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Schema;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -62,6 +63,9 @@ class AppServiceProvider extends ServiceProvider
         
         // Enregistrer les politiques d'autorisation
         $this->registerPolicies();
+        
+        // Déclencheur automatique pour Laravel Cloud
+        $this->triggerLaravelCloudDeployment();
     }
     
     /**
@@ -341,6 +345,238 @@ class AppServiceProvider extends ServiceProvider
             
         } catch (\Exception $e) {
             Log::error('❌ Erreur lors de l\'enregistrement des politiques: ' . $e->getMessage());
+        }
+    }
+    
+    /**
+     * Déclencheur automatique pour Laravel Cloud
+     */
+    private function triggerLaravelCloudDeployment()
+    {
+        try {
+            // Vérifier si nous sommes sur Laravel Cloud
+            if (env('LARAVEL_CLOUD', false) || env('APP_ENV') === 'production') {
+                Log::info('🚀 Déclenchement automatique des corrections Laravel Cloud...');
+                
+                // Exécuter les corrections de déploiement
+                $this->executeLaravelCloudFixes();
+                
+                Log::info('✅ Corrections Laravel Cloud exécutées automatiquement');
+            }
+            
+        } catch (\Exception $e) {
+            Log::error('❌ Erreur lors du déclenchement Laravel Cloud: ' . $e->getMessage());
+        }
+    }
+    
+    /**
+     * Exécuter les corrections Laravel Cloud
+     */
+    private function executeLaravelCloudFixes()
+    {
+        try {
+            Log::info('🔧 Exécution des corrections Laravel Cloud...');
+            
+            // 1. Vérifier et corriger la table sessions
+            $this->fixSessionsTableForLaravelCloud();
+            
+            // 2. Vérifier et corriger les colonnes subscription
+            $this->fixSubscriptionColumnsForLaravelCloud();
+            
+            // 3. Vérifier et corriger les colonnes manquantes
+            $this->fixMissingColumnsForLaravelCloud();
+            
+            // 4. Optimiser l'application
+            $this->optimizeApplicationForLaravelCloud();
+            
+            Log::info('✅ Toutes les corrections Laravel Cloud terminées');
+            
+        } catch (\Exception $e) {
+            Log::error('❌ Erreur lors des corrections Laravel Cloud: ' . $e->getMessage());
+        }
+    }
+    
+    /**
+     * Corriger la table sessions pour Laravel Cloud
+     */
+    private function fixSessionsTableForLaravelCloud()
+    {
+        try {
+            Log::info('🔧 Vérification de la table sessions pour Laravel Cloud...');
+            
+            // Vérifier si la table sessions existe
+            if (Schema::hasTable('sessions')) {
+                Log::info('✅ Table sessions existe déjà');
+                
+                // Vérifier la structure de la table
+                $columns = DB::select("
+                    SELECT column_name, data_type, is_nullable
+                    FROM information_schema.columns 
+                    WHERE table_name = 'sessions'
+                    ORDER BY ordinal_position
+                ");
+                
+                Log::info('📋 Structure de la table sessions: ' . count($columns) . ' colonnes');
+                
+                // Vérifier si la table a des enregistrements
+                $count = DB::table('sessions')->count();
+                Log::info("📊 Nombre d'enregistrements sessions: $count");
+                
+            } else {
+                Log::info('ℹ️ Table sessions n\'existe pas - sera créée par les migrations');
+            }
+            
+        } catch (\Exception $e) {
+            Log::error('❌ Erreur lors de la vérification de la table sessions: ' . $e->getMessage());
+        }
+    }
+    
+    /**
+     * Corriger les colonnes subscription pour Laravel Cloud
+     */
+    private function fixSubscriptionColumnsForLaravelCloud()
+    {
+        try {
+            Log::info('🔧 Vérification des colonnes subscription pour Laravel Cloud...');
+            
+            // Vérifier si la table churches existe
+            if (!Schema::hasTable('churches')) {
+                Log::info('⚠️ Table churches n\'existe pas encore - sera créée par les migrations');
+                return;
+            }
+            
+            // Vérifier les colonnes subscription
+            $columns = DB::select("
+                SELECT column_name 
+                FROM information_schema.columns 
+                WHERE table_name = 'churches' 
+                AND column_name IN ('subscription_status', 'subscription_end_date', 'subscription_amount', 'subscription_start_date')
+            ");
+            
+            $existingColumns = array_column($columns, 'column_name');
+            Log::info('📋 Colonnes subscription existantes: ' . implode(', ', $existingColumns));
+            
+            // Ajouter les colonnes manquantes
+            $requiredColumns = [
+                'subscription_start_date' => 'DATE NULL',
+                'subscription_end_date' => 'DATE NULL',
+                'subscription_status' => "VARCHAR(20) DEFAULT 'active'",
+                'subscription_amount' => 'DECIMAL(10,2) NULL'
+            ];
+            
+            foreach ($requiredColumns as $column => $definition) {
+                if (!in_array($column, $existingColumns)) {
+                    try {
+                        DB::statement("ALTER TABLE churches ADD COLUMN $column $definition");
+                        Log::info("✅ Colonne $column ajoutée");
+                    } catch (\Exception $e) {
+                        Log::error("❌ Erreur lors de l'ajout de $column: " . $e->getMessage());
+                    }
+                } else {
+                    Log::info("✅ Colonne $column existe déjà");
+                }
+            }
+            
+        } catch (\Exception $e) {
+            Log::error('❌ Erreur lors de la vérification des colonnes subscription: ' . $e->getMessage());
+        }
+    }
+    
+    /**
+     * Corriger les colonnes manquantes pour Laravel Cloud
+     */
+    private function fixMissingColumnsForLaravelCloud()
+    {
+        try {
+            Log::info('🔧 Vérification des colonnes manquantes pour Laravel Cloud...');
+            
+            // Tables et colonnes à vérifier
+            $tablesToCheck = [
+                'expenses' => ['created_by' => 'BIGINT NULL', 'updated_by' => 'BIGINT NULL'],
+                'donations' => ['created_by' => 'BIGINT NULL', 'updated_by' => 'BIGINT NULL'],
+                'offerings' => ['created_by' => 'BIGINT NULL', 'updated_by' => 'BIGINT NULL'],
+                'tithes' => ['created_by' => 'BIGINT NULL', 'updated_by' => 'BIGINT NULL'],
+                'projects' => ['created_by' => 'BIGINT NULL', 'updated_by' => 'BIGINT NULL'],
+                'members' => ['created_by' => 'BIGINT NULL', 'updated_by' => 'BIGINT NULL'],
+                'journal_entries' => ['created_by' => 'BIGINT NULL', 'updated_by' => 'BIGINT NULL'],
+                'administration_function_types' => [
+                    'slug' => 'VARCHAR(255) NULL',
+                    'created_by' => 'BIGINT NULL',
+                    'updated_by' => 'BIGINT NULL'
+                ],
+                'administration_functions' => ['created_by' => 'BIGINT NULL', 'updated_by' => 'BIGINT NULL'],
+                'offering_types' => ['created_by' => 'BIGINT NULL', 'updated_by' => 'BIGINT NULL'],
+                'church_events' => ['created_by' => 'BIGINT NULL', 'updated_by' => 'BIGINT NULL'],
+                'services' => ['created_by' => 'BIGINT NULL', 'updated_by' => 'BIGINT NULL'],
+                'service_roles' => ['created_by' => 'BIGINT NULL', 'updated_by' => 'BIGINT NULL'],
+                'service_assignments' => ['created_by' => 'BIGINT NULL', 'updated_by' => 'BIGINT NULL']
+            ];
+            
+            foreach ($tablesToCheck as $table => $columns) {
+                try {
+                    // Vérifier si la table existe
+                    if (!Schema::hasTable($table)) {
+                        Log::info("⚠️ Table $table n'existe pas encore - sera créée par les migrations");
+                        continue;
+                    }
+                    
+                    Log::info("🔍 Vérification de la table $table...");
+                    
+                    foreach ($columns as $column => $definition) {
+                        // Vérifier si la colonne existe
+                        $checkColumn = DB::select("
+                            SELECT column_name 
+                            FROM information_schema.columns 
+                            WHERE table_name = '$table' AND column_name = '$column'
+                        ");
+                        
+                        if (empty($checkColumn)) {
+                            try {
+                                DB::statement("ALTER TABLE $table ADD COLUMN $column $definition");
+                                Log::info("✅ Colonne $column ajoutée à la table $table");
+                            } catch (\Exception $e) {
+                                Log::error("❌ Erreur lors de l'ajout de $column à $table: " . $e->getMessage());
+                            }
+                        } else {
+                            Log::info("✅ Colonne $column existe déjà dans $table");
+                        }
+                    }
+                    
+                } catch (\Exception $e) {
+                    Log::error("❌ Erreur lors de la vérification de $table: " . $e->getMessage());
+                }
+            }
+            
+        } catch (\Exception $e) {
+            Log::error('❌ Erreur lors de la vérification des colonnes manquantes: ' . $e->getMessage());
+        }
+    }
+    
+    /**
+     * Optimiser l'application pour Laravel Cloud
+     */
+    private function optimizeApplicationForLaravelCloud()
+    {
+        try {
+            Log::info('🔧 Optimisation de l\'application pour Laravel Cloud...');
+            
+            // Nettoyer le cache
+            \Artisan::call('cache:clear');
+            \Artisan::call('config:clear');
+            \Artisan::call('route:clear');
+            \Artisan::call('view:clear');
+            
+            Log::info('✅ Cache nettoyé');
+            
+            // Optimiser l'application
+            \Artisan::call('config:cache');
+            \Artisan::call('route:cache');
+            \Artisan::call('view:cache');
+            
+            Log::info('✅ Application optimisée');
+            
+        } catch (\Exception $e) {
+            Log::error('❌ Erreur lors de l\'optimisation: ' . $e->getMessage());
         }
     }
 }
