@@ -245,6 +245,19 @@ SQLSTATE[42S21]: Column already exists: 1060 Duplicate column name 'subscription
 - Vérifiez l'existence des colonnes avant de les ajouter
 - Gestion des deadlocks avec retry automatique
 
+### Problème 10 : Migrations de Photos en Conflit
+
+**Erreur** :
+```
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'photo' in 'members'
+```
+
+**Solution** :
+- Corrigez toutes les migrations de photos en une fois
+- Utilisez `php artisan fix:all-photo-migrations`
+- Vérifiez l'existence des colonnes de référence avant de les utiliser
+- Gestion des positions de colonnes avec alternatives
+
 ## 🚀 Configuration Recommandée
 
 ### Pour MySQL
@@ -320,6 +333,7 @@ QUEUE_CONNECTION=database
 - [ ] Colonnes dupliquées résolues
 - [ ] Migrations d'audit corrigées
 - [ ] Migrations d'abonnement corrigées
+- [ ] Migrations de photos corrigées
 - [ ] Test local réussi
 - [ ] Script de déploiement testé
 

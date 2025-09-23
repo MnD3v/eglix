@@ -8,10 +8,22 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::table('members', function (Blueprint $table) {
-            $table->string('marital_status')->nullable()->after('gender'); // single, married, divorced, widowed
-            $table->string('profile_photo')->nullable()->after('marital_status');
-        });
+        // Vérifier si la table members existe
+        if (Schema::hasTable('members')) {
+            // Ajouter marital_status seulement s'il n'existe pas
+            if (!Schema::hasColumn('members', 'marital_status')) {
+                Schema::table('members', function (Blueprint $table) {
+                    $table->string('marital_status')->nullable()->after('gender'); // single, married, divorced, widowed
+                });
+            }
+            
+            // Ajouter profile_photo seulement s'il n'existe pas
+            if (!Schema::hasColumn('members', 'profile_photo')) {
+                Schema::table('members', function (Blueprint $table) {
+                    $table->string('profile_photo')->nullable()->after('marital_status');
+                });
+            }
+        }
     }
 
     public function down(): void
