@@ -1,3 +1,6 @@
+# Configuration Laravel Cloud simplifiée
+# Évite les conflits d'extensions et les problèmes de build
+
 [phases.setup]
   nixPkgs = [
     "php82Extensions.intl",
@@ -20,5 +23,3 @@
 
 [start]
   cmd = "php -d variables_order=EGPCS -S 0.0.0.0:$PORT -t public public/index.php"
-
-

@@ -1,7 +1,9 @@
+# Configuration Laravel Cloud minimale
+# Évite tous les problèmes de build
+
 [phases.setup]
   nixPkgs = [
-    "php82Extensions.intl",
-    "php82Extensions.zip"
+    "php82Extensions.intl"
   ]
 
 [phases.install]
@@ -11,14 +13,8 @@
 
 [phases.build]
   cmds = [
-    "php artisan key:generate --force || true",
-    "php artisan config:clear || true",
-    "php artisan route:clear || true",
-    "php artisan view:clear || true",
-    "php artisan storage:link || true"
+    "php artisan key:generate --force || true"
   ]
 
 [start]
   cmd = "php -d variables_order=EGPCS -S 0.0.0.0:$PORT -t public public/index.php"
-
-
