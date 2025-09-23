@@ -215,8 +215,22 @@ SQLSTATE[42S21]: Column already exists: 1060 Duplicate column name 'created_by'
 
 **Solution** :
 - Utilisez la commande `php artisan fix:duplicate-columns`
+- Utilisez la commande `php artisan fix:all-audit-migrations`
 - Ajoutez des vérifications `Schema::hasColumn()` dans les migrations
 - Évitez les conflits entre migrations et auto-corrections
+
+### Problème 8 : Migrations d'Audit en Conflit
+
+**Erreur** :
+```
+SQLSTATE[42S21]: Column already exists: 1060 Duplicate column name 'created_by'
+```
+
+**Solution** :
+- Corrigez toutes les migrations d'audit en une fois
+- Utilisez `php artisan fix:all-audit-migrations`
+- Vérifiez l'existence des colonnes avant de les ajouter
+- Gestion des deadlocks avec retry automatique
 
 ## 🚀 Configuration Recommandée
 
@@ -291,6 +305,7 @@ QUEUE_CONNECTION=database
 - [ ] Cache nettoyé
 - [ ] Deadlocks MySQL résolus
 - [ ] Colonnes dupliquées résolues
+- [ ] Migrations d'audit corrigées
 - [ ] Test local réussi
 - [ ] Script de déploiement testé
 

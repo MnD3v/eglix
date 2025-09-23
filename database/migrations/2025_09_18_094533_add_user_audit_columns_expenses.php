@@ -11,10 +11,22 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('expenses', function (Blueprint $table) {
-            $table->foreignId('created_by')->nullable()->after('church_id');
-            $table->foreignId('updated_by')->nullable()->after('created_by');
-        });
+        // Vérifier si la table expenses existe
+        if (Schema::hasTable('expenses')) {
+            // Ajouter created_by seulement s'il n'existe pas
+            if (!Schema::hasColumn('expenses', 'created_by')) {
+                Schema::table('expenses', function (Blueprint $table) {
+                    $table->foreignId('created_by')->nullable()->after('church_id');
+                });
+            }
+            
+            // Ajouter updated_by seulement s'il n'existe pas
+            if (!Schema::hasColumn('expenses', 'updated_by')) {
+                Schema::table('expenses', function (Blueprint $table) {
+                    $table->foreignId('updated_by')->nullable()->after('created_by');
+                });
+            }
+        }
     }
 
     /**

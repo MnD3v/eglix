@@ -21,6 +21,7 @@
     "php artisan view:clear || true",
     "php artisan fix:mysql-deadlocks || true",
     "php artisan fix:duplicate-columns || true",
+    "php artisan fix:all-audit-migrations || true",
     "php artisan storage:link || true"
   ]
 
