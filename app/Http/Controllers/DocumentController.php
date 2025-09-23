@@ -100,7 +100,7 @@ class DocumentController extends Controller
             $fileUrl = $this->firebaseService->uploadDocument($file, $folderPath);
 
             // Déterminer le type de fichier
-            $fileType = $this->getFileType($file->getMimeType());
+            $fileType = $this->getFileType($file->getMimeType(), $file->getClientOriginalExtension());
 
             // Créer l'enregistrement en base
             Document::create([
@@ -214,16 +214,80 @@ class DocumentController extends Controller
     }
 
     /**
-     * Déterminer le type de fichier basé sur le MIME type
+     * Déterminer le type de fichier basé sur le MIME type et l'extension
      */
-    private function getFileType($mimeType)
+    private function getFileType($mimeType, $extension = null)
     {
+        // D'abord, vérifier par MIME type
         if (str_starts_with($mimeType, 'image/')) {
             return 'image';
         } elseif ($mimeType === 'application/pdf') {
             return 'pdf';
-        } else {
-            return 'other';
+        } elseif (in_array($mimeType, [
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'application/msword'
+        ])) {
+            return 'word';
+        } elseif (in_array($mimeType, [
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            'application/vnd.ms-excel'
+        ])) {
+            return 'excel';
+        } elseif (in_array($mimeType, [
+            'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+            'application/vnd.ms-powerpoint'
+        ])) {
+            return 'powerpoint';
+        } elseif (str_starts_with($mimeType, 'video/')) {
+            return 'video';
+        } elseif (str_starts_with($mimeType, 'audio/')) {
+            return 'audio';
+        } elseif (in_array($mimeType, [
+            'application/zip',
+            'application/x-rar-compressed',
+            'application/x-7z-compressed'
+        ])) {
+            return 'archive';
         }
+        
+        // Si pas de correspondance par MIME type, vérifier par extension
+        if ($extension) {
+            $extension = strtolower($extension);
+            switch ($extension) {
+                case 'jpg':
+                case 'jpeg':
+                case 'png':
+                case 'gif':
+                case 'webp':
+                case 'svg':
+                    return 'image';
+                case 'pdf':
+                    return 'pdf';
+                case 'doc':
+                case 'docx':
+                    return 'word';
+                case 'xls':
+                case 'xlsx':
+                    return 'excel';
+                case 'ppt':
+                case 'pptx':
+                    return 'powerpoint';
+                case 'mp4':
+                case 'avi':
+                case 'mov':
+                case 'wmv':
+                    return 'video';
+                case 'mp3':
+                case 'wav':
+                case 'flac':
+                    return 'audio';
+                case 'zip':
+                case 'rar':
+                case '7z':
+                    return 'archive';
+            }
+        }
+        
+        return 'other';
     }
 }

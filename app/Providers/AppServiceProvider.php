@@ -252,14 +252,15 @@ class AppServiceProvider extends ServiceProvider
     }
     
     /**
-     * Correction du stockage des sessions pour Render
+     * Correction du stockage des sessions pour Render et Laravel Cloud
      */
     private function fixSessionStorage()
     {
         try {
-            // Sur Render, forcer l'utilisation des sessions en base de données
-            if (env('RENDER', false) || env('APP_ENV') === 'production') {
-                Log::info('🔧 Configuration des sessions pour Render...');
+            // Sur Render ou Laravel Cloud, forcer l'utilisation des sessions en base de données
+            if (env('RENDER', false) || env('LARAVEL_CLOUD', false) || env('APP_ENV') === 'production') {
+                $platform = env('RENDER', false) ? 'Render' : (env('LARAVEL_CLOUD', false) ? 'Laravel Cloud' : 'Production');
+                Log::info("🔧 Configuration des sessions pour $platform...");
                 
                 // Vérifier si la table sessions existe
                 try {
@@ -268,7 +269,7 @@ class AppServiceProvider extends ServiceProvider
                 } catch (\Exception $e) {
                     Log::info('❌ Table sessions n\'existe pas, création...');
                     
-                    // Créer la table sessions
+                    // Créer la table sessions seulement si elle n'existe pas
                     DB::statement('
                         CREATE TABLE IF NOT EXISTS sessions (
                             id VARCHAR(255) PRIMARY KEY,
@@ -292,7 +293,7 @@ class AppServiceProvider extends ServiceProvider
                 config(['session.http_only' => true]);
                 config(['session.same_site' => 'lax']);
                 
-                Log::info('✅ Configuration des sessions mise à jour pour Render');
+                Log::info("✅ Configuration des sessions mise à jour pour $platform");
             }
             
         } catch (\Exception $e) {

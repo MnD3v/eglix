@@ -9,6 +9,7 @@
     @include('partials.meta')
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@7.4.47/css/materialdesignicons.min.css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -493,6 +494,342 @@
         .accent-info .kpi-icon { background: rgba(56,189,248,.12); color:#0EA5E9; }
         .accent-warning .kpi-icon { background: rgba(245,158,11,.12); color:#F59E0B; }
         .accent-purple .kpi-icon { background: rgba(124,58,237,.12); color:#7C3AED; }
+        
+        /* Classes Bootstrap pour purple */
+        .bg-purple { background-color: #7C3AED !important; }
+        .text-purple { color: #7C3AED !important; }
+        .bg-purple-subtle { background-color: rgba(124,58,237,.12) !important; }
+        .text-purple { color: #7C3AED !important; }
+
+        /* Classes supplémentaires pour les couleurs de documents */
+        .bg-success-subtle { background-color: rgba(34,197,94,.12) !important; }
+        .text-success { color: #22C55E !important; }
+        .bg-danger-subtle { background-color: rgba(239,68,68,.12) !important; }
+        .text-danger { color: #EF4444 !important; }
+        .bg-primary-subtle { background-color: rgba(59,130,246,.12) !important; }
+        .text-primary { color: #3B82F6 !important; }
+        .bg-warning-subtle { background-color: rgba(245,158,11,.12) !important; }
+        .text-warning { color: #F59E0B !important; }
+        .bg-info-subtle { background-color: rgba(56,189,248,.12) !important; }
+        .text-info { color: #38BDF8 !important; }
+        .bg-secondary-subtle { background-color: rgba(107,114,128,.12) !important; }
+        .text-secondary { color: #6B7280 !important; }
+
+        /* Styles pour les cartes de documents */
+        .document-card {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+        }
+
+        .document-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            border-color: #d1d5db;
+        }
+
+        .document-icon-wrapper {
+            position: relative;
+        }
+
+        .document-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .document-image-container {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .document-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .document-image-container:hover .document-image {
+            transform: scale(1.05);
+        }
+
+        .document-badges {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            align-items: flex-end;
+        }
+
+        .document-type-badge {
+            font-size: 10px;
+            font-weight: 600;
+            padding: 4px 8px;
+            border-radius: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .document-public-badge {
+            font-size: 10px;
+            padding: 4px 6px;
+            border-radius: 6px;
+        }
+
+        .document-title {
+            font-weight: 600;
+            color: #1f2937;
+            line-height: 1.4;
+            font-size: 14px;
+        }
+
+        .document-description {
+            line-height: 1.4;
+            font-size: 12px;
+        }
+
+        .document-metadata {
+            background: #f9fafb;
+            border-radius: 8px;
+            padding: 8px 12px;
+            margin-top: 8px;
+        }
+
+        .document-folder {
+            font-weight: 500;
+            color: #6b7280;
+        }
+
+        .document-size {
+            font-weight: 500;
+            color: #6b7280;
+        }
+
+        .document-actions {
+            background: #f9fafb;
+            margin: 0 -16px -16px -16px;
+            padding: 12px 16px;
+        }
+
+        .document-action-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            transition: all 0.2s ease;
+            border: 1px solid #e5e7eb;
+        }
+
+        .document-action-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .document-action-btn.btn-outline-primary:hover {
+            background-color: #3b82f6;
+            border-color: #3b82f6;
+            color: white;
+        }
+
+        .document-action-btn.btn-outline-success:hover {
+            background-color: #10b981;
+            border-color: #10b981;
+            color: white;
+        }
+
+        .document-action-btn.btn-outline-warning:hover {
+            background-color: #f59e0b;
+            border-color: #f59e0b;
+            color: white;
+        }
+
+        .document-action-btn.btn-outline-danger:hover {
+            background-color: #ef4444;
+            border-color: #ef4444;
+            color: white;
+        }
+
+        /* Animation d'apparition */
+        .document-card {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .document-card {
+                margin-bottom: 16px;
+            }
+            
+            .document-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 18px;
+            }
+            
+            .document-image-container {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .document-title {
+                font-size: 13px;
+            }
+            
+            .document-action-btn {
+                width: 28px;
+                height: 28px;
+                font-size: 12px;
+            }
+        }
+
+        /* Styles pour les titres de section */
+        .section-header {
+            background: #1a1a1a;
+            border-radius: 16px;
+            padding: 30px;
+            margin-top: 30px;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .section-title {
+            color: white;
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin: 0;
+            position: relative;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .section-title-icon {
+            width: 60px;
+            height: 60px;
+            background: #ff6b35;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .section-subtitle {
+            color: #a0a0a0;
+            font-size: 1rem;
+            font-weight: 400;
+            margin: 8px 0 0 80px;
+            position: relative;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-subtitle-icon {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .section-actions {
+            position: absolute;
+            right: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 2;
+        }
+
+        .section-action-btn {
+            background: #ff6b35;
+            border: none;
+            border-radius: 12px;
+            padding: 12px 20px;
+            color: white;
+            font-weight: 600;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(255, 107, 53, 0.3);
+        }
+
+        .section-action-btn:hover {
+            background: #e55a2b;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.4);
+            color: white;
+            text-decoration: none;
+        }
+
+        .section-action-btn i {
+            font-size: 18px;
+        }
+
+        /* Responsive pour les titres */
+        @media (max-width: 768px) {
+            .section-header {
+                padding: 20px;
+                margin-top: 20px;
+                margin-bottom: 20px;
+            }
+            
+            .section-title {
+                font-size: 1.8rem;
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+            
+            .section-title-icon {
+                width: 50px;
+                height: 50px;
+                font-size: 24px;
+            }
+            
+            .section-subtitle {
+                margin: 8px 0 0 0;
+                text-align: center;
+                justify-content: center;
+            }
+            
+            .section-actions {
+                position: static;
+                transform: none;
+                margin-top: 20px;
+                display: flex;
+                justify-content: center;
+            }
+        }
 
         /* KPI links */
         .kpi-link { text-decoration: none; color: inherit; display: block; }

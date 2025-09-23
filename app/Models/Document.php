@@ -88,6 +88,54 @@ class Document extends Model
         return round($bytes, 2) . ' ' . $units[$i];
     }
 
+    public function getFileIconAttribute()
+    {
+        switch ($this->file_type) {
+            case 'image':
+                return 'mdi-image';
+            case 'pdf':
+                return 'mdi-file-pdf-box';
+            case 'word':
+                return 'mdi-file-word-box';
+            case 'excel':
+                return 'mdi-file-excel-box';
+            case 'powerpoint':
+                return 'mdi-file-powerpoint-box';
+            case 'video':
+                return 'mdi-file-video';
+            case 'audio':
+                return 'mdi-file-music';
+            case 'archive':
+                return 'mdi-file-zip-box';
+            default:
+                return 'mdi-file-document-outline';
+        }
+    }
+
+    public function getFileColorAttribute()
+    {
+        switch ($this->file_type) {
+            case 'image':
+                return 'success';
+            case 'pdf':
+                return 'danger';
+            case 'word':
+                return 'primary';
+            case 'excel':
+                return 'success';
+            case 'powerpoint':
+                return 'warning';
+            case 'video':
+                return 'info';
+            case 'audio':
+                return 'purple';
+            case 'archive':
+                return 'secondary';
+            default:
+                return 'secondary';
+        }
+    }
+
     public function getFileExtensionAttribute()
     {
         return strtolower(pathinfo($this->original_name, PATHINFO_EXTENSION));
@@ -120,15 +168,15 @@ class Document extends Model
         parent::boot();
 
         static::creating(function ($document) {
-            if (auth()->check()) {
-                $document->created_by = auth()->id();
-                $document->updated_by = auth()->id();
+            if (Auth::check()) {
+                $document->created_by = Auth::id();
+                $document->updated_by = Auth::id();
             }
         });
 
         static::updating(function ($document) {
-            if (auth()->check()) {
-                $document->updated_by = auth()->id();
+            if (Auth::check()) {
+                $document->updated_by = Auth::id();
             }
         });
     }

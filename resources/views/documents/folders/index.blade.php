@@ -4,33 +4,47 @@
 
 @section('content')
 <div class="container-fluid">
-    <div class="row">
-        <div class="col-12">
-            <div class="page-title-box">
-                <div class="page-title-right">
-                    <ol class="breadcrumb m-0">
-                        <li class="breadcrumb-item"><a href="{{ url('/') }}">Tableau de bord</a></li>
-                        <li class="breadcrumb-item"><a href="{{ route('documents.index') }}">Documents</a></li>
-                        <li class="breadcrumb-item active">Dossiers</li>
-                    </ol>
-                </div>
-                <h4 class="page-title">
-                    <i class="mdi mdi-folder-multiple-outline me-1"></i>
-                    Gestion des Dossiers
-                </h4>
+    <!-- Header de section moderne -->
+    <div class="section-header">
+        <h1 class="section-title">
+            <div class="section-title-icon">
+                <i class="mdi mdi-folder-multiple"></i>
             </div>
+            Dossiers
+        </h1>
+        <p class="section-subtitle">
+            <i class="mdi mdi-shield-check section-subtitle-icon"></i>
+            Organisez vos documents en dossiers thématiques pour une meilleure gestion
+        </p>
+        
+        <div class="section-actions">
+            <a href="{{ route('document-folders.create') }}" class="section-action-btn">
+                <i class="mdi mdi-plus"></i>
+                Nouveau Dossier
+            </a>
         </div>
     </div>
 
-    <!-- Actions -->
+    <!-- Breadcrumb -->
     <div class="row mb-3">
-        <div class="col-md-6">
-            <a href="{{ route('document-folders.create') }}" class="btn btn-primary">
-                <i class="mdi mdi-folder-plus"></i> Nouveau Dossier
-            </a>
-            <a href="{{ route('documents.index') }}" class="btn btn-outline-secondary">
-                <i class="mdi mdi-file-document-outline"></i> Voir les Documents
-            </a>
+        <div class="col-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href="{{ url('/') }}" class="text-decoration-none">
+                            <i class="mdi mdi-home me-1"></i>Tableau de bord
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="{{ route('documents.index') }}" class="text-decoration-none">
+                            <i class="mdi mdi-file-document-outline me-1"></i>Documents
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">
+                        <i class="mdi mdi-folder-multiple me-1"></i>Dossiers
+                    </li>
+                </ol>
+            </nav>
         </div>
     </div>
 

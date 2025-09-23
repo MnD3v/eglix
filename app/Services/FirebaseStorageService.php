@@ -100,16 +100,56 @@ class FirebaseStorageService
     public function deleteFile(string $filename): bool
     {
         try {
-            // For now, we'll just log the deletion attempt
-            Log::info('Firebase delete simulated', [
-                'filename' => $filename
-            ]);
+            // Vérifier si Firebase est configuré
+            if (!FirebaseHelper::isConfigured()) {
+                Log::warning('Firebase not configured, cannot delete file', [
+                    'filename' => $filename
+                ]);
+                return true; // Retourner true pour éviter les erreurs
+            }
             
-            return true;
-
+            // URL de suppression Firebase Storage
+            $deleteUrl = $this->storageUrl . urlencode($filename);
+            
+            // Initialiser cURL pour la suppression
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $deleteUrl);
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+            
+            // Exécuter la requête
+            $response = curl_exec($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            $error = curl_error($ch);
+            curl_close($ch);
+            
+            if ($error) {
+                Log::error('cURL error during Firebase delete', ['error' => $error]);
+                return false;
+            }
+            
+            if ($httpCode === 200 || $httpCode === 404) {
+                // 200 = supprimé avec succès, 404 = fichier déjà supprimé
+                Log::info('File deleted from Firebase successfully', [
+                    'filename' => $filename,
+                    'http_code' => $httpCode
+                ]);
+                return true;
+            } else {
+                Log::error('Firebase delete failed', [
+                    'http_code' => $httpCode,
+                    'response' => $response,
+                    'filename' => $filename
+                ]);
+                return false;
+            }
+            
         } catch (\Exception $e) {
             Log::error('Firebase delete exception', [
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
+                'filename' => $filename
             ]);
             return false;
         }
@@ -129,9 +169,17 @@ class FirebaseStorageService
     public function getDownloadUrl(string $filePath): string
     {
         try {
-            // Pour l'instant, retourner l'URL publique
-            // En production, vous pourriez générer une URL signée temporaire
-            return $this->getPublicUrl($filePath);
+            // Pour l'instant, retourner l'URL publique directe
+            // En production, vous pourriez générer une URL signée temporaire pour plus de sécurité
+            $publicUrl = $this->getPublicUrl($filePath);
+            
+            Log::info('Generated download URL', [
+                'filePath' => $filePath,
+                'url' => $publicUrl
+            ]);
+            
+            return $publicUrl;
+            
         } catch (\Exception $e) {
             Log::error('Error generating download URL', [
                 'filePath' => $filePath,
@@ -162,23 +210,20 @@ class FirebaseStorageService
             // Generate unique filename
             $filename = $folderPath . '/' . Str::uuid() . '.' . $file->getClientOriginalExtension();
             
-            // For now, we'll simulate the upload and return a placeholder URL
-            $publicUrl = $this->getPublicUrl($filename);
+            // Upload vers Firebase Storage
+            $publicUrl = $this->uploadToFirebase($file, $filename);
             
-            // Log the upload attempt
-            Log::info('Document upload simulated', [
-                'filename' => $filename,
-                'size' => $file->getSize(),
-                'type' => $file->getMimeType(),
-                'url' => $publicUrl
-            ]);
-
-            // For demonstration, we'll store the file locally and return a local URL
-            $localPath = $file->store($folderPath, 'public');
-            $localUrl = asset('storage/' . $localPath);
-            
-            // Retourner l'URL Firebase pour stockage en BD
-            return $publicUrl;
+            if ($publicUrl) {
+                Log::info('Document uploaded to Firebase successfully', [
+                    'filename' => $filename,
+                    'size' => $file->getSize(),
+                    'type' => $file->getMimeType(),
+                    'url' => $publicUrl
+                ]);
+                return $publicUrl;
+            } else {
+                throw new \Exception('Failed to upload to Firebase');
+            }
 
         } catch (\Exception $e) {
             Log::error('Document upload exception', [
@@ -197,6 +242,66 @@ class FirebaseStorageService
                 ]);
                 return null;
             }
+        }
+    }
+
+    /**
+     * Upload file to Firebase Storage using REST API
+     */
+    private function uploadToFirebase(UploadedFile $file, string $filename): ?string
+    {
+        try {
+            // Préparer les données pour l'upload
+            $fileContent = file_get_contents($file->getPathname());
+            $mimeType = $file->getMimeType();
+            
+            // URL d'upload Firebase Storage
+            $uploadUrl = $this->storageUrl . urlencode($filename);
+            
+            // Headers pour l'upload
+            $headers = [
+                'Content-Type: ' . $mimeType,
+                'Content-Length: ' . strlen($fileContent),
+            ];
+            
+            // Initialiser cURL
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $uploadUrl);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $fileContent);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+            
+            // Exécuter la requête
+            $response = curl_exec($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            $error = curl_error($ch);
+            curl_close($ch);
+            
+            if ($error) {
+                Log::error('cURL error during Firebase upload', ['error' => $error]);
+                return null;
+            }
+            
+            if ($httpCode === 200) {
+                // Upload réussi, retourner l'URL publique
+                return $this->getPublicUrl($filename);
+            } else {
+                Log::error('Firebase upload failed', [
+                    'http_code' => $httpCode,
+                    'response' => $response
+                ]);
+                return null;
+            }
+            
+        } catch (\Exception $e) {
+            Log::error('Firebase upload exception', [
+                'message' => $e->getMessage(),
+                'filename' => $filename
+            ]);
+            return null;
         }
     }
 }

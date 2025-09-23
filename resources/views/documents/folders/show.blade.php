@@ -132,52 +132,89 @@
     <!-- Liste des documents -->
     <div class="row">
         @forelse($documents as $document)
-            <div class="col-xl-3 col-md-4 col-sm-6">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="text-center">
-                            @if($document->is_image)
-                                <img src="{{ $document->thumbnail_url }}" alt="{{ $document->name }}" 
-                                     class="img-fluid rounded mb-3" style="max-height: 150px; width: 100%; object-fit: cover;">
-                            @else
-                                <div class="avatar-lg mx-auto mb-3">
-                                    <div class="avatar-title bg-{{ $document->is_pdf ? 'danger' : 'secondary' }}-subtle text-{{ $document->is_pdf ? 'danger' : 'secondary' }} rounded">
-                                        <i class="mdi mdi-{{ $document->is_pdf ? 'file-pdf-box' : 'file-document-outline' }} font-size-24"></i>
+            <div class="col-xl-3 col-md-4 col-sm-6 mb-4">
+                <div class="card document-card h-100 shadow-sm border-0" style="transition: all 0.3s ease; border-radius: 16px;">
+                    <div class="card-body p-4">
+                        <!-- Header avec icône et type -->
+                        <div class="d-flex align-items-start justify-content-between mb-3">
+                            <div class="document-icon-wrapper">
+                                @if($document->is_image)
+                                    <div class="document-image-container">
+                                        <img src="{{ $document->thumbnail_url }}" alt="{{ $document->name }}" 
+                                             class="document-image">
                                     </div>
-                                </div>
-                            @endif
-                            
-                            <h5 class="card-title mb-1">{{ $document->name }}</h5>
-                            <p class="text-muted mb-2">
-                                <small>
-                                    <i class="mdi mdi-file-outline"></i> {{ $document->formatted_size }}<br>
-                                    <i class="mdi mdi-calendar"></i> {{ $document->created_at->format('d/m/Y') }}
-                                </small>
-                            </p>
-                            
-                            @if($document->description)
-                                <p class="text-muted small mb-3">{{ Str::limit($document->description, 50) }}</p>
-                            @endif
+                                @else
+                                    <div class="document-icon bg-{{ $document->file_color }}-subtle text-{{ $document->file_color }}">
+                                        <i class="mdi {{ $document->file_icon }}"></i>
+                                    </div>
+                                @endif
+                            </div>
+                            <div class="document-badges">
+                                <span class="badge bg-{{ $document->file_color }}-subtle text-{{ $document->file_color }} document-type-badge">
+                                    {{ strtoupper($document->file_extension) }}
+                                </span>
+                                @if($document->is_public)
+                                    <span class="badge bg-success-subtle text-success document-public-badge">
+                                        <i class="mdi mdi-earth"></i>
+                                    </span>
+                                @endif
+                            </div>
                         </div>
                         
-                        <div class="d-flex justify-content-center gap-2">
-                            <a href="{{ route('documents.show', $document) }}" class="btn btn-sm btn-outline-primary">
-                                <i class="mdi mdi-eye"></i>
-                            </a>
-                            <a href="{{ route('documents.download', $document) }}" class="btn btn-sm btn-outline-success">
-                                <i class="mdi mdi-download"></i>
-                            </a>
-                            <a href="{{ route('documents.edit', $document) }}" class="btn btn-sm btn-outline-warning">
-                                <i class="mdi mdi-pencil"></i>
-                            </a>
-                            <form action="{{ route('documents.destroy', $document) }}" method="POST" class="d-inline">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-sm btn-outline-danger" 
-                                        onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce document ?')">
-                                    <i class="mdi mdi-delete"></i>
-                                </button>
-                            </form>
+                        <!-- Contenu principal -->
+                        <div class="document-content">
+                            <h6 class="document-title mb-2">{{ $document->name }}</h6>
+                            
+                            @if($document->description)
+                                <p class="document-description text-muted small mb-3">{{ Str::limit($document->description, 60) }}</p>
+                            @endif
+                            
+                            <!-- Métadonnées -->
+                            <div class="document-metadata">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <div class="d-flex align-items-center text-muted small">
+                                        <i class="mdi mdi-file-outline me-2"></i>
+                                        <span class="document-size">{{ $document->formatted_size }}</span>
+                                    </div>
+                                    <div class="text-muted small">
+                                        <i class="mdi mdi-calendar-outline me-1"></i>
+                                        {{ $document->created_at->format('d/m/Y') }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Actions -->
+                        <div class="document-actions mt-3 pt-3 border-top">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="btn-group" role="group">
+                                    <a href="{{ route('documents.show', $document) }}" 
+                                       class="btn btn-sm btn-outline-primary document-action-btn" 
+                                       title="Voir">
+                                        <i class="mdi mdi-eye"></i>
+                                    </a>
+                                    <a href="{{ route('documents.download', $document) }}" 
+                                       class="btn btn-sm btn-outline-success document-action-btn" 
+                                       title="Télécharger">
+                                        <i class="mdi mdi-download"></i>
+                                    </a>
+                                    <a href="{{ route('documents.edit', $document) }}" 
+                                       class="btn btn-sm btn-outline-warning document-action-btn" 
+                                       title="Modifier">
+                                        <i class="mdi mdi-pencil"></i>
+                                    </a>
+                                </div>
+                                <form action="{{ route('documents.destroy', $document) }}" method="POST" class="d-inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" 
+                                            class="btn btn-sm btn-outline-danger document-action-btn" 
+                                            title="Supprimer"
+                                            onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce document ?')">
+                                        <i class="mdi mdi-delete"></i>
+                                    </button>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -22,8 +22,8 @@
                                  class="rounded me-3" style="width: 40px; height: 40px; object-fit: cover;">
                         @else
                             <div class="avatar-sm me-3">
-                                <div class="avatar-title bg-{{ $document->is_pdf ? 'danger' : 'secondary' }}-subtle text-{{ $document->is_pdf ? 'danger' : 'secondary' }} rounded">
-                                    <i class="mdi mdi-{{ $document->is_pdf ? 'file-pdf-box' : 'file-document-outline' }} font-size-18"></i>
+                                <div class="avatar-title bg-{{ $document->file_color }}-subtle text-{{ $document->file_color }} rounded">
+                                    <i class="mdi {{ $document->file_icon }} font-size-18"></i>
                                 </div>
                             </div>
                         @endif
@@ -49,8 +49,8 @@
                     @else
                         <div class="text-center py-5">
                             <div class="avatar-lg mx-auto mb-3">
-                                <div class="avatar-title bg-{{ $document->is_pdf ? 'danger' : 'secondary' }}-subtle text-{{ $document->is_pdf ? 'danger' : 'secondary' }} rounded">
-                                    <i class="mdi mdi-{{ $document->is_pdf ? 'file-pdf-box' : 'file-document-outline' }} font-size-48"></i>
+                                <div class="avatar-title bg-{{ $document->file_color }}-subtle text-{{ $document->file_color }} rounded">
+                                    <i class="mdi {{ $document->file_icon }} font-size-48"></i>
                                 </div>
                             </div>
                             <h4>{{ $document->name }}</h4>
