@@ -10,9 +10,9 @@ if [ -z "$APP_KEY" ]; then
     php artisan key:generate --force
 fi
 
-# Vérifier la base de données et les routes
-echo "🔍 Vérification de la base de données et des routes..."
-php artisan test:routes
+# Déboguer les routes
+echo "🐛 Débogage des routes..."
+php artisan debug:routes
 
 # Démarrer le serveur
 echo "🌐 Démarrage du serveur web..."

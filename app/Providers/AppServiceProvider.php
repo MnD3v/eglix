@@ -102,26 +102,58 @@ class AppServiceProvider extends ServiceProvider
                 
                 // Ajouter subscription_start_date si elle n'existe pas
                 if (!in_array('subscription_start_date', $existingColumns)) {
-                    DB::statement('ALTER TABLE churches ADD COLUMN subscription_start_date DATE NULL');
-                    Log::info('✅ Colonne subscription_start_date ajoutée');
+                    try {
+                        DB::statement('ALTER TABLE churches ADD COLUMN subscription_start_date DATE NULL');
+                        Log::info('✅ Colonne subscription_start_date ajoutée');
+                    } catch (\Exception $e) {
+                        if (strpos($e->getMessage(), 'Duplicate column name') !== false) {
+                            Log::info('ℹ️ Colonne subscription_start_date existe déjà, ignorée');
+                        } else {
+                            Log::error('❌ Erreur lors de l\'ajout de subscription_start_date: ' . $e->getMessage());
+                        }
+                    }
                 }
                 
                 // Ajouter subscription_end_date si elle n'existe pas
                 if (!in_array('subscription_end_date', $existingColumns)) {
-                    DB::statement('ALTER TABLE churches ADD COLUMN subscription_end_date DATE NULL');
-                    Log::info('✅ Colonne subscription_end_date ajoutée');
+                    try {
+                        DB::statement('ALTER TABLE churches ADD COLUMN subscription_end_date DATE NULL');
+                        Log::info('✅ Colonne subscription_end_date ajoutée');
+                    } catch (\Exception $e) {
+                        if (strpos($e->getMessage(), 'Duplicate column name') !== false) {
+                            Log::info('ℹ️ Colonne subscription_end_date existe déjà, ignorée');
+                        } else {
+                            Log::error('❌ Erreur lors de l\'ajout de subscription_end_date: ' . $e->getMessage());
+                        }
+                    }
                 }
                 
                 // Ajouter subscription_status si elle n'existe pas
                 if (!in_array('subscription_status', $existingColumns)) {
-                    DB::statement("ALTER TABLE churches ADD COLUMN subscription_status VARCHAR(20) DEFAULT 'active'");
-                    Log::info('✅ Colonne subscription_status ajoutée');
+                    try {
+                        DB::statement("ALTER TABLE churches ADD COLUMN subscription_status VARCHAR(20) DEFAULT 'active'");
+                        Log::info('✅ Colonne subscription_status ajoutée');
+                    } catch (\Exception $e) {
+                        if (strpos($e->getMessage(), 'Duplicate column name') !== false) {
+                            Log::info('ℹ️ Colonne subscription_status existe déjà, ignorée');
+                        } else {
+                            Log::error('❌ Erreur lors de l\'ajout de subscription_status: ' . $e->getMessage());
+                        }
+                    }
                 }
                 
                 // Ajouter subscription_amount si elle n'existe pas
                 if (!in_array('subscription_amount', $existingColumns)) {
-                    DB::statement('ALTER TABLE churches ADD COLUMN subscription_amount DECIMAL(10,2) NULL');
-                    Log::info('✅ Colonne subscription_amount ajoutée');
+                    try {
+                        DB::statement('ALTER TABLE churches ADD COLUMN subscription_amount DECIMAL(10,2) NULL');
+                        Log::info('✅ Colonne subscription_amount ajoutée');
+                    } catch (\Exception $e) {
+                        if (strpos($e->getMessage(), 'Duplicate column name') !== false) {
+                            Log::info('ℹ️ Colonne subscription_amount existe déjà, ignorée');
+                        } else {
+                            Log::error('❌ Erreur lors de l\'ajout de subscription_amount: ' . $e->getMessage());
+                        }
+                    }
                 }
                 
                 // Ajouter les autres colonnes optionnelles
@@ -141,8 +173,16 @@ class AppServiceProvider extends ServiceProvider
                     ");
                     
                     if (empty($checkColumn)) {
-                        DB::statement("ALTER TABLE churches ADD COLUMN $column $definition");
-                        Log::info("✅ Colonne $column ajoutée");
+                        try {
+                            DB::statement("ALTER TABLE churches ADD COLUMN $column $definition");
+                            Log::info("✅ Colonne $column ajoutée");
+                        } catch (\Exception $e) {
+                            if (strpos($e->getMessage(), 'Duplicate column name') !== false) {
+                                Log::info("ℹ️ Colonne $column existe déjà, ignorée");
+                            } else {
+                                Log::error("❌ Erreur lors de l'ajout de $column: " . $e->getMessage());
+                            }
+                        }
                     }
                 }
                 
@@ -583,20 +623,37 @@ class AppServiceProvider extends ServiceProvider
         try {
             Log::info('🔧 Optimisation de l\'application pour Laravel Cloud...');
             
-            // Nettoyer le cache
-            \Artisan::call('cache:clear');
-            \Artisan::call('config:clear');
-            \Artisan::call('route:clear');
-            \Artisan::call('view:clear');
+            // Nettoyer le cache de manière sécurisée
+            try {
+                \Artisan::call('cache:clear');
+                Log::info('✅ Cache nettoyé');
+            } catch (\Exception $e) {
+                Log::warning('⚠️ Erreur lors du nettoyage du cache: ' . $e->getMessage());
+            }
             
-            Log::info('✅ Cache nettoyé');
+            try {
+                \Artisan::call('config:clear');
+                Log::info('✅ Cache de configuration nettoyé');
+            } catch (\Exception $e) {
+                Log::warning('⚠️ Erreur lors du nettoyage du cache de configuration: ' . $e->getMessage());
+            }
             
-            // Optimiser l'application
-            \Artisan::call('config:cache');
-            \Artisan::call('route:cache');
-            \Artisan::call('view:cache');
+            try {
+                \Artisan::call('route:clear');
+                Log::info('✅ Cache des routes nettoyé');
+            } catch (\Exception $e) {
+                Log::warning('⚠️ Erreur lors du nettoyage du cache des routes: ' . $e->getMessage());
+            }
             
-            Log::info('✅ Application optimisée');
+            try {
+                \Artisan::call('view:clear');
+                Log::info('✅ Cache des vues nettoyé');
+            } catch (\Exception $e) {
+                Log::warning('⚠️ Erreur lors du nettoyage du cache des vues: ' . $e->getMessage());
+            }
+            
+            // Éviter la mise en cache qui cause des problèmes de sérialisation
+            Log::info('✅ Optimisation terminée (sans mise en cache)');
             
         } catch (\Exception $e) {
             Log::error('❌ Erreur lors de l\'optimisation: ' . $e->getMessage());
