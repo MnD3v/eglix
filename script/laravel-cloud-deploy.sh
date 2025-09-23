@@ -61,7 +61,11 @@ try {
 log_info "Correction des problèmes de déploiement Laravel Cloud..."
 php artisan laravel-cloud:fix-deployment
 
-# 4. Exécuter les migrations avec gestion d'erreurs
+# 4. Résoudre le conflit de table sessions
+log_info "Résolution du conflit de table sessions..."
+php artisan fix:sessions-conflict
+
+# 5. Exécuter les migrations avec gestion d'erreurs
 log_info "Exécution des migrations..."
 php artisan migrate --force
 
@@ -79,7 +83,7 @@ else
     php artisan migrate --force --step
 fi
 
-# 5. Vérifier les tables critiques
+# 6. Vérifier les tables critiques
 log_info "Vérification des tables critiques..."
 php artisan tinker --execute="
 \$tables = ['users', 'churches', 'sessions', 'migrations'];
@@ -93,20 +97,20 @@ foreach (\$tables as \$table) {
 }
 "
 
-# 6. Configurer les permissions
+# 7. Configurer les permissions
 log_info "Configuration des permissions..."
 chmod -R 755 storage
 chmod -R 755 bootstrap/cache
 log_success "Permissions configurées"
 
-# 7. Optimiser l'application
+# 8. Optimiser l'application
 log_info "Optimisation de l'application..."
 php artisan config:cache
 php artisan route:cache
 php artisan view:cache
 log_success "Application optimisée"
 
-# 8. Vérification finale
+# 9. Vérification finale
 log_info "Vérification finale..."
 php artisan tinker --execute="
 try {
@@ -137,13 +141,14 @@ try {
 }
 "
 
-# 9. Afficher le résumé
+# 10. Afficher le résumé
 log_success "Déploiement Laravel Cloud terminé !"
 echo ""
 echo "📋 Résumé du déploiement:"
 echo "   ✅ Cache nettoyé"
 echo "   ✅ Configuration vérifiée"
 echo "   ✅ Problèmes de déploiement corrigés"
+echo "   ✅ Conflit de table sessions résolu"
 echo "   ✅ Migrations exécutées"
 echo "   ✅ Permissions configurées"
 echo "   ✅ Application optimisée"

@@ -1,0 +1,42 @@
+{
+  "name": "egliox",
+  "description": "Application de gestion d'église - Egliox",
+  "version": "1.0.0",
+  "type": "laravel",
+  "framework": "laravel",
+  "php_version": "8.2",
+  "extensions": [
+    "intl",
+    "zip",
+    "pdo_pgsql"
+  ],
+  "build_commands": [
+    "composer install --no-dev --prefer-dist --no-interaction --optimize-autoloader",
+    "php artisan key:generate --force",
+    "php artisan config:clear",
+    "php artisan route:clear",
+    "php artisan view:clear",
+    "php artisan laravel-cloud:fix-deployment",
+    "php artisan fix:sessions-conflict",
+    "php artisan migrate --force",
+    "php artisan storage:link"
+  ],
+  "start_command": "php -d variables_order=EGPCS -S 0.0.0.0:$PORT -t public public/index.php",
+  "environment_variables": {
+    "LARAVEL_CLOUD": "true",
+    "APP_ENV": "production",
+    "APP_DEBUG": "false",
+    "SESSION_DRIVER": "database",
+    "CACHE_DRIVER": "database",
+    "QUEUE_CONNECTION": "database"
+  },
+  "required_services": [
+    "postgresql"
+  ],
+  "notes": [
+    "Pas besoin de Docker - Laravel Cloud utilise Nixpacks",
+    "Configuration automatique via nixpacks.toml",
+    "Extensions PHP installées automatiquement",
+    "Déploiement simplifié sans scripts Docker"
+  ]
+}

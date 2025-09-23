@@ -257,9 +257,9 @@ class AppServiceProvider extends ServiceProvider
     private function fixSessionStorage()
     {
         try {
-            // Sur Render ou Laravel Cloud, forcer l'utilisation des sessions en base de données
-            if (env('RENDER', false) || env('LARAVEL_CLOUD', false) || env('APP_ENV') === 'production') {
-                $platform = env('RENDER', false) ? 'Render' : (env('LARAVEL_CLOUD', false) ? 'Laravel Cloud' : 'Production');
+            // Sur Render, forcer l'utilisation des sessions en base de données
+            if (env('RENDER', false) || env('APP_ENV') === 'production') {
+                $platform = env('RENDER', false) ? 'Render' : 'Production';
                 Log::info("🔧 Configuration des sessions pour $platform...");
                 
                 // Vérifier si la table sessions existe
@@ -294,6 +294,30 @@ class AppServiceProvider extends ServiceProvider
                 config(['session.same_site' => 'lax']);
                 
                 Log::info("✅ Configuration des sessions mise à jour pour $platform");
+            }
+            
+            // Sur Laravel Cloud, seulement configurer les sessions sans créer la table
+            if (env('LARAVEL_CLOUD', false)) {
+                Log::info('🔧 Configuration des sessions pour Laravel Cloud...');
+                
+                // Vérifier si la table sessions existe
+                try {
+                    DB::select('SELECT 1 FROM sessions LIMIT 1');
+                    Log::info('✅ Table sessions existe');
+                } catch (\Exception $e) {
+                    Log::info('ℹ️ Table sessions n\'existe pas - sera créée par les migrations');
+                }
+                
+                // Configurer les sessions sans créer la table
+                config(['session.driver' => 'database']);
+                config(['session.table' => 'sessions']);
+                config(['session.lifetime' => 120]);
+                config(['session.expire_on_close' => false]);
+                config(['session.secure' => true]);
+                config(['session.http_only' => true]);
+                config(['session.same_site' => 'lax']);
+                
+                Log::info('✅ Configuration des sessions mise à jour pour Laravel Cloud');
             }
             
         } catch (\Exception $e) {

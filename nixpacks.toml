@@ -1,7 +1,8 @@
 [phases.setup]
   nixPkgs = [
     "php82Extensions.intl",
-    "php82Extensions.zip"
+    "php82Extensions.zip",
+    "php82Extensions.pdo_pgsql"
   ]
 
 [phases.install]
@@ -12,6 +13,11 @@
 [phases.build]
   cmds = [
     "php artisan key:generate --force || true",
+    "php artisan config:clear || true",
+    "php artisan route:clear || true",
+    "php artisan view:clear || true",
+    "php artisan laravel-cloud:fix-deployment || true",
+    "php artisan fix:sessions-conflict || true",
     "php artisan migrate --force || true",
     "php artisan storage:link || true"
   ]
