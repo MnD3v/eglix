@@ -52,20 +52,23 @@ class AppServiceProvider extends ServiceProvider
             return '<?php echo \'<meta name="csrf-token" content="\' . csrf_token() . \'">\'; ?>';
         });
         
-        // Auto-correction des colonnes subscription au démarrage
-        $this->autoFixSubscriptionColumns();
-        
-        // Auto-correction des colonnes manquantes dans les tables
-        $this->autoFixMissingColumns();
-        
-        // Correction du stockage des sessions pour Render
-        $this->fixSessionStorage();
-        
-        // Enregistrer les politiques d'autorisation
-        $this->registerPolicies();
-        
-        // Déclencheur automatique pour Laravel Cloud
-        $this->triggerLaravelCloudDeployment();
+        // Vérifier si nous ne sommes pas en phase de build
+        if (!$this->isBuildPhase()) {
+            // Auto-correction des colonnes subscription au démarrage
+            $this->autoFixSubscriptionColumns();
+            
+            // Auto-correction des colonnes manquantes dans les tables
+            $this->autoFixMissingColumns();
+            
+            // Correction du stockage des sessions pour Render
+            $this->fixSessionStorage();
+            
+            // Enregistrer les politiques d'autorisation
+            $this->registerPolicies();
+            
+            // Déclencheur automatique pour Laravel Cloud
+            $this->triggerLaravelCloudDeployment();
+        }
     }
     
     /**
@@ -625,5 +628,35 @@ class AppServiceProvider extends ServiceProvider
             Log::error('❌ Erreur de connexion base de données: ' . $e->getMessage());
             throw $e;
         }
+    }
+    
+    /**
+     * Vérifier si nous sommes en phase de build
+     */
+    private function isBuildPhase()
+    {
+        // Vérifier les variables d'environnement de build
+        if (env('NIXPACKS_BUILD', false) || env('BUILD_PHASE', false)) {
+            return true;
+        }
+        
+        // Vérifier si nous sommes en mode CLI et que c'est une commande de build
+        if (php_sapi_name() === 'cli') {
+            $command = $_SERVER['argv'][0] ?? '';
+            $buildCommands = ['artisan', 'composer', 'php'];
+            
+            foreach ($buildCommands as $buildCommand) {
+                if (strpos($command, $buildCommand) !== false) {
+                    return true;
+                }
+            }
+        }
+        
+        // Vérifier si nous sommes en mode artisan
+        if (defined('ARTISAN_BINARY') || (isset($_SERVER['argv'][0]) && strpos($_SERVER['argv'][0], 'artisan') !== false)) {
+            return true;
+        }
+        
+        return false;
     }
 }

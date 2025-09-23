@@ -8,6 +8,7 @@
 2. **Commandes de build trop complexes** - Trop de commandes artisan dans la phase build
 3. **Dépendances manquantes** - Extensions PHP non disponibles
 4. **Configuration Nixpacks incorrecte** - Syntaxe ou paramètres invalides
+5. **AppServiceProvider bloquant** - Auto-corrections exécutées pendant le build
 
 ## 🔧 Solutions
 
@@ -64,7 +65,23 @@ Utilisez `laravel-cloud-minimal.toml` pour un build ultra-rapide :
   cmd = "php -d variables_order=EGPCS -S 0.0.0.0:$PORT -t public public/index.php"
 ```
 
-### Solution 3 : Script de Déploiement Manuel
+### Solution 3 : Désactiver AppServiceProvider pendant le Build
+
+Le `AppServiceProvider` exécute des auto-corrections qui peuvent bloquer le build. Ajoutez cette vérification :
+
+```php
+// Dans AppServiceProvider::boot()
+if (!$this->isBuildPhase()) {
+    // Auto-corrections seulement en production
+    $this->autoFixSubscriptionColumns();
+    $this->autoFixMissingColumns();
+    $this->fixSessionStorage();
+    $this->registerPolicies();
+    $this->triggerLaravelCloudDeployment();
+}
+```
+
+### Solution 4 : Script de Déploiement Manuel
 
 Utilisez le script `laravel-cloud-simple-deploy.sh` :
 
@@ -164,6 +181,18 @@ Build timeout after 10 minutes
 - Simplifiez la configuration
 - Réduisez le nombre de commandes de build
 - Utilisez la configuration minimale
+
+### Problème 5 : AppServiceProvider Bloquant
+
+**Erreur** :
+```
+Preparing build environment interminable
+```
+
+**Solution** :
+- Ajoutez la vérification `isBuildPhase()` dans AppServiceProvider
+- Désactivez les auto-corrections pendant le build
+- Utilisez les variables d'environnement `NIXPACKS_BUILD=true`
 
 ## 🚀 Configuration Recommandée
 

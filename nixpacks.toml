@@ -10,6 +10,10 @@
   ]
 
 [phases.build]
+  env = [
+    "NIXPACKS_BUILD=true",
+    "BUILD_PHASE=true"
+  ]
   cmds = [
     "php artisan key:generate --force || true",
     "php artisan config:clear || true",
