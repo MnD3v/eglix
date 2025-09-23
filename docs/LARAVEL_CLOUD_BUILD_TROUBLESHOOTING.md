@@ -194,6 +194,18 @@ Preparing build environment interminable
 - Désactivez les auto-corrections pendant le build
 - Utilisez les variables d'environnement `NIXPACKS_BUILD=true`
 
+### Problème 6 : Deadlocks MySQL
+
+**Erreur** :
+```
+SQLSTATE[40001]: Serialization failure: 1213 Deadlock found when trying to get lock
+```
+
+**Solution** :
+- Utilisez la commande `php artisan fix:mysql-deadlocks`
+- Ajoutez la gestion des deadlocks dans les migrations
+- Utilisez des retries avec délais aléatoires
+
 ## 🚀 Configuration Recommandée
 
 ### Pour MySQL
@@ -265,6 +277,7 @@ QUEUE_CONNECTION=database
 - [ ] Commandes de build réduites
 - [ ] Variables d'environnement correctes
 - [ ] Cache nettoyé
+- [ ] Deadlocks MySQL résolus
 - [ ] Test local réussi
 - [ ] Script de déploiement testé
 

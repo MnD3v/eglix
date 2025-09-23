@@ -11,9 +11,32 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('members', function (Blueprint $table) {
-            $table->string('function')->nullable()->after('marital_status');
-        });
+        // Vérifier si la colonne existe déjà
+        if (!Schema::hasColumn('members', 'function')) {
+            // Gérer les deadlocks avec retry
+            $maxRetries = 3;
+            $retryCount = 0;
+            
+            while ($retryCount < $maxRetries) {
+                try {
+                    Schema::table('members', function (Blueprint $table) {
+                        $table->string('function')->nullable()->after('marital_status');
+                    });
+                    break; // Succès, sortir de la boucle
+                } catch (\Exception $e) {
+                    $retryCount++;
+                    
+                    if (strpos($e->getMessage(), 'Deadlock found') !== false && $retryCount < $maxRetries) {
+                        // Attendre un peu avant de réessayer
+                        sleep(rand(1, 3));
+                        continue;
+                    }
+                    
+                    // Si ce n'est pas un deadlock ou qu'on a épuisé les tentatives
+                    throw $e;
+                }
+            }
+        }
     }
 
     /**

@@ -19,6 +19,7 @@
     "php artisan config:clear || true",
     "php artisan route:clear || true",
     "php artisan view:clear || true",
+    "php artisan fix:mysql-deadlocks || true",
     "php artisan storage:link || true"
   ]
 

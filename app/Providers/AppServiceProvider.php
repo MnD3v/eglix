@@ -186,7 +186,8 @@ class AppServiceProvider extends ServiceProvider
                 ],
                 'members' => [
                     'created_by' => 'BIGINT NULL',
-                    'updated_by' => 'BIGINT NULL'
+                    'updated_by' => 'BIGINT NULL',
+                    'function' => 'VARCHAR(255) NULL'
                 ],
                 'journal_entries' => [
                     'created_by' => 'BIGINT NULL',
@@ -241,11 +242,27 @@ class AppServiceProvider extends ServiceProvider
                     ");
                     
                     if (empty($checkColumn)) {
-                        try {
-                            DB::statement("ALTER TABLE $table ADD COLUMN $column $definition");
-                            Log::info("✅ Colonne $column ajoutée à la table $table");
-                        } catch (\Exception $e) {
-                            Log::error("❌ Erreur lors de l'ajout de $column à $table: " . $e->getMessage());
+                        // Gérer les deadlocks avec retry
+                        $maxRetries = 3;
+                        $retryCount = 0;
+                        
+                        while ($retryCount < $maxRetries) {
+                            try {
+                                DB::statement("ALTER TABLE $table ADD COLUMN $column $definition");
+                                Log::info("✅ Colonne $column ajoutée à la table $table");
+                                break;
+                            } catch (\Exception $e) {
+                                $retryCount++;
+                                
+                                if (strpos($e->getMessage(), 'Deadlock found') !== false && $retryCount < $maxRetries) {
+                                    Log::warning("⚠️ Deadlock détecté pour $column dans $table, tentative $retryCount/$maxRetries...");
+                                    sleep(rand(1, 3));
+                                    continue;
+                                }
+                                
+                                Log::error("❌ Erreur lors de l'ajout de $column à $table: " . $e->getMessage());
+                                break;
+                            }
                         }
                     }
                 }
