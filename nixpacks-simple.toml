@@ -29,6 +29,4 @@
   ]
 
 [start]
-  cmd = "chmod +x start.sh && ./start.sh"
-
-
+  cmd = "php -S 0.0.0.0:$PORT -t public"
