@@ -2,7 +2,8 @@
   nixPkgs = [
     "php82Extensions.intl",
     "php82Extensions.zip",
-    "php82Extensions.pdo_pgsql"
+    "php82Extensions.pdo_pgsql",
+    "php82Extensions.pgsql"
   ]
 
 [phases.install]

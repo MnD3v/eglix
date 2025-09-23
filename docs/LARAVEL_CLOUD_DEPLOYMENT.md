@@ -29,6 +29,8 @@ DB_PORT=5432
 DB_DATABASE=your-db-name
 DB_USERNAME=your-db-user
 DB_PASSWORD=your-db-password
+DB_SSLMODE=require
+DB_CHARSET=utf8
 
 # Sessions
 SESSION_DRIVER=database
@@ -155,6 +157,18 @@ SQLSTATE[42P01]: Undefined table: 7 ERROR: relation "churches" does not exist
 - Exécutez les migrations : `php artisan migrate --force`
 - Vérifiez que toutes les migrations sont présentes dans `database/migrations/`
 
+### Problème 4 : Connexion PostgreSQL SSL
+
+**Erreur** :
+```
+SQLSTATE[08006] [7] connection to server failed: ERROR: connection is insecure (try using `sslmode=require`)
+```
+
+**Solution** :
+- Ajoutez `DB_SSLMODE=require` dans vos variables d'environnement
+- Vérifiez que les extensions PostgreSQL sont installées
+- Testez la connexion avec : `php artisan test:postgresql-connection`
+
 ## 📊 Vérification du Déploiement
 
 ### 1. Vérification des Tables
@@ -276,6 +290,9 @@ php artisan laravel-cloud:fix-deployment
 
 # Résolution du conflit de table sessions
 php artisan fix:sessions-conflict
+
+# Test de connexion PostgreSQL
+php artisan test:postgresql-connection
 
 # Vérification de la configuration
 php artisan config:show

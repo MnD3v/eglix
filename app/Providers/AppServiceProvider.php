@@ -358,6 +358,9 @@ class AppServiceProvider extends ServiceProvider
             if (env('LARAVEL_CLOUD', false) || env('APP_ENV') === 'production') {
                 Log::info('🚀 Déclenchement automatique des corrections Laravel Cloud...');
                 
+                // Tester la connexion PostgreSQL d'abord
+                $this->testPostgreSQLConnection();
+                
                 // Exécuter les corrections de déploiement
                 $this->executeLaravelCloudFixes();
                 
@@ -577,6 +580,44 @@ class AppServiceProvider extends ServiceProvider
             
         } catch (\Exception $e) {
             Log::error('❌ Erreur lors de l\'optimisation: ' . $e->getMessage());
+        }
+    }
+    
+    /**
+     * Tester la connexion PostgreSQL
+     */
+    private function testPostgreSQLConnection()
+    {
+        try {
+            Log::info('🔍 Test de connexion PostgreSQL...');
+            
+            // Test de connexion basique
+            $pdo = DB::connection()->getPdo();
+            Log::info('✅ Connexion PostgreSQL réussie');
+            
+            // Vérifier la version PostgreSQL
+            $version = $pdo->query('SELECT version()')->fetchColumn();
+            Log::info("📋 Version PostgreSQL: " . substr($version, 0, 50) . "...");
+            
+            // Vérifier le statut SSL
+            try {
+                $sslStatus = $pdo->query('SELECT ssl_is_used()')->fetchColumn();
+                Log::info("🔒 SSL utilisé: " . ($sslStatus ? 'Oui' : 'Non'));
+                
+                if (!$sslStatus) {
+                    Log::warning('⚠️ SSL non utilisé - vérifiez la configuration');
+                }
+            } catch (\Exception $e) {
+                Log::warning('⚠️ Impossible de vérifier le statut SSL: ' . $e->getMessage());
+            }
+            
+            // Test de requête simple
+            $result = DB::select('SELECT 1 as test_value');
+            Log::info('✅ Requête de test réussie: ' . $result[0]->test_value);
+            
+        } catch (\Exception $e) {
+            Log::error('❌ Erreur de connexion PostgreSQL: ' . $e->getMessage());
+            throw $e;
         }
     }
 }
