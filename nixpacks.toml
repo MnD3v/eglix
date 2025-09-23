@@ -24,6 +24,7 @@
     "php artisan fix:all-audit-migrations || true",
     "php artisan fix:all-subscription-migrations || true",
     "php artisan fix:all-photo-migrations || true",
+    "php artisan fix:postgresql-enum || true",
     "php artisan storage:link || true",
     "php artisan diagnose:routes || true"
   ]

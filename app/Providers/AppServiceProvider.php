@@ -131,10 +131,21 @@ class AppServiceProvider extends ServiceProvider
                 // Ajouter subscription_status si elle n'existe pas
                 if (!in_array('subscription_status', $existingColumns)) {
                     try {
-                        DB::statement("ALTER TABLE churches ADD COLUMN subscription_status VARCHAR(20) DEFAULT 'active'");
+                        $driver = DB::connection()->getDriverName();
+                        
+                        if ($driver === 'pgsql') {
+                            // PostgreSQL - utiliser VARCHAR avec CHECK constraint
+                            DB::statement("ALTER TABLE churches ADD COLUMN subscription_status VARCHAR(20) DEFAULT 'active'");
+                            DB::statement("ALTER TABLE churches ADD CONSTRAINT churches_subscription_status_check CHECK (subscription_status IN ('active', 'expired', 'suspended'))");
+                        } else {
+                            // MySQL - utiliser ENUM
+                            DB::statement("ALTER TABLE churches ADD COLUMN subscription_status ENUM('active', 'expired', 'suspended') DEFAULT 'active'");
+                        }
+                        
                         Log::info('✅ Colonne subscription_status ajoutée');
                     } catch (\Exception $e) {
-                        if (strpos($e->getMessage(), 'Duplicate column name') !== false) {
+                        if (strpos($e->getMessage(), 'Duplicate column name') !== false || 
+                            strpos($e->getMessage(), 'already exists') !== false) {
                             Log::info('ℹ️ Colonne subscription_status existe déjà, ignorée');
                         } else {
                             Log::error('❌ Erreur lors de l\'ajout de subscription_status: ' . $e->getMessage());
