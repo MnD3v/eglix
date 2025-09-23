@@ -206,6 +206,18 @@ SQLSTATE[40001]: Serialization failure: 1213 Deadlock found when trying to get l
 - Ajoutez la gestion des deadlocks dans les migrations
 - Utilisez des retries avec délais aléatoires
 
+### Problème 7 : Colonnes Dupliquées
+
+**Erreur** :
+```
+SQLSTATE[42S21]: Column already exists: 1060 Duplicate column name 'created_by'
+```
+
+**Solution** :
+- Utilisez la commande `php artisan fix:duplicate-columns`
+- Ajoutez des vérifications `Schema::hasColumn()` dans les migrations
+- Évitez les conflits entre migrations et auto-corrections
+
 ## 🚀 Configuration Recommandée
 
 ### Pour MySQL
@@ -278,6 +290,7 @@ QUEUE_CONNECTION=database
 - [ ] Variables d'environnement correctes
 - [ ] Cache nettoyé
 - [ ] Deadlocks MySQL résolus
+- [ ] Colonnes dupliquées résolues
 - [ ] Test local réussi
 - [ ] Script de déploiement testé
 

@@ -2843,6 +2843,9 @@
         });
     });
     </script>
+    
+    <!-- Section pour les scripts spécifiques aux pages -->
+    @yield('script')
 </body>
  </html>
 
