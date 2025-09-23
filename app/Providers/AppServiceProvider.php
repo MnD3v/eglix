@@ -584,31 +584,37 @@ class AppServiceProvider extends ServiceProvider
     }
     
     /**
-     * Tester la connexion PostgreSQL
+     * Tester la connexion à la base de données
      */
     private function testPostgreSQLConnection()
     {
         try {
-            Log::info('🔍 Test de connexion PostgreSQL...');
+            $connection = config('database.default');
+            Log::info("🔍 Test de connexion $connection...");
             
             // Test de connexion basique
             $pdo = DB::connection()->getPdo();
-            Log::info('✅ Connexion PostgreSQL réussie');
+            Log::info("✅ Connexion $connection réussie");
             
-            // Vérifier la version PostgreSQL
-            $version = $pdo->query('SELECT version()')->fetchColumn();
-            Log::info("📋 Version PostgreSQL: " . substr($version, 0, 50) . "...");
-            
-            // Vérifier le statut SSL
-            try {
-                $sslStatus = $pdo->query('SELECT ssl_is_used()')->fetchColumn();
-                Log::info("🔒 SSL utilisé: " . ($sslStatus ? 'Oui' : 'Non'));
+            // Vérifier la version de la base de données
+            if ($connection === 'pgsql') {
+                $version = $pdo->query('SELECT version()')->fetchColumn();
+                Log::info("📋 Version PostgreSQL: " . substr($version, 0, 50) . "...");
                 
-                if (!$sslStatus) {
-                    Log::warning('⚠️ SSL non utilisé - vérifiez la configuration');
+                // Vérifier le statut SSL
+                try {
+                    $sslStatus = $pdo->query('SELECT ssl_is_used()')->fetchColumn();
+                    Log::info("🔒 SSL utilisé: " . ($sslStatus ? 'Oui' : 'Non'));
+                    
+                    if (!$sslStatus) {
+                        Log::warning('⚠️ SSL non utilisé - vérifiez la configuration');
+                    }
+                } catch (\Exception $e) {
+                    Log::warning('⚠️ Impossible de vérifier le statut SSL: ' . $e->getMessage());
                 }
-            } catch (\Exception $e) {
-                Log::warning('⚠️ Impossible de vérifier le statut SSL: ' . $e->getMessage());
+            } elseif ($connection === 'mysql') {
+                $version = $pdo->query('SELECT VERSION()')->fetchColumn();
+                Log::info("📋 Version MySQL: " . substr($version, 0, 50) . "...");
             }
             
             // Test de requête simple
@@ -616,7 +622,7 @@ class AppServiceProvider extends ServiceProvider
             Log::info('✅ Requête de test réussie: ' . $result[0]->test_value);
             
         } catch (\Exception $e) {
-            Log::error('❌ Erreur de connexion PostgreSQL: ' . $e->getMessage());
+            Log::error('❌ Erreur de connexion base de données: ' . $e->getMessage());
             throw $e;
         }
     }

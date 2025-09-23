@@ -7,7 +7,7 @@ Ce guide vous aide à déployer votre application Laravel sur Laravel Cloud en r
 ## 📋 Prérequis
 
 1. **Compte Laravel Cloud** - Créez un compte sur [Laravel Cloud](https://laravel.cloud)
-2. **Base de données PostgreSQL** - Configurez une base de données PostgreSQL
+2. **Base de données** - Configurez une base de données PostgreSQL ou MySQL
 3. **Variables d'environnement** - Configurez toutes les variables nécessaires
 4. **Pas de Docker** - Laravel Cloud utilise Nixpacks automatiquement
 
@@ -22,7 +22,7 @@ Ajoutez ces variables dans votre dashboard Laravel Cloud (pas besoin de Docker) 
 LARAVEL_CLOUD=true
 APP_ENV=production
 
-# Base de données
+# Base de données PostgreSQL
 DB_CONNECTION=pgsql
 DB_HOST=your-db-host
 DB_PORT=5432
@@ -31,6 +31,16 @@ DB_USERNAME=your-db-user
 DB_PASSWORD=your-db-password
 DB_SSLMODE=require
 DB_CHARSET=utf8
+
+# Base de données MySQL (alternative)
+# DB_CONNECTION=mysql
+# DB_HOST=your-db-host
+# DB_PORT=3306
+# DB_DATABASE=your-db-name
+# DB_USERNAME=your-db-user
+# DB_PASSWORD=your-db-password
+# DB_CHARSET=utf8mb4
+# DB_COLLATION=utf8mb4_unicode_ci
 
 # Sessions
 SESSION_DRIVER=database
@@ -167,6 +177,18 @@ SQLSTATE[08006] [7] connection to server failed: ERROR: connection is insecure (
 **Solution** :
 - Ajoutez `DB_SSLMODE=require` dans vos variables d'environnement
 - Vérifiez que les extensions PostgreSQL sont installées
+- Testez la connexion avec : `php artisan test:postgresql-connection`
+
+### Problème 5 : Connexion MySQL
+
+**Erreur** :
+```
+SQLSTATE[42S01]: Base table or view already exists: 1050 Table 'sessions' already exists
+```
+
+**Solution** :
+- Vérifiez que la migration `2025_09_17_160000_create_sessions_table.php` est supprimée
+- La table sessions est créée par `0001_01_01_000000_create_users_table.php`
 - Testez la connexion avec : `php artisan test:postgresql-connection`
 
 ## 📊 Vérification du Déploiement
