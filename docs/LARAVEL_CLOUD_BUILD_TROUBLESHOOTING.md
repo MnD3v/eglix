@@ -258,6 +258,20 @@ SQLSTATE[42S22]: Column not found: 1054 Unknown column 'photo' in 'members'
 - Vérifiez l'existence des colonnes de référence avant de les utiliser
 - Gestion des positions de colonnes avec alternatives
 
+### Problème 11 : Routes Not Found
+
+**Erreur** :
+```
+404 Not Found - Toutes les routes retournent "Not Found"
+```
+
+**Solution** :
+- Utilisez `php artisan diagnose:routes` pour diagnostiquer
+- Vérifiez la configuration du serveur web
+- Utilisez `public/server.php` pour la réécriture d'URL
+- Vérifiez les permissions des répertoires
+- Vérifiez la configuration de la base de données
+
 ## 🚀 Configuration Recommandée
 
 ### Pour MySQL
@@ -334,6 +348,7 @@ QUEUE_CONNECTION=database
 - [ ] Migrations d'audit corrigées
 - [ ] Migrations d'abonnement corrigées
 - [ ] Migrations de photos corrigées
+- [ ] Routes diagnostiquées et fonctionnelles
 - [ ] Test local réussi
 - [ ] Script de déploiement testé
 

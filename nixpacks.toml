@@ -24,10 +24,11 @@
     "php artisan fix:all-audit-migrations || true",
     "php artisan fix:all-subscription-migrations || true",
     "php artisan fix:all-photo-migrations || true",
-    "php artisan storage:link || true"
+    "php artisan storage:link || true",
+    "php artisan diagnose:routes || true"
   ]
 
 [start]
-  cmd = "php -d variables_order=EGPCS -S 0.0.0.0:$PORT -t public public/index.php"
+  cmd = "php -d variables_order=EGPCS -S 0.0.0.0:$PORT -t public public/server.php"
 
 
