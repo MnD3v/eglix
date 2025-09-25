@@ -10,24 +10,46 @@
         @method('PUT')
         <div class="row g-3">
             <div class="col-md-6">
-                <label class="form-label">Membre</label>
-                <select name="member_id" class="form-select @error('member_id') is-invalid @enderror">
-                    <option value="">—</option>
-                    @foreach($members as $m)
-                        <option value="{{ $m->id }}" @selected(old('member_id', $donation->member_id)==$m->id)>{{ $m->last_name }} {{ $m->first_name }}</option>
-                    @endforeach
-                </select>
-                @error('member_id')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                <div class="form-check form-switch mb-2">
+                    <input class="form-check-input" type="checkbox" id="externalDonorToggle" name="external_donor" value="1" @checked(old('external_donor', $donation->member_id ? 0 : 1))>
+                    <label class="form-check-label" for="externalDonorToggle">Donateur externe</label>
+                </div>
+                <div id="memberSelectWrap">
+                    <label class="form-label">Membre</label>
+                    <select name="member_id" class="form-select @error('member_id') is-invalid @enderror">
+                        <option value="">—</option>
+                        @foreach($members as $m)
+                            <option value="{{ $m->id }}" @selected(old('member_id', $donation->member_id)==$m->id)>{{ $m->last_name }} {{ $m->first_name }}</option>
+                        @endforeach
+                    </select>
+                    @error('member_id')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                </div>
+                <div id="externalDonorWrap" style="display:none;">
+                    <label class="form-label">Nom du donateur externe</label>
+                    <input name="donor_name" value="{{ old('donor_name', $donation->donor_name) }}" class="form-control @error('donor_name') is-invalid @enderror" placeholder="Ex: Jean Dupont, Entreprise ABC...">
+                    @error('donor_name')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                </div>
             </div>
             <div class="col-md-6">
-                <label class="form-label">Projet</label>
-                <select name="project_id" class="form-select @error('project_id') is-invalid @enderror">
-                    <option value="">—</option>
-                    @foreach($projects as $p)
-                        <option value="{{ $p->id }}" @selected(old('project_id', $donation->project_id)==$p->id)>{{ $p->name }}</option>
-                    @endforeach
-                </select>
-                @error('project_id')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                <div class="form-check form-switch mb-2">
+                    <input class="form-check-input" type="checkbox" id="hasProjectToggle" name="has_project" value="1" @checked(old('has_project', $donation->project_id ? 1 : 0))>
+                    <label class="form-check-label" for="hasProjectToggle">Lier à un projet</label>
+                </div>
+                <div id="projectSelectWrap" style="display:none;">
+                    <label class="form-label">Projet</label>
+                    <select name="project_id" class="form-select @error('project_id') is-invalid @enderror">
+                        <option value="">—</option>
+                        @foreach($projects as $p)
+                            <option value="{{ $p->id }}" @selected(old('project_id', $donation->project_id)==$p->id)>{{ $p->name }}</option>
+                        @endforeach
+                    </select>
+                    @error('project_id')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                </div>
+                <div id="titleWrap" style="display:none;">
+                    <label class="form-label">Titre du don</label>
+                    <input name="title" value="{{ old('title', $donation->project_id ? '' : $donation->title) }}" class="form-control @error('title') is-invalid @enderror" placeholder="Ex: Don pour l'église, Offrande spéciale...">
+                    @error('title')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                </div>
             </div>
             <div class="col-md-3">
                 <label class="form-label">Date</label>
@@ -40,12 +62,12 @@
                 <label class="form-label fw-semibold">Type de don *</label>
                 <div class="btn-group w-100" role="group">
                     <input type="radio" class="btn-check" name="donation_type" id="donation_type_money" value="money" {{ old('donation_type', $donation->donation_type ?? 'money') == 'money' ? 'checked' : '' }}>
-                    <label class="btn btn-outline-primary" for="donation_type_money">
+                    <label class="btn btn-outline-primary donation-type-btn" for="donation_type_money">
                         <i class="bi bi-cash-coin me-2"></i>Argent
                     </label>
                     
                     <input type="radio" class="btn-check" name="donation_type" id="donation_type_physical" value="physical" {{ old('donation_type', $donation->donation_type) == 'physical' ? 'checked' : '' }}>
-                    <label class="btn btn-outline-primary" for="donation_type_physical">
+                    <label class="btn btn-outline-primary donation-type-btn" for="donation_type_physical">
                         <i class="bi bi-box me-2"></i>Objet physique
                     </label>
                 </div>
@@ -81,11 +103,6 @@
                 @error('physical_description')<div class="invalid-feedback">{{ $message }}</div>@enderror
             </div>
 
-            <div class="col-md-6">
-                <label class="form-label">Nom du donateur (si externe)</label>
-                <input name="donor_name" value="{{ old('donor_name', $donation->donor_name) }}" class="form-control @error('donor_name') is-invalid @enderror">
-                @error('donor_name')<div class="invalid-feedback">{{ $message }}</div>@enderror
-            </div>
             <div class="col-md-4" id="reference-field">
                 <label class="form-label">Référence</label>
                 <input name="reference" value="{{ old('reference', $donation->reference) }}" class="form-control @error('reference') is-invalid @enderror">
@@ -104,6 +121,32 @@
     </form>
 </div>
 
+<style>
+.donation-type-btn {
+    background-color: white !important;
+    border: 2px solid #dee2e6 !important;
+    color: #6c757d !important;
+    transition: all 0.3s ease;
+}
+
+.donation-type-btn:hover {
+    background-color: #f8f9fa !important;
+    border-color: #adb5bd !important;
+    color: #495057 !important;
+}
+
+.btn-check:checked + .donation-type-btn {
+    background-color: #ff2600 !important;
+    border-color: #ff2600 !important;
+    color: white !important;
+}
+
+.btn-check:checked + .donation-type-btn:hover {
+    background-color: #e02200 !important;
+    border-color: #e02200 !important;
+}
+</style>
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const moneyRadio = document.getElementById('donation_type_money');
@@ -120,21 +163,104 @@ document.addEventListener('DOMContentLoaded', function() {
             paymentMethodField.style.display = 'block';
             physicalItemField.style.display = 'none';
             physicalDescriptionField.style.display = 'none';
-            referenceField.style.display = 'block';
+            updateReferenceField();
         } else if (physicalRadio.checked) {
             amountField.style.display = 'none';
             paymentMethodField.style.display = 'none';
             physicalItemField.style.display = 'block';
             physicalDescriptionField.style.display = 'block';
-            referenceField.style.display = 'block';
+            // Pour les objets physiques, toujours masquer le champ référence
+            referenceField.style.display = 'none';
+        }
+    }
+
+    function updateReferenceField() {
+        const paymentMethod = document.querySelector('select[name="payment_method"]');
+        
+        if (paymentMethod) {
+            const showReference = paymentMethod.value === 'mobile' || paymentMethod.value === 'bank';
+            
+            if (showReference) {
+                referenceField.style.display = 'block';
+            } else {
+                referenceField.style.display = 'none';
+                // Vider le champ quand il est masqué
+                const referenceInput = referenceField.querySelector('input[name="reference"]');
+                if (referenceInput) referenceInput.value = '';
+            }
+        } else {
+            // Par défaut, masquer le champ référence
+            referenceField.style.display = 'none';
         }
     }
 
     moneyRadio.addEventListener('change', toggleFields);
     physicalRadio.addEventListener('change', toggleFields);
     
+    // Ajouter un event listener pour le changement de mode de paiement
+    const paymentMethodSelect = document.querySelector('select[name="payment_method"]');
+    if (paymentMethodSelect) {
+        paymentMethodSelect.addEventListener('change', updateReferenceField);
+    }
+    
     // Initialiser l'affichage
     toggleFields();
+    
+    // Initialiser le champ référence selon l'état initial avec un délai
+    setTimeout(function() {
+        updateReferenceField();
+        // Déclencher l'événement change pour forcer la mise à jour (comme setState en Flutter)
+        const paymentMethodSelect = document.querySelector('select[name="payment_method"]');
+        if (paymentMethodSelect) {
+            paymentMethodSelect.dispatchEvent(new Event('change'));
+        }
+    }, 100);
+    
+    // Toggle external donor
+    const externalDonorToggle = document.getElementById('externalDonorToggle');
+    const memberSelectWrap = document.getElementById('memberSelectWrap');
+    const externalDonorWrap = document.getElementById('externalDonorWrap');
+    
+    function updateExternalDonor() {
+        if (!externalDonorToggle || !memberSelectWrap || !externalDonorWrap) return;
+        const isExternal = !!externalDonorToggle.checked;
+        memberSelectWrap.style.display = isExternal ? 'none' : '';
+        externalDonorWrap.style.display = isExternal ? '' : 'none';
+        
+        if (isExternal) {
+            const memberSelect = memberSelectWrap.querySelector('select[name="member_id"]');
+            if (memberSelect) memberSelect.value = '';
+        } else {
+            const donorInput = externalDonorWrap.querySelector('input[name="donor_name"]');
+            if (donorInput) donorInput.value = '';
+        }
+    }
+    
+    if (externalDonorToggle) {
+        externalDonorToggle.addEventListener('change', updateExternalDonor);
+        updateExternalDonor();
+    }
+    
+    // Toggle project select
+    const toggle = document.getElementById('hasProjectToggle');
+    const projectSelectWrap = document.getElementById('projectSelectWrap');
+    const titleWrap = document.getElementById('titleWrap');
+    
+    function updateProject() {
+        if (!toggle || !projectSelectWrap || !titleWrap) return;
+        const on = !!toggle.checked;
+        projectSelectWrap.style.display = on ? '' : 'none';
+        titleWrap.style.display = on ? 'none' : '';
+        if (!toggle.checked) {
+            const sel = projectSelectWrap.querySelector('select[name="project_id"]');
+            if (sel) sel.value = '';
+        }
+    }
+    
+    if (toggle) {
+        toggle.addEventListener('change', updateProject);
+        updateProject();
+    }
 });
 </script>
 @endsection

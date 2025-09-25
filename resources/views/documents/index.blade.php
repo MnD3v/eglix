@@ -77,79 +77,47 @@
 
     <!-- Statistiques -->
     <div class="row mb-4">
-        <div class="col-md-3">
-            <div class="card">
-                <div class="card-body">
-                    <div class="d-flex align-items-center">
-                        <div class="flex-shrink-0">
-                            <div class="avatar-sm rounded bg-primary-subtle">
-                                <span class="avatar-title bg-primary rounded">
-                                    <i class="mdi mdi-file-document-outline"></i>
-                                </span>
-                            </div>
-                        </div>
-                        <div class="flex-grow-1 ms-3">
-                            <h5 class="mb-1">{{ $documents->total() }}</h5>
-                            <p class="text-muted mb-0">Total Documents</p>
-                        </div>
-                    </div>
+        <div class="col-md-3 mb-3">
+            <div class="stats-card">
+                <div class="stats-icon stats-icon-primary">
+                    <i class="mdi mdi-file-document-outline"></i>
+                </div>
+                <div class="stats-content">
+                    <h3 class="stats-number">{{ $documents->total() }}</h3>
+                    <p class="stats-label">Total Documents</p>
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="card">
-                <div class="card-body">
-                    <div class="d-flex align-items-center">
-                        <div class="flex-shrink-0">
-                            <div class="avatar-sm rounded bg-success-subtle">
-                                <span class="avatar-title bg-success rounded">
-                                    <i class="mdi mdi-image"></i>
-                                </span>
-                            </div>
-                        </div>
-                        <div class="flex-grow-1 ms-3">
-                            <h5 class="mb-1">{{ $documents->where('file_type', 'image')->count() }}</h5>
-                            <p class="text-muted mb-0">Images</p>
-                        </div>
-                    </div>
+        <div class="col-md-3 mb-3">
+            <div class="stats-card">
+                <div class="stats-icon stats-icon-success">
+                    <i class="mdi mdi-image"></i>
+                </div>
+                <div class="stats-content">
+                    <h3 class="stats-number">{{ $documents->where('file_type', 'image')->count() }}</h3>
+                    <p class="stats-label">Images</p>
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="card">
-                <div class="card-body">
-                    <div class="d-flex align-items-center">
-                        <div class="flex-shrink-0">
-                            <div class="avatar-sm rounded bg-danger-subtle">
-                                <span class="avatar-title bg-danger rounded">
-                                    <i class="mdi mdi-file-pdf-box"></i>
-                                </span>
-                            </div>
-                        </div>
-                        <div class="flex-grow-1 ms-3">
-                            <h5 class="mb-1">{{ $documents->where('file_type', 'pdf')->count() }}</h5>
-                            <p class="text-muted mb-0">PDFs</p>
-                        </div>
-                    </div>
+        <div class="col-md-3 mb-3">
+            <div class="stats-card">
+                <div class="stats-icon stats-icon-danger">
+                    <i class="mdi mdi-file-pdf-box"></i>
+                </div>
+                <div class="stats-content">
+                    <h3 class="stats-number">{{ $documents->where('file_type', 'pdf')->count() }}</h3>
+                    <p class="stats-label">PDFs</p>
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="card">
-                <div class="card-body">
-                    <div class="d-flex align-items-center">
-                        <div class="flex-shrink-0">
-                            <div class="avatar-sm rounded bg-info-subtle">
-                                <span class="avatar-title bg-info rounded">
-                                    <i class="mdi mdi-folder-multiple"></i>
-                                </span>
-                            </div>
-                        </div>
-                        <div class="flex-grow-1 ms-3">
-                            <h5 class="mb-1">{{ $folders->count() }}</h5>
-                            <p class="text-muted mb-0">Dossiers</p>
-                        </div>
-                    </div>
+        <div class="col-md-3 mb-3">
+            <div class="stats-card">
+                <div class="stats-icon stats-icon-info">
+                    <i class="mdi mdi-folder-multiple"></i>
+                </div>
+                <div class="stats-content">
+                    <h3 class="stats-number">{{ $folders->count() }}</h3>
+                    <p class="stats-label">Dossiers</p>
                 </div>
             </div>
         </div>

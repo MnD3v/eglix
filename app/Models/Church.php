@@ -72,6 +72,14 @@ class Church extends Model
     }
 
     /**
+     * Get the route key for the model.
+     */
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
+
+    /**
      * Get the users for the church
      */
     public function users(): HasMany

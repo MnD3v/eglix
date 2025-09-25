@@ -18,6 +18,10 @@
                 </div>
             </div>
             <div class="appbar-right">
+                <button onclick="generateAndCopyLink()" class="btn-add me-2">
+                    <i class="bi bi-share"></i>
+                    <span class="btn-text">Partager le lien</span>
+                </button>
                 <a href="{{ route('members.create') }}" class="btn-add">
                     <i class="bi bi-person-plus"></i>
                     <span class="btn-text">Nouveau membre</span>
@@ -29,6 +33,7 @@
     @if(session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
+
 
     <!-- Statistiques membres -->
     <div class="row g-3 mb-3">
@@ -225,6 +230,150 @@
         {{ $members->links() }}
     </div>
 </div>
+
+<script>
+function copyToClipboard(text, buttonElement = null) {
+    // Méthode moderne avec fallback
+    if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(text).then(function() {
+            showCopySuccess(buttonElement);
+        }).catch(function(err) {
+            console.error('Erreur avec navigator.clipboard: ', err);
+            fallbackCopyTextToClipboard(text, buttonElement);
+        });
+    } else {
+        // Fallback pour les navigateurs plus anciens ou contextes non sécurisés
+        fallbackCopyTextToClipboard(text, buttonElement);
+    }
+}
+
+function fallbackCopyTextToClipboard(text, buttonElement) {
+    const textArea = document.createElement("textarea");
+    textArea.value = text;
+    
+    // Éviter le défilement vers l'élément
+    textArea.style.top = "0";
+    textArea.style.left = "0";
+    textArea.style.position = "fixed";
+    textArea.style.opacity = "0";
+    
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    
+    try {
+        const successful = document.execCommand('copy');
+        if (successful) {
+            showCopySuccess(buttonElement);
+        } else {
+            throw new Error('execCommand failed');
+        }
+    } catch (err) {
+        console.error('Erreur avec execCommand: ', err);
+        alert('Erreur lors de la copie du lien. Veuillez copier manuellement: ' + text);
+    }
+    
+    document.body.removeChild(textArea);
+}
+
+function showCopySuccess(buttonElement) {
+    if (buttonElement) {
+        const originalHTML = buttonElement.innerHTML;
+        buttonElement.innerHTML = '<i class="bi bi-check"></i> Copié';
+        buttonElement.classList.remove('btn-outline-primary');
+        buttonElement.classList.add('btn-success');
+        
+        setTimeout(() => {
+            buttonElement.innerHTML = originalHTML;
+            buttonElement.classList.remove('btn-success');
+            buttonElement.classList.add('btn-outline-primary');
+        }, 2000);
+    }
+}
+</script>
 @endsection
+
+<script>
+// Fonction pour générer et copier le lien directement
+function generateAndCopyLink() {
+    // Afficher un indicateur de chargement
+    const button = event.target.closest('button');
+    const originalHTML = button.innerHTML;
+    button.innerHTML = '<i class="bi bi-hourglass-split"></i> <span class="btn-text">Génération...</span>';
+    button.disabled = true;
+    
+    // Faire une requête AJAX pour générer le lien
+    fetch('{{ route("members.generate-link") }}', {
+        method: 'GET',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Copier le lien dans le presse-papier
+            copyToClipboard(data.registration_link, button);
+            
+            // Afficher le message de succès
+            showSuccessMessage(data.registration_link);
+            
+            // Restaurer le bouton
+            button.innerHTML = originalHTML;
+            button.disabled = false;
+        } else {
+            throw new Error(data.message || 'Erreur lors de la génération du lien');
+        }
+    })
+    .catch(error => {
+        console.error('Erreur:', error);
+        alert('Erreur lors de la génération du lien: ' + error.message);
+        
+        // Restaurer le bouton
+        button.innerHTML = originalHTML;
+        button.disabled = false;
+    });
+}
+
+// Fonction pour afficher le message de succès
+function showSuccessMessage(link) {
+    // Supprimer l'ancien message s'il existe
+    const existingAlert = document.querySelector('.alert-success');
+    if (existingAlert) {
+        existingAlert.remove();
+    }
+    
+    // Créer le nouveau message
+    const alertDiv = document.createElement('div');
+    alertDiv.className = 'alert alert-success';
+    alertDiv.innerHTML = `
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <strong>✅ Lien copié dans le presse-papier !</strong><br>
+                <small class="text-muted">Le lien d'inscription est maintenant prêt à être partagé</small>
+            </div>
+            <div class="d-flex gap-2">
+                <input type="text" class="form-control form-control-sm" value="${link}" readonly style="width: 300px;" id="registration-link-input">
+                <button class="btn btn-sm btn-outline-primary" onclick="copyToClipboard('${link}', this)">
+                    <i class="bi bi-copy"></i> Copier à nouveau
+                </button>
+            </div>
+        </div>
+    `;
+    
+    // Insérer le message après les alertes existantes
+    const container = document.querySelector('.container.py-4');
+    const firstChild = container.children[1]; // Après l'appbar
+    container.insertBefore(alertDiv, firstChild);
+    
+    // Auto-supprimer après 10 secondes
+    setTimeout(() => {
+        if (alertDiv.parentNode) {
+            alertDiv.remove();
+        }
+    }, 10000);
+}
+</script>
 
 

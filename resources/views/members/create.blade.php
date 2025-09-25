@@ -181,6 +181,11 @@
                 @error('baptized_at')<div class="invalid-feedback">{{ $message }}</div>@enderror
             </div>
             <div class="col-md-4">
+                <label class="form-label">Pasteur ou responsable du baptême</label>
+                <input name="baptism_responsible" value="{{ old('baptism_responsible') }}" class="form-control @error('baptism_responsible') is-invalid @enderror" placeholder="Ex: Pasteur Jean Dupont">
+                @error('baptism_responsible')<div class="invalid-feedback">{{ $message }}</div>@enderror
+            </div>
+            <div class="col-md-4">
                 <label class="form-label">Statut</label>
                 <select name="status" class="form-select @error('status') is-invalid @enderror" required>
                     <option value="active" @selected(old('status','active')==='active')>Actif</option>

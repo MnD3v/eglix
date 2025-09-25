@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Member;
+use App\Models\Church;
 use App\Services\FirebaseStorageService;
+use App\Services\ChurchLinkService;
+use App\Services\ChurchIdEncryptionService;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
@@ -68,6 +71,7 @@ class MemberController extends Controller
             'marital_status' => ['nullable', Rule::in(['single','married','divorced','widowed'])],
             'birth_date' => ['nullable','date'],
             'baptized_at' => ['nullable','date'],
+            'baptism_responsible' => ['nullable','string','max:150'],
             'status' => ['required', Rule::in(['active','inactive'])],
             'joined_at' => ['nullable','date'],
             'notes' => ['nullable','string'],
@@ -179,6 +183,7 @@ class MemberController extends Controller
             'marital_status' => ['nullable', Rule::in(['single','married','divorced','widowed'])],
             'birth_date' => ['nullable','date'],
             'baptized_at' => ['nullable','date'],
+            'baptism_responsible' => ['nullable','string','max:150'],
             'status' => ['required', Rule::in(['active','inactive'])],
             'joined_at' => ['nullable','date'],
             'notes' => ['nullable','string'],
@@ -212,5 +217,225 @@ class MemberController extends Controller
         
         $member->delete();
         return redirect()->route('members.index')->with('success', 'Membre supprimé.');
+    }
+    
+    /**
+     * Génère un lien unique pour l'inscription individuelle
+     */
+    public function generateRegistrationLink(Request $request)
+    {
+        $church = Church::find(Auth::user()->church_id);
+        
+        if (!$church) {
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Église non trouvée.'
+                ]);
+            }
+            return redirect()->route('members.index')->with('error', 'Église non trouvée.');
+        }
+        
+        // Utiliser le service de chiffrement simple
+        $registrationLink = ChurchIdEncryptionService::generateRegistrationLink($church->id);
+        
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Lien généré avec succès',
+                'registration_link' => $registrationLink
+            ]);
+        }
+        
+        return redirect()->route('members.index')->with([
+            'success' => 'Lien copié dans le presse-papier !',
+            'registration_link' => $registrationLink,
+            'auto_copy' => true
+        ]);
+    }
+    
+    /**
+     * Affiche le formulaire d'inscription via lien unique
+     */
+    public function showRegistrationForm(Request $request)
+    {
+        $token = $request->get('token');
+        
+        if (!$token) {
+            abort(404, 'Lien invalide');
+        }
+        
+        $linkService = new ChurchLinkService();
+        $decryptedData = $linkService->decryptRegistrationLink($token);
+        
+        if (!$decryptedData) {
+            abort(404, 'Lien invalide ou expiré');
+        }
+        
+        $church = $decryptedData['church'];
+        
+        return view('members.register', compact('church', 'token'));
+    }
+    
+    /**
+     * Traite l'inscription via lien unique
+     */
+    public function processRegistration(Request $request)
+    {
+        $token = $request->get('token');
+        
+        if (!$token) {
+            return redirect()->back()->with('error', 'Token manquant');
+        }
+        
+        $linkService = new ChurchLinkService();
+        $decryptedData = $linkService->decryptRegistrationLink($token);
+        
+        if (!$decryptedData) {
+            return redirect()->back()->with('error', 'Lien invalide ou expiré');
+        }
+        
+        $church = $decryptedData['church'];
+        
+        $validated = $request->validate([
+            'first_name' => ['required','string','max:100'],
+            'last_name' => ['required','string','max:100'],
+            'email' => ['nullable','email','max:150','unique:members,email'],
+            'phone' => ['nullable','string','max:50'],
+            'address' => ['nullable','string','max:255'],
+            'gender' => ['nullable', Rule::in(['male','female','other'])],
+            'marital_status' => ['nullable', Rule::in(['single','married','divorced','widowed'])],
+            'birth_date' => ['nullable','date'],
+            'baptized_at' => ['nullable','date'],
+            'baptism_responsible' => ['nullable','string','max:150'],
+            'status' => ['required', Rule::in(['active','inactive'])],
+            'joined_at' => ['nullable','date'],
+            'notes' => ['nullable','string'],
+            'profile_photo' => ['nullable','image','mimes:jpg,jpeg,png,webp','max:4096'],
+        ]);
+
+        // Upload photo to Firebase if provided
+        if ($request->hasFile('profile_photo')) {
+            $firebaseService = new FirebaseStorageService();
+            $photoUrl = $firebaseService->uploadFileDirect($request->file('profile_photo'));
+            
+            if ($photoUrl) {
+                $validated['photo_url'] = $photoUrl;
+            }
+            
+            $validated['profile_photo'] = $request->file('profile_photo')->store('members', 'public');
+        }
+
+        // Ajouter l'ID de l'église et les métadonnées
+        $validated['church_id'] = $church->id;
+        $validated['created_by'] = null; // Auto-inscription
+        $validated['status'] = 'active'; // Actif par défaut pour les auto-inscriptions
+        
+        $member = Member::create($validated);
+        
+        return redirect()->route('members.register.success', ['church' => $church->slug])
+            ->with('success', 'Inscription réussie ! Bienvenue dans l\'église ' . $church->name);
+    }
+    
+    /**
+     * Page de succès après inscription
+     */
+    public function registrationSuccess(Church $church)
+    {
+        return view('members.register-success', compact('church'));
+    }
+    
+    /**
+     * Génère un lien d'inscription sécurisé pour une église
+     */
+    public function generateSecureRegistrationLink(Church $church)
+    {
+        if (!$church->is_active) {
+            return null;
+        }
+        
+        return ChurchIdEncryptionService::generateRegistrationLink($church->id);
+    }
+    
+    /**
+     * Affiche le formulaire d'inscription publique avec l'ID de l'église chiffré
+     */
+    public function showPublicRegistrationForm($church_id)
+    {
+        try {
+            $churchId = ChurchIdEncryptionService::validateAndDecrypt($church_id);
+            $church = Church::findOrFail($churchId);
+        } catch (\Exception $e) {
+            abort(404, 'Lien d\'inscription invalide');
+        }
+        
+        if (!$church->is_active) {
+            abort(404, 'Cette église n\'est pas active');
+        }
+        
+        return view('members.public-create', compact('church', 'church_id'));
+    }
+    
+    /**
+     * Traite l'inscription publique avec l'ID de l'église chiffré
+     */
+    public function processPublicRegistration(Request $request, $church_id)
+    {
+        try {
+            $churchId = ChurchIdEncryptionService::validateAndDecrypt($church_id);
+            $church = Church::findOrFail($churchId);
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Lien d\'inscription invalide');
+        }
+        
+        if (!$church->is_active) {
+            return redirect()->back()->with('error', 'Cette église n\'est pas active');
+        }
+        
+        $validated = $request->validate([
+            'first_name' => ['required','string','max:100'],
+            'last_name' => ['required','string','max:100'],
+            'email' => ['nullable','email','max:150','unique:members,email'],
+            'phone' => ['nullable','string','max:50'],
+            'address' => ['nullable','string','max:255'],
+            'gender' => ['nullable', Rule::in(['male','female','other'])],
+            'marital_status' => ['nullable', Rule::in(['single','married','divorced','widowed'])],
+            'birth_date' => ['nullable','date'],
+            'baptized_at' => ['nullable','date'],
+            'baptism_responsible' => ['nullable','string','max:150'],
+            'joined_at' => ['nullable','date'],
+            'notes' => ['nullable','string'],
+            'profile_photo' => ['nullable','image','mimes:jpg,jpeg,png,webp','max:4096'],
+        ]);
+
+        // Upload photo to Firebase if provided
+        if ($request->hasFile('profile_photo')) {
+            $firebaseService = new FirebaseStorageService();
+            $photoUrl = $firebaseService->uploadFileDirect($request->file('profile_photo'));
+            
+            if ($photoUrl) {
+                $validated['photo_url'] = $photoUrl;
+            }
+            
+            $validated['profile_photo'] = $request->file('profile_photo')->store('members', 'public');
+        }
+
+        // Ajouter l'ID de l'église et les métadonnées
+        $validated['church_id'] = $church->id;
+        $validated['created_by'] = null; // Auto-inscription
+        $validated['status'] = 'active'; // Actif par défaut pour les auto-inscriptions
+        
+        $member = Member::create($validated);
+        
+        return redirect()->route('members.public.success', ['church' => $church->slug])
+            ->with('success', 'Inscription réussie ! Bienvenue dans l\'église ' . $church->name);
+    }
+    
+    /**
+     * Page de succès après inscription publique
+     */
+    public function publicRegistrationSuccess(Church $church)
+    {
+        return view('members.public-success', compact('church'));
     }
 }

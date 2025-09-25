@@ -62,8 +62,8 @@
                         <span class="badge bg-custom">{{ optional($e->paid_at)->format('d/m/Y') }}</span>
                         <div class="fw-bold numeric">{{ number_format(round($e->amount), 0, ',', ' ') }} FCFA</div>
                     </div>
-                    <div class="fw-semibold">{{ $e->project?->name ?? '—' }}</div>
-                    <div class="small text-muted mt-1">{{ $e->category }}</div>
+                    <div class="fw-semibold">{{ $e->project?->name ?? 'Dépense générale' }}</div>
+                    <div class="small text-muted mt-1">{{ $e->description ?? 'Aucune description' }}</div>
                 </div>
                 <div class="card-footer d-flex justify-content-end gap-2">
                     <a class="btn btn-sm btn-outline-secondary" href="{{ route('expenses.edit', $e) }}">Modifier</a>

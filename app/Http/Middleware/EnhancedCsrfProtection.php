@@ -18,6 +18,18 @@ class EnhancedCsrfProtection
      */
     public function handle(Request $request, Closure $next): Response
     {
+        // Exclure les routes publiques d'inscription de la vérification CSRF
+        $publicRoutes = [
+            'members/create/*',
+            'members/success/*',
+        ];
+        
+        foreach ($publicRoutes as $route) {
+            if ($request->is($route)) {
+                return $next($request);
+            }
+        }
+        
         // Vérifier les requêtes POST, PUT, PATCH, DELETE
         if (in_array($request->method(), ['POST', 'PUT', 'PATCH', 'DELETE'])) {
             

@@ -49,7 +49,24 @@ class DonationController extends Controller
             'payment_method' => ['nullable','string','max:50'],
             'reference' => ['nullable','string','max:100'],
             'notes' => ['nullable','string'],
+            'title' => ['nullable','string','max:150'],
         ]);
+        
+        // If toggle is off, ensure project_id is null
+        if (!$request->boolean('has_project')) {
+            $validated['project_id'] = null;
+        }
+        
+        // If external donor toggle is on, ensure member_id is null
+        if ($request->boolean('external_donor')) {
+            $validated['member_id'] = null;
+        }
+        
+        // If not linked to a project, map title to description if provided
+        if (!$request->boolean('has_project') && !empty($validated['title'])) {
+            $validated['notes'] = ($validated['notes'] ?? '') . "\nTitre: " . $validated['title'];
+        }
+        
         // Ensure DB NOT NULL for amount: set to 0 when physical donation
         if (($validated['donation_type'] ?? 'money') === 'physical') {
             $validated['amount'] = 0;
@@ -116,7 +133,22 @@ class DonationController extends Controller
             'payment_method' => ['nullable','string','max:50'],
             'reference' => ['nullable','string','max:100'],
             'notes' => ['nullable','string'],
+            'title' => ['nullable','string','max:150'],
         ]);
+        
+        if (!$request->boolean('has_project')) {
+            $validated['project_id'] = null;
+        }
+        
+        // If external donor toggle is on, ensure member_id is null
+        if ($request->boolean('external_donor')) {
+            $validated['member_id'] = null;
+        }
+        
+        if (!$request->boolean('has_project') && !empty($validated['title'])) {
+            $validated['notes'] = ($validated['notes'] ?? '') . "\nTitre: " . $validated['title'];
+        }
+        
         if (($validated['donation_type'] ?? $donation->donation_type) === 'physical') {
             $validated['amount'] = 0;
         }

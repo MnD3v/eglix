@@ -254,7 +254,12 @@
             --bs-primary-bg-subtle: #FFE1DB;
             --bs-primary-border-subtle: #FFC0B5;
         }
-        body { font-family: 'DM Sans', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif; background-color: #ffffff; }
+        body { 
+            font-family: 'DM Sans', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif; 
+            background: url('{{ asset("images/auth-background.png") }}') center/cover no-repeat fixed;
+            background-attachment: fixed;
+            min-height: 100vh;
+        }
         /* Numeric typography using Plus Jakarta Sans across the app */
         .numeric, .kpi-value, .badge, .text-end, .amount, .money, .stat-number, .table td.text-end, .card .card-body strong {
             font-family: 'Plus Jakarta Sans', 'DM Sans', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
@@ -880,7 +885,103 @@
             display: inline;
         }
         .sidebar a:hover, .sidebar a.active { color: #fff; background-color: rgba(255,38,0,.14); }
-        main.dashboard-main { margin-left: 220px; }
+        main.dashboard-main { 
+            margin-left: 220px; 
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            min-height: 100vh;
+            border-radius: 0;
+        }
+
+        /* Cartes avec transparence pour cohérence */
+        .card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Container avec transparence */
+        .container-fluid {
+            background: transparent;
+        }
+
+        /* Cartes de statistiques modernes */
+        .stats-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stats-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.15);
+        }
+
+        .stats-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #ff2600, #e02200);
+            border-radius: 20px 20px 0 0;
+        }
+
+        .stats-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+            font-size: 24px;
+            color: white;
+            position: relative;
+        }
+
+        .stats-icon-primary {
+            background: linear-gradient(135deg, #ff2600, #e02200);
+        }
+
+        .stats-icon-success {
+            background: linear-gradient(135deg, #28a745, #20c997);
+        }
+
+        .stats-icon-danger {
+            background: linear-gradient(135deg, #dc3545, #fd7e14);
+        }
+
+        .stats-icon-info {
+            background: linear-gradient(135deg, #17a2b8, #6f42c1);
+        }
+
+        .stats-number {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 32px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin: 0 0 8px 0;
+            line-height: 1;
+        }
+
+        .stats-label {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            color: #666666;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
 
         /* Header hero band */
         .hero {

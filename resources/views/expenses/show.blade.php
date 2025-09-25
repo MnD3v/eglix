@@ -7,10 +7,9 @@
         <a class="btn btn-outline-secondary" href="{{ route('expenses.edit', $expense) }}">Modifier</a>
     </div>
     <div class="card p-3">
-        <div><strong>Projet:</strong> {{ $expense->project?->name ?? '—' }}</div>
-        <div><strong>Catégorie:</strong> {{ $expense->category }}</div>
-        <div><strong>Montant:</strong> {{ number_format($expense->amount, 2, ',', ' ') }}</div>
-        <div><strong>Fournisseur:</strong> {{ $expense->vendor ?? '—' }}</div>
+        <div><strong>Projet:</strong> {{ $expense->project?->name ?? 'Dépense générale' }}</div>
+        <div><strong>Montant:</strong> {{ number_format($expense->amount, 2, ',', ' ') }} FCFA</div>
+        <div><strong>Méthode de paiement:</strong> {{ $expense->payment_method ?? '—' }}</div>
         <div><strong>Référence:</strong> {{ $expense->reference ?? '—' }}</div>
         <div><strong>Description:</strong> {{ $expense->description ?? '—' }}</div>
         <div><strong>Notes:</strong> {{ $expense->notes ?? '—' }}</div>

@@ -6,6 +6,7 @@ use App\Traits\BelongsToChurch;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Auth;
 
 class Member extends Model
 {
@@ -24,10 +25,14 @@ class Member extends Model
         'photo_url',
         'birth_date',
         'baptized_at',
+        'baptism_responsible',
         'status',
         'joined_at',
         'notes',
         'remarks',
+        'church_id',
+        'created_by',
+        'updated_by',
     ];
 
     protected $casts = [
@@ -61,7 +66,7 @@ class Member extends Model
         $remarks[] = [
             'remark' => $remark,
             'added_at' => now()->toISOString(),
-            'added_by' => auth()->id(),
+            'added_by' => Auth::id(),
         ];
         $this->update(['remarks' => $remarks]);
     }

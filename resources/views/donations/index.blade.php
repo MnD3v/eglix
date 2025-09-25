@@ -73,6 +73,10 @@
 
                                 @if($donation->project)
                                     <div class="small text-muted mb-1"><i class="bi bi-kanban me-1"></i>{{ $donation->project->name }}</div>
+                                @elseif($donation->title)
+                                    <div class="small text-muted mb-1"><i class="bi bi-tag me-1"></i>{{ $donation->title }}</div>
+                                @else
+                                    <div class="small text-muted mb-1"><i class="bi bi-gift me-1"></i>Don général</div>
                                 @endif
 
                                 @if($donation->reference)

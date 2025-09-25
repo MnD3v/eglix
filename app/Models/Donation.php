@@ -12,7 +12,7 @@ class Donation extends Model
 
     protected $fillable = [
         'church_id','member_id','project_id','received_at','amount','donor_name','payment_method','reference','notes',
-        'donation_type','physical_item','physical_description','created_by','updated_by'
+        'donation_type','physical_item','physical_description','title','created_by','updated_by'
     ];
 
     protected $casts = [

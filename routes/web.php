@@ -46,6 +46,11 @@ Route::get('/users-list', function() {
     return view('users-list', compact('users'));
 })->name('users.list');
 
+// Routes publiques pour l'inscription des membres (sans authentification)
+Route::get('members/create/{church_id}', [App\Http\Controllers\MemberController::class, 'showPublicRegistrationForm'])->name('members.public.create');
+Route::post('members/create/{church_id}', [App\Http\Controllers\MemberController::class, 'processPublicRegistration'])->name('members.public.store');
+Route::get('members/success/{church}', [App\Http\Controllers\MemberController::class, 'publicRegistrationSuccess'])->name('members.public.success');
+
 Route::middleware(['auth', 'auth.ensure'])->group(function () {
     Route::get('/', function (Request $request) {
     $churchId = Auth::user()->church_id;
@@ -227,11 +232,17 @@ Route::middleware(['auth', 'auth.ensure'])->group(function () {
     return view('home', compact('stats','recentTithes','recentDonations','recentOfferings','chart','offeringsByType','from','to','kpis'));
 });
 
+// Routes pour l'inscription individuelle via lien unique (AVANT la route resource)
+Route::get('members/share-link', [App\Http\Controllers\MemberController::class, 'generateRegistrationLink'])->name('members.generate-link');
+
 Route::resource('members', MemberController::class)->middleware('validate.image.upload');
 // Routes pour les remarques des membres
 Route::post('members/{member}/remarks', [App\Http\Controllers\MemberRemarkController::class, 'store'])->name('members.remarks.store');
 Route::delete('members/{member}/remarks/{index}', [App\Http\Controllers\MemberRemarkController::class, 'destroy'])->name('members.remarks.destroy');
 Route::get('members/{member}/remarks', [App\Http\Controllers\MemberRemarkController::class, 'index'])->name('members.remarks.index');
+Route::get('register/{token}', [App\Http\Controllers\MemberController::class, 'showRegistrationForm'])->name('members.register');
+Route::post('register/{token}', [App\Http\Controllers\MemberController::class, 'processRegistration'])->name('members.register.process');
+Route::get('register-success/{church}', [App\Http\Controllers\MemberController::class, 'registrationSuccess'])->name('members.register.success');
 
 // Routes pour les dîmes (spécifiques avant les routes de ressource)
 Route::get('tithes/total', [TitheController::class, 'getTotal'])->name('tithes.total');

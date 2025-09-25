@@ -23,39 +23,61 @@ class AuthController extends Controller
      */
     public function login(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'email' => 'required|email',
-            'password' => 'required|min:6',
-        ], [
-            'email.required' => 'L\'adresse email est requise.',
-            'email.email' => 'L\'adresse email doit être valide.',
-            'password.required' => 'Le mot de passe est requis.',
-            'password.min' => 'Le mot de passe doit contenir au moins 6 caractères.',
-        ]);
+        try {
+            $validator = Validator::make($request->all(), [
+                'email' => 'required|email',
+                'password' => 'required|min:6',
+            ], [
+                'email.required' => 'L\'adresse email est requise.',
+                'email.email' => 'L\'adresse email doit être valide.',
+                'password.required' => 'Le mot de passe est requis.',
+                'password.min' => 'Le mot de passe doit contenir au moins 6 caractères.',
+            ]);
 
-        if ($validator->fails()) {
+            if ($validator->fails()) {
+                \Log::info('Erreurs de validation de connexion: ' . json_encode($validator->errors()->all()));
+                return redirect()->back()
+                    ->withErrors($validator)
+                    ->withInput($request->except('password'));
+            }
+
+            $credentials = $request->only('email', 'password');
+            $remember = $request->has('remember');
+
+            \Log::info('Tentative de connexion pour: ' . $request->email);
+
+            if (Auth::attempt($credentials, $remember)) {
+                $request->session()->regenerate();
+                
+                // Log pour diagnostiquer les problèmes de session
+                \Log::info('Connexion réussie pour: ' . $request->email);
+                \Log::info('Session ID après connexion: ' . $request->session()->getId());
+                \Log::info('User ID connecté: ' . Auth::id());
+                
+                // Vérifier si l'utilisateur a un church_id
+                $user = Auth::user();
+                if (!$user->church_id) {
+                    \Log::warning('Utilisateur sans church_id: ' . $user->email);
+                    Auth::logout();
+                    return redirect()->back()
+                        ->withErrors(['email' => 'Votre compte n\'est pas correctement configuré. Veuillez contacter l\'administrateur.'])
+                        ->withInput($request->except('password'));
+                }
+                
+                return redirect()->intended('/')->with('success', 'Connexion réussie !');
+            }
+
+            \Log::warning('Échec de connexion pour: ' . $request->email);
             return redirect()->back()
-                ->withErrors($validator)
+                ->withErrors(['email' => 'Les identifiants fournis ne correspondent pas à nos enregistrements.'])
+                ->withInput($request->except('password'));
+
+        } catch (\Exception $e) {
+            \Log::error('Erreur lors de la connexion: ' . $e->getMessage());
+            return redirect()->back()
+                ->withErrors(['email' => 'Une erreur est survenue lors de la connexion. Veuillez réessayer.'])
                 ->withInput($request->except('password'));
         }
-
-        $credentials = $request->only('email', 'password');
-        $remember = $request->has('remember');
-
-        if (Auth::attempt($credentials, $remember)) {
-            $request->session()->regenerate();
-            
-            // Log pour diagnostiquer les problèmes de session
-            \Log::info('Connexion réussie pour: ' . $request->email);
-            \Log::info('Session ID après connexion: ' . $request->session()->getId());
-            \Log::info('User ID connecté: ' . Auth::id());
-            
-            return redirect()->intended('/')->with('success', 'Connexion réussie !');
-        }
-
-        return redirect()->back()
-            ->withErrors(['email' => 'Les identifiants fournis ne correspondent pas à nos enregistrements.'])
-            ->withInput($request->except('password'));
     }
 
     /**

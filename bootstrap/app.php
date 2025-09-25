@@ -21,6 +21,12 @@ return Application::configure(basePath: dirname(__DIR__))
             \App\Http\Middleware\CheckChurchSubscription::class,
         ]);
         
+        // Exclure les routes publiques du middleware CSRF par défaut
+        $middleware->validateCsrfTokens(except: [
+            'members/create/*',
+            'members/success/*',
+        ]);
+        
         // Enregistrement des middlewares
         $middleware->alias([
             'validate.image.upload' => \App\Http\Middleware\ValidateImageUpload::class,

@@ -388,7 +388,7 @@ class AppServiceProvider extends ServiceProvider
                 config(['session.table' => 'sessions']);
                 config(['session.lifetime' => 120]);
                 config(['session.expire_on_close' => false]);
-                config(['session.secure' => true]);
+                config(['session.secure' => false]); // Désactivé pour Laravel Cloud
                 config(['session.http_only' => true]);
                 config(['session.same_site' => 'lax']);
                 
