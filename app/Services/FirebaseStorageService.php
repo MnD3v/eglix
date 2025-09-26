@@ -56,12 +56,12 @@ class FirebaseStorageService
                 'url' => $publicUrl
             ]);
 
-            // For demonstration, we'll store the file locally and return a local URL
+            // Store the file locally and return the local URL
             $localPath = $file->store($path, 'public');
             $localUrl = asset('storage/' . $localPath);
             
-            // Retourner simplement l'URL Firebase pour stockage en BD
-            return $publicUrl;
+            // Return the local URL for database storage
+            return $localUrl;
 
         } catch (\Exception $e) {
             Log::error('Firebase upload exception', [

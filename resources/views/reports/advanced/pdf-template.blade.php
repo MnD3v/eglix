@@ -17,12 +17,12 @@
         .header {
             text-align: center;
             margin-bottom: 30px;
-            border-bottom: 3px solid #FF2600;
+            border-bottom: 3px solid #FFCC00;
             padding-bottom: 20px;
         }
         
         .header h1 {
-            color: #FF2600;
+            color: #FFCC00;
             font-size: 24px;
             margin: 0;
             font-weight: bold;
@@ -40,12 +40,12 @@
             padding: 15px;
             border-radius: 8px;
             margin-bottom: 25px;
-            border-left: 4px solid #FF2600;
+            border-left: 4px solid #FFCC00;
         }
         
         .period-info h3 {
             margin: 0 0 10px 0;
-            color: #FF2600;
+            color: #FFCC00;
             font-size: 14px;
         }
         
@@ -60,7 +60,7 @@
         }
         
         .section-title {
-            background: #FF2600;
+            background: #FFCC00;
             color: white;
             padding: 8px 15px;
             font-size: 14px;
@@ -126,7 +126,7 @@
         .kpi-value {
             font-size: 18px;
             font-weight: bold;
-            color: #FF2600;
+            color: #FFCC00;
             margin-bottom: 5px;
         }
         
@@ -173,7 +173,7 @@
         
         .recommendation-item:before {
             content: "•";
-            color: #FF2600;
+            color: #FFCC00;
             font-weight: bold;
             position: absolute;
             left: 0;
@@ -357,7 +357,7 @@
         </div>
         
         @if(count($comprehensiveReport['member_contribution']['top_contributors']) > 0)
-        <h4 style="margin: 20px 0 10px 0; color: #FF2600;">Top 5 Contributeurs</h4>
+        <h4 style="margin: 20px 0 10px 0; color: #FFCC00;">Top 5 Contributeurs</h4>
         <div class="financial-summary">
             @foreach($comprehensiveReport['member_contribution']['top_contributors']->take(5) as $contributor)
             <div class="row">

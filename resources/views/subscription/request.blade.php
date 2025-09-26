@@ -40,7 +40,7 @@
     border-radius: 8px;
     padding: 1.5rem;
     margin-bottom: 2rem;
-    border-left: 4px solid #ff2600;
+    border-left: 4px solid #FFCC00;
 }
 
 .church-name {
@@ -74,13 +74,13 @@
 }
 
 .plan-card:hover {
-    border-color: #ff2600;
+    border-color: #FFCC00;
     transform: translateY(-2px);
     box-shadow: 0 8px 25px rgba(255, 38, 0, 0.1);
 }
 
 .plan-card.selected {
-    border-color: #ff2600;
+    border-color: #FFCC00;
     background: #fff5f5;
 }
 
@@ -94,7 +94,7 @@
 .plan-price {
     font-size: 1.5rem;
     font-weight: 700;
-    color: #ff2600;
+    color: #FFCC00;
     margin-bottom: 0.5rem;
 }
 
@@ -128,13 +128,13 @@
 
 .form-control:focus, .form-select:focus {
     outline: none;
-    border-color: #ff2600;
+    border-color: #FFCC00;
     background: white;
     box-shadow: 0 0 0 3px rgba(255, 38, 0, 0.1);
 }
 
 .btn {
-    background: linear-gradient(135deg, #ff2600 0%, #cc1f00 100%);
+    background: linear-gradient(135deg, #FFCC00 0%, #cc1f00 100%);
     border: none;
     border-radius: 8px;
     padding: 0.75rem 1.5rem;

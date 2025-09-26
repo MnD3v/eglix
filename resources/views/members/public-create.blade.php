@@ -11,8 +11,11 @@
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         body {
-            background: linear-gradient(135deg, rgba(255, 38, 0, 0.1) 0%, rgba(0, 0, 0, 0.1) 100%),
-                        url('{{ asset("images/auth-background.png") }}') center/cover no-repeat;
+            background: #f5f5f5;
+            background-image: 
+                linear-gradient(rgba(0,0,0,0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0,0,0,0.02) 1px, transparent 1px);
+            background-size: 20px 20px;
             min-height: 100vh;
             font-family: 'DM Sans', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
         }
@@ -26,33 +29,27 @@
         }
         
         .registration-card {
-            background: white;
+            background: #ffffff;
             border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             overflow: hidden;
             max-width: 800px;
             width: 100%;
             margin: 0 1rem;
-            border: 2px solid #ff2600;
+            border: 1px solid #e2e8f0;
         }
         
         .church-header {
-            background: linear-gradient(135deg, #ff2600 0%, #000000 100%);
-            color: white;
+            background: #ffffff;
+            color: #000000;
             padding: 2rem;
             text-align: center;
             position: relative;
+            border-bottom: 1px solid #e2e8f0;
         }
         
         .church-header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/><circle cx="10" cy="60" r="0.5" fill="white" opacity="0.1"/><circle cx="90" cy="40" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
-            opacity: 0.3;
+            display: none;
         }
         
         .eglix-logo {
@@ -93,7 +90,6 @@
             font-size: 1.8rem;
             font-weight: 700;
             margin-bottom: 0.5rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
             position: relative;
             z-index: 1;
             font-family: 'DM Sans', sans-serif;
@@ -109,7 +105,7 @@
         
         .form-section {
             padding: 2rem;
-            background: linear-gradient(180deg, #ffffff 0%, #f8f9fa 100%);
+            background: #ffffff;
         }
         
         .section-title {
@@ -118,7 +114,7 @@
             font-weight: 700;
             margin-bottom: 1.5rem;
             padding-bottom: 0.5rem;
-            border-bottom: 3px solid #ff2600;
+            border-bottom: 3px solid #e2e8f0;
             text-align: center;
             position: relative;
             font-family: 'DM Sans', sans-serif;
@@ -136,68 +132,82 @@
         }
         
         .form-label {
-            font-weight: 600;
+            font-weight: 300;
             color: #000;
             margin-bottom: 0.5rem;
             font-size: 0.95rem;
-            text-transform: uppercase;
+            text-transform: capitalize;
             letter-spacing: 0.5px;
             font-family: 'DM Sans', sans-serif;
         }
         
         .form-control, .form-select {
-            border: 2px solid #e9ecef;
-            border-radius: 8px;
-            padding: 0.75rem 1rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
             transition: all 0.3s ease;
-            background: white;
-            font-size: 0.95rem;
+            background: #ffffff;
+            font-size: 1rem;
             font-family: 'DM Sans', sans-serif;
+            text-transform: lowercase;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            font-weight: 400;
+            letter-spacing: 0.3px;
+        }
+        
+        .form-control::placeholder, .form-select::placeholder {
+            color: rgba(0, 0, 0, 0.3);
+            opacity: 1;
         }
         
         .form-control:focus, .form-select:focus {
-            border-color: #ff2600;
-            box-shadow: 0 0 0 0.2rem rgba(255, 38, 0, 0.25);
+            border-color: #FFCC00;
+            box-shadow: 0 0 0 3px rgba(255, 204, 0, 0.15), 0 4px 12px rgba(0, 0, 0, 0.1);
             outline: none;
+            transform: translateY(-1px);
         }
         
         .form-control:hover, .form-select:hover {
-            border-color: #ff2600;
+            border-color: #FFCC00;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            transform: translateY(-1px);
         }
         
         .btn-primary {
-            background: linear-gradient(135deg, #ff2600 0%, #cc1f00 100%);
-            border: none;
-            border-radius: 8px;
+            background: #FFCC00;
+            color: #000000;
+            border: 1px solid #FFCC00;
+            border-radius: 20px;
             padding: 0.75rem 2rem;
             font-weight: 700;
             font-size: 1rem;
-            text-transform: uppercase;
+            text-transform: lowercase;
             letter-spacing: 1px;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(255, 38, 0, 0.3);
+            box-shadow: 0 4px 15px rgba(255, 204, 0, 0.3);
             font-family: 'DM Sans', sans-serif;
         }
         
         .btn-primary:hover {
-            background: linear-gradient(135deg, #cc1f00 0%, #ff2600 100%);
+            background: #e6b800;
+            color: #000000;
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(255, 38, 0, 0.4);
+            box-shadow: 0 8px 25px rgba(255, 204, 0, 0.4);
         }
         
         .btn-primary:active {
             transform: translateY(0);
-            box-shadow: 0 2px 10px rgba(255, 38, 0, 0.3);
+            box-shadow: 0 2px 10px rgba(255, 204, 0, 0.3);
         }
         
         .photo-upload-area {
-            border: 2px dashed #ff2600;
+            border: 2px dashed #e2e8f0;
             border-radius: 15px;
             padding: 2rem;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s ease;
-            background: linear-gradient(135deg, #fff5f5 0%, #ffe6e6 100%);
+            background: #ffffff;
             position: relative;
             overflow: hidden;
         }
@@ -215,34 +225,36 @@
         
         .photo-upload-area:hover {
             border-color: #000;
-            background: linear-gradient(135deg, #ffe6e6 0%, #ffcccc 100%);
+            background: #ffffff;
             transform: scale(1.02);
         }
         
         .photo-upload-area.dragover {
             border-color: #000;
-            background: linear-gradient(135deg, #ffcccc 0%, #ff9999 100%);
+            background: #ffffff;
             transform: scale(1.05);
         }
         
         .upload-button {
-            background: linear-gradient(135deg, #ff2600 0%, #cc1f00 100%);
-            border: none;
-            border-radius: 10px;
+            background: #FFCC00;
+            border: 1px solid #FFCC00;
+            border-radius: 20px;
             padding: 12px 24px;
-            color: white;
-            font-weight: 600;
+            color: #000000;
+            font-weight: 700;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(255, 38, 0, 0.3);
+            box-shadow: 0 4px 15px rgba(255, 204, 0, 0.3);
             position: relative;
             z-index: 1;
+            text-transform: lowercase;
         }
         
         .upload-button:hover {
-            background: linear-gradient(135deg, #cc1f00 0%, #ff2600 100%);
+            background: #e6b800;
+            color: #000000;
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(255, 38, 0, 0.4);
+            box-shadow: 0 8px 25px rgba(255, 204, 0, 0.4);
         }
         
         .photo-preview img {
@@ -251,24 +263,24 @@
             object-fit: cover;
             border-radius: 15px;
             box-shadow: 0 8px 25px rgba(255, 38, 0, 0.3);
-            border: 3px solid #ff2600;
+            border: 3px solid #e2e8f0;
         }
         
         .progress {
             height: 8px;
             border-radius: 10px;
             background-color: #ffe6e6;
-            border: 1px solid #ff2600;
+            border: 1px solid #e2e8f0;
         }
         
         .progress-bar {
-            background: linear-gradient(135deg, #ff2600 0%, #cc1f00 100%);
+            background: #ffffff;
             border-radius: 10px;
             box-shadow: 0 2px 10px rgba(255, 38, 0, 0.3);
         }
         
         .required {
-            color: #ff2600;
+            color: #000000;
             font-weight: 700;
         }
         
@@ -279,25 +291,25 @@
         }
         
         .alert-danger {
-            background: linear-gradient(135deg, #ffe6e6 0%, #ffcccc 100%);
+            background: #ffffff;
             color: #cc1f00;
-            border-left: 4px solid #ff2600;
+            border-left: 4px solid #e2e8f0;
         }
         
         .alert-success {
-            background: linear-gradient(135deg, #e6ffe6 0%, #ccffcc 100%);
+            background: #ffffff;
             color: #006600;
-            border-left: 4px solid #00cc00;
+            border-left: 4px solid #e2e8f0;
         }
         
         .invalid-feedback {
-            color: #ff2600;
+            color: #000000;
             font-weight: 600;
             font-size: 0.85rem;
         }
         
         .form-control.is-invalid, .form-select.is-invalid {
-            border-color: #ff2600;
+            border-color: #e2e8f0;
             box-shadow: 0 0 0 0.2rem rgba(255, 38, 0, 0.25);
         }
         
@@ -313,6 +325,64 @@
         .upload-formats {
             position: relative;
             z-index: 1;
+        }
+        
+        /* Loader styles */
+        .loader-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .loader-container {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 3rem;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .loader-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #e2e8f0;
+            border-top: 4px solid #FFCC00;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1.5rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loader-text {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #000000;
+            margin-bottom: 0.5rem;
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        .loader-subtext {
+            font-size: 0.9rem;
+            color: #666666;
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        .form-submitting {
+            pointer-events: none;
+            opacity: 0.7;
         }
         
         @media (max-width: 768px) {
@@ -337,7 +407,7 @@
             <div class="church-header">
                 <!-- Logo Eglix -->
                 <div class="eglix-logo">
-                    <img src="{{ asset('images/eglix.png') }}" alt="Eglix" class="eglix-logo-img">
+                    <img src="{{ asset('images/eglix-black.png') }}" alt="Eglix" class="eglix-logo-img">
                 </div>
                 
                 <div class="church-logo">

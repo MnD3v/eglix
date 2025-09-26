@@ -1,117 +1,288 @@
 @extends('layouts.app')
 @section('content')
+
+<style>
+/* Styles pour la liste des dons */
+.donations-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.donation-row {
+    background: #ffffff;
+    border: 1px solid #f1f5f9;
+    border-radius: 12px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    gap: 1.5rem;
+    min-height: 80px;
+}
+
+.donation-row-separated {
+    margin-top: 0.5rem;
+    padding-top: 1.5rem;
+}
+
+.donation-row:hover {
+    background: #fafbfc;
+    border-color: #e2e8f0;
+}
+
+.donation-row-body {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+    flex: 1;
+}
+
+.donation-info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.donation-date {
+    margin-bottom: 4px;
+}
+
+.donation-donor {
+    font-size: 16px;
+    font-weight: 700;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    color: #1e293b;
+    margin: 0;
+    line-height: 1.3;
+}
+
+.donation-details {
+    font-size: 14px;
+    color: #64748b;
+    margin: 4px 0 0 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.donation-amount {
+    flex-shrink: 0;
+    text-align: right;
+}
+
+.amount-value {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1e293b;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.donation-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.donation-row-empty {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: #64748b;
+}
+
+.donation-row-empty i {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+}
+
+/* Styles pour les champs de recherche arrondis */
+.search-group {
+    border-radius: 25px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.search-icon {
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-right: none;
+    border-radius: 25px 0 0 25px;
+    color: #000000;
+}
+
+.search-input {
+    border: 1px solid #e2e8f0;
+    border-left: none;
+    border-right: none;
+    background-color: #ffffff;
+    border-radius: 0;
+    padding: 12px 16px;
+    font-size: 14px;
+}
+
+.search-input:focus {
+    border-color: #e2e8f0;
+    box-shadow: none;
+    background-color: #ffffff;
+}
+
+.search-btn {
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-left: none;
+    border-radius: 0 25px 25px 0;
+    color: #000000;
+    font-weight: 600;
+    padding: 12px 20px;
+}
+
+.search-btn:hover {
+    background-color: #f1f5f9;
+    border-color: #cbd5e1;
+    color: #000000;
+}
+
+.date-input {
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    padding: 12px 16px;
+    font-size: 14px;
+}
+
+.date-input:focus {
+    border-color: #e2e8f0;
+    box-shadow: none;
+}
+
+.filter-btn {
+    border-radius: 12px;
+    padding: 12px 20px;
+    font-weight: 600;
+    color: #000000;
+}
+
+/* Icônes noires dans toute la section dons */
+.donations-list .bi,
+.donations-appbar .bi,
+.donation-details .bi,
+.donation-row-empty .bi,
+.search-icon .bi,
+.search-btn .bi,
+.filter-btn .bi {
+    color: #000000 !important;
+}
+
+/* Texte de date noir */
+.donation-date .badge {
+    color: #000000 !important;
+    background-color: #f8fafc !important;
+    border: 1px solid #e2e8f0 !important;
+}
+</style>
 <div class="container py-4">
-    <!-- Page Header -->
-    <div class="page-header">
-        <div class="d-flex justify-content-between align-items-center">
-            <div>
-                <h1 class="page-title">
-                    <i class="bi bi-heart me-3"></i>
-                    Dons
-                </h1>
-                <p class="page-subtitle">
-                    <i class="bi bi-gift me-2"></i>
-                    Gérez les dons des membres et bienfaiteurs
-                </p>
+    <!-- AppBar Dons -->
+    <div class="appbar donations-appbar">
+        <div class="appbar-content">
+            <div class="appbar-left">
+                <a href="{{ url('/') }}" class="appbar-back-btn">
+                    <i class="bi bi-arrow-left"></i>
+                </a>
+                <div class="appbar-title-section">
+                    <h1 class="appbar-title">Dons</h1>
+                </div>
             </div>
-            <div>
-                <a href="{{ route('donations.create') }}" class="btn-add">
-                    <i class="bi bi-plus-lg" style="color: white !important;"></i>
+            <div class="appbar-right">
+                <a href="{{ route('donations.create') }}" class="appbar-btn-yellow">
+                    <i class="bi bi-plus-lg"></i>
                     <span class="btn-text">Nouveau don</span>
                 </a>
             </div>
         </div>
     </div>
 
-            @if(session('success'))
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    {{ session('success') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    @endif
+
+    <!-- Filtres de recherche -->
+    <form method="GET" class="mb-3">
+        <div class="row g-2 g-lg-3 align-items-end">
+            <div class="col-12 col-lg-6">
+                <div class="input-group search-group">
+                    <span class="input-group-text search-icon"><i class="bi bi-search"></i></span>
+                    <input type="text" class="form-control search-input" placeholder="Rechercher par donateur, type, référence..." name="q" value="{{ $search ?? '' }}">
+                    <button class="btn btn search-btn" type="submit"><i class="bi bi-search"></i> <span class="btn-label d-none d-lg-inline">Rechercher</span></button>
                 </div>
-            @endif
+            </div>
+            <div class="col-6 col-lg-3">
+                <label class="form-label small text-muted">Du</label>
+                <input type="date" name="from" value="{{ $filters['from'] ?? '' }}" class="form-control date-input" />
+            </div>
+            <div class="col-6 col-lg-3">
+                <label class="form-label small text-muted">Au</label>
+                <input type="date" name="to" value="{{ $filters['to'] ?? '' }}" class="form-control date-input" />
+            </div>
+            <div class="col-12 col-lg-auto ms-lg-auto d-flex gap-2 justify-content-end">
+                <button class="btn btn filter-btn" type="submit"><i class="bi bi-funnel"></i> <span class="btn-label d-none d-lg-inline">Filtrer</span></button>
+            </div>
+        </div>
+    </form>
 
-    <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-3">
-        @forelse($donations as $donation)
-            <div class="col">
-                <div class="card card-soft h-100 position-relative">
-                    <div class="card-body">
-                                <div class="d-flex align-items-center mb-2">
-                                    <div class="rounded-circle d-flex align-items-center justify-content-center me-3" 
-                                         style="width: 40px; height: 40px; background-color: {{ $donation->donation_type === 'money' ? '#FF2600' : '#22C55E' }}20; border: 2px solid {{ $donation->donation_type === 'money' ? '#FF2600' : '#22C55E' }};">
-                                        <i class="bi {{ $donation->donation_type === 'money' ? 'bi-cash-coin' : 'bi-box' }}" 
-                                           style="color: {{ $donation->donation_type === 'money' ? '#FF2600' : '#22C55E' }};"></i>
-                                    </div>
-                                    <div class="flex-grow-1">
-                                        <h6 class="card-title mb-0 fw-semibold">
-                                            {{ $donation->donor_name ?? ($donation->member?->last_name.' '.$donation->member?->first_name) }}
-                                        </h6>
-                                        <small class="text-muted">
-                                            {{ optional($donation->received_at)->format('d/m/Y') }}
-                                        </small>
-                                    </div>
-                                </div>
-                                
-                                @if($donation->donation_type === 'money')
-                                    <div class="mb-2 d-flex align-items-center justify-content-between">
-                                        <span class="badge bg-custom">Argent</span>
-                                        <span class="fw-bold numeric">{{ number_format(round($donation->amount), 0, ',', ' ') }} FCFA</span>
-                                    </div>
-                                    @if($donation->payment_method)
-                                        <div class="small text-muted mb-1">
-                                            <i class="bi bi-credit-card me-1"></i>{{ ucfirst($donation->payment_method) }}
-                                        </div>
-                                    @endif
-                                @else
-                                    <div class="mb-2 d-flex align-items-center justify-content-between">
-                                        <span class="badge bg-success">Objet physique</span>
-                                        <span class="fw-semibold">{{ $donation->physical_item }}</span>
-                                    </div>
-                                    @if($donation->physical_description)
-                                        <div class="small text-muted mb-1">{{ Str::limit($donation->physical_description, 60) }}</div>
-                                    @endif
+    <div class="donations-list">
+        @forelse($donations as $index => $donation)
+            <div class="donation-row {{ $index > 0 ? 'donation-row-separated' : '' }}">
+                <div class="donation-row-body">
+                    <div class="donation-info">
+                        <div class="donation-date">
+                            <span class="badge bg-custom">{{ optional($donation->received_at)->format('d/m/Y') }}</span>
+                        </div>
+                        <div class="donation-donor">
+                            <a class="link-dark text-decoration-none" href="{{ route('donations.show', $donation) }}">
+                                {{ $donation->donor_name ?? ($donation->member?->last_name.' '.$donation->member?->first_name) }}
+                            </a>
+                        </div>
+                        <div class="donation-details">
+                            @if($donation->donation_type === 'money')
+                                <i class="bi bi-cash-coin me-1"></i>Argent
+                                @if($donation->payment_method)
+                                    <span class="ms-2"><i class="bi bi-credit-card me-1"></i>{{ ucfirst($donation->payment_method) }}</span>
                                 @endif
-
-                                @if($donation->project)
-                                    <div class="small text-muted mb-1"><i class="bi bi-kanban me-1"></i>{{ $donation->project->name }}</div>
-                                @elseif($donation->title)
-                                    <div class="small text-muted mb-1"><i class="bi bi-tag me-1"></i>{{ $donation->title }}</div>
-                                @else
-                                    <div class="small text-muted mb-1"><i class="bi bi-gift me-1"></i>Don général</div>
-                                @endif
-
-                                @if($donation->reference)
-                                    <div class="small text-muted mb-1"><i class="bi bi-hash me-1"></i>{{ $donation->reference }}</div>
-                                @endif
-
-                                @if($donation->notes)
-                                    <div class="small text-muted"><i class="bi bi-chat-text me-1"></i>{{ Str::limit($donation->notes, 50) }}</div>
-                                @endif
-
-                                <div class="d-flex justify-content-between align-items-center mt-2">
-                                    <small class="text-muted"><i class="bi bi-calendar3 me-1"></i>{{ $donation->created_at->format('d/m/Y') }}</small>
-                                    <div class="btn-group btn-group-sm">
-                                        <a href="{{ route('donations.show', $donation) }}" class="btn btn-outline-primary btn-sm" title="Voir le détail"><i class="bi bi-eye"></i></a>
-                                        <a href="{{ route('donations.edit', $donation) }}" class="btn btn-outline-secondary btn-sm" title="Modifier"><i class="bi bi-pencil"></i></a>
-                                        <form action="{{ route('donations.destroy', $donation) }}" method="POST" class="d-inline">
-                                            @csrf @method('DELETE')
-                                            <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirm('Supprimer ce don ?')" title="Supprimer"><i class="bi bi-trash"></i></button>
-                                        </form>
-                                    </div>
-                                </div>
+                            @else
+                                <i class="bi bi-box me-1"></i>{{ $donation->physical_item }}
+                            @endif
+                            @if($donation->reference)
+                                <span class="ms-2"><i class="bi bi-hash me-1"></i>{{ $donation->reference }}</span>
+                            @endif
+                        </div>
                     </div>
+                    <div class="donation-amount">
+                        @if($donation->donation_type === 'money')
+                            <div class="amount-value">{{ number_format(round($donation->amount), 0, ',', ' ') }} FCFA</div>
+                        @else
+                            <div class="amount-value">Objet physique</div>
+                        @endif
+                    </div>
+                </div>
+                <div class="donation-actions">
+                    <a class="btn btn-sm btn-outline-secondary" href="{{ route('donations.edit', $donation) }}">Modifier</a>
+                    <form action="{{ route('donations.destroy', $donation) }}" method="POST" data-confirm="Supprimer ?" data-confirm-ok="Supprimer" class="d-inline">
+                        @csrf @method('DELETE')
+                        <button class="btn btn-sm btn-outline-danger">Supprimer</button>
+                    </form>
                 </div>
             </div>
         @empty
-            <div class="col-12">
-                <div class="text-center py-5">
-                    <i class="bi bi-heart display-1 text-muted"></i>
-                    <h4 class="mt-3 text-muted">Aucun don</h4>
-                    <p class="text-muted">Commencez par enregistrer votre premier don.</p>
-                    <a href="{{ route('donations.create') }}" class="btn-add-empty">
-                        <i class="bi bi-plus-circle" style="color: white !important;"></i>
-                        Créer un don
-                    </a>
-                </div>
+            <div class="donation-row-empty">
+                <i class="bi bi-heart"></i>
+                <div>Aucun don trouvé</div>
+                <small class="text-muted mt-2">Commencez par enregistrer votre premier don</small>
             </div>
         @endforelse
     </div>

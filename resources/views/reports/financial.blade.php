@@ -54,7 +54,7 @@
     flex-shrink: 0;
 }
 
-.summary-icon.month { background: #FF2600; }
+.summary-icon.month { background: #FFCC00; }
 .summary-icon.year { background: #22C55E; }
 
 .summary-title {
@@ -189,9 +189,9 @@
 }
 
 .action-btn.primary {
-    background: #FF2600;
+    background: #FFCC00;
     color: white;
-    border-color: #FF2600;
+    border-color: #FFCC00;
 }
 
 .action-btn.primary:hover {

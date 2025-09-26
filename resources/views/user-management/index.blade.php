@@ -1,136 +1,254 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container-fluid px-4">
+<style>
+/* Styles pour la liste des comptes */
+.accounts-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.account-row {
+    background: #ffffff;
+    border: 1px solid #f1f5f9;
+    border-radius: 12px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    gap: 1.5rem;
+    min-height: 80px;
+}
+
+.account-row-separated {
+    margin-top: 0.5rem;
+    padding-top: 1.5rem;
+}
+
+.account-row:hover {
+    background: #fafbfc;
+    border-color: #e2e8f0;
+}
+
+.account-row-body {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+    flex: 1;
+}
+
+.account-info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.account-date {
+    margin-bottom: 4px;
+}
+
+.account-name {
+    font-size: 16px;
+    font-weight: 700;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    color: #1e293b;
+    margin: 0;
+    line-height: 1.3;
+}
+
+.account-details {
+    font-size: 14px;
+    color: #64748b;
+    margin: 4px 0 0 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.account-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.account-row-empty {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: #64748b;
+}
+
+.account-row-empty i {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+}
+
+/* Styles pour les champs de recherche arrondis */
+.search-group {
+    border-radius: 25px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.search-icon {
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-right: none;
+    border-radius: 25px 0 0 25px;
+    color: #000000;
+}
+
+.search-input {
+    border: 1px solid #e2e8f0;
+    border-left: none;
+    border-right: none;
+    background-color: #ffffff;
+    border-radius: 0;
+    padding: 12px 16px;
+    font-size: 14px;
+}
+
+.search-input:focus {
+    border-color: #e2e8f0;
+    box-shadow: none;
+    background-color: #ffffff;
+}
+
+.search-btn {
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-left: none;
+    border-radius: 0 25px 25px 0;
+    color: #000000;
+    font-weight: 600;
+    padding: 12px 20px;
+}
+
+.search-btn:hover {
+    background-color: #f1f5f9;
+    border-color: #cbd5e1;
+    color: #000000;
+}
+
+.filter-select {
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    padding: 12px 16px;
+    font-size: 14px;
+}
+
+.filter-select:focus {
+    border-color: #e2e8f0;
+    box-shadow: none;
+}
+
+.filter-btn {
+    border-radius: 12px;
+    padding: 12px 20px;
+    font-weight: 600;
+    color: #000000;
+}
+
+/* Icônes noires dans toute la section comptes */
+.accounts-list .bi,
+.accounts-appbar .bi,
+.account-details .bi,
+.account-row-empty .bi,
+.search-icon .bi,
+.search-btn .bi,
+.filter-btn .bi {
+    color: #000000 !important;
+}
+
+/* Texte de date noir */
+.account-date .badge {
+    color: #000000 !important;
+    background-color: #f8fafc !important;
+    border: 1px solid #e2e8f0 !important;
+}
+</style>
+<div class="container-fluid px-4 py-4" >
     <!-- AppBar Gestion des Comptes -->
     <div class="appbar accounts-appbar">
         <div class="appbar-content">
             <div class="appbar-left">
-                <div class="appbar-icon">
-                    <i class="bi bi-people-fill"></i>
-                </div>
+                <a href="{{ url('/') }}" class="appbar-back-btn">
+                    <i class="bi bi-arrow-left"></i>
+                </a>
                 <div class="appbar-title-section">
                     <h1 class="appbar-title">Gestion des Comptes</h1>
-                    <div class="appbar-subtitle">
-                        <i class="bi bi-shield-check appbar-subtitle-icon"></i>
-                        <span class="appbar-subtitle-text">Gérez les utilisateurs et leurs permissions</span>
-                    </div>
                 </div>
             </div>
             <div class="appbar-right">
-                <a href="{{ route('user-management.create') }}" class="btn-add">
+                <a href="{{ route('user-management.create') }}" class="appbar-btn-yellow">
                     <i class="bi bi-person-plus"></i>
                     <span class="btn-text">Nouvel utilisateur</span>
                 </a>
             </div>
         </div>
     </div>
+
+    <!-- Champ de recherche -->
+    <form method="GET" class="mb-4">
+        <div class="row g-3 align-items-end">
+            <div class="col-12 col-md-6">
+                <div class="input-group search-group">
+                    <span class="input-group-text search-icon"><i class="bi bi-search"></i></span>
+                    <input type="text" class="form-control search-input" placeholder="Rechercher par nom, email..." name="q" value="{{ request('q') }}">
+                    <button class="btn btn search-btn" type="submit"><i class="bi bi-search"></i> <span class="btn-label d-none d-lg-inline">Rechercher</span></button>
+                </div>
+            </div>
+        </div>
+    </form>
+
     <!-- Liste des utilisateurs -->
-    <div class="row justify-content-center">
-        @forelse($users as $user)
-        <div class="col-xl-4 col-lg-6 col-md-6 mb-4">
-            <div class="card user-card h-100">
-                <div class="card-body">
-                    <div class="d-flex align-items-center mb-3">
-                        <div class="user-avatar me-3">
-                            <i class="bi bi-person-circle"></i>
+    <div class="accounts-list">
+        @forelse($users as $index => $user)
+            <div class="account-row {{ $index > 0 ? 'account-row-separated' : '' }}">
+                <div class="account-row-body">
+                    <div class="account-info">
+                        <div class="account-date">
+                            <span class="badge bg-custom">{{ $user->created_at->format('d/m/Y') }}</span>
                         </div>
-                        <div class="flex-grow-1">
-                            <h5 class="card-title mb-1">{{ $user->name }}</h5>
-                            <p class="text-muted mb-0">{{ $user->email }}</p>
+                        <div class="account-name">
+                            {{ $user->name }}
                         </div>
-                        <div class="user-status">
-                            @if($user->is_active)
-                                <span class="badge bg-success">Actif</span>
-                            @else
-                                <span class="badge bg-secondary">Inactif</span>
-                            @endif
-                        </div>
-                    </div>
-
-                    <div class="user-info mb-3">
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <span class="text-muted">Rôle :</span>
-                            <span class="fw-bold">{{ $user->role->name ?? 'Aucun' }}</span>
-                        </div>
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <span class="text-muted">Type :</span>
+                        <div class="account-details">
+                            <i class="bi bi-envelope me-1"></i>{{ $user->email }}
+                            <span class="ms-2"><i class="bi bi-person-badge me-1"></i>{{ $user->role->name ?? 'Aucun rôle' }}</span>
                             @if($user->is_church_admin)
-                                <span class="badge bg-custom">Administrateur</span>
+                                <span class="ms-2"><i class="bi bi-shield-check me-1"></i>Administrateur</span>
                             @else
-                                <span class="badge bg-info">Utilisateur</span>
+                                <span class="ms-2"><i class="bi bi-person me-1"></i>Utilisateur</span>
+                            @endif
+                            @if($user->is_active)
+                                <span class="ms-2"><i class="bi bi-check-circle me-1"></i>Actif</span>
+                            @else
+                                <span class="ms-2"><i class="bi bi-x-circle me-1"></i>Inactif</span>
                             @endif
                         </div>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span class="text-muted">Créé le :</span>
-                            <span>{{ $user->created_at->format('d/m/Y') }}</span>
-                        </div>
                     </div>
-
-                    <!-- Permissions -->
-                    @if($user->role && $user->role->permissions)
-                    <div class="permissions-section mb-3">
-                        <h6 class="text-muted mb-2">Permissions :</h6>
-                        <div class="permissions-grid">
-                            @php
-                                $permissionLabels = [
-                                    'members' => 'Membres',
-                                    'tithes' => 'Dîmes',
-                                    'offerings' => 'Offrandes',
-                                    'donations' => 'Dons',
-                                    'expenses' => 'Dépenses',
-                                    'reports' => 'Rapports',
-                                    'services' => 'Cultes',
-                                    'journal' => 'Journal',
-                                    'administration' => 'Administration'
-                                ];
-                            @endphp
-                            
-                            @foreach($permissionLabels as $permission => $label)
-                                @if(in_array($permission, $user->role->permissions))
-                                <div class="permission-item">
-                                    <i class="bi bi-check-circle-fill text-success me-1"></i>
-                                    <small>{{ $label }}</small>
-                                </div>
-                                @endif
-                            @endforeach
-                        </div>
-                    </div>
+                </div>
+                <div class="account-actions">
+                    <a href="{{ route('user-management.edit', $user) }}" class="btn btn-sm btn-outline-primary">Modifier</a>
+                    @if(!$user->is_church_admin)
+                        <form action="{{ route('user-management.destroy', $user) }}" method="POST" onsubmit="return confirmDelete()" class="d-inline">
+                            @csrf @method('DELETE')
+                            <button type="submit" class="btn btn-sm btn-outline-danger">Supprimer</button>
+                        </form>
                     @endif
                 </div>
-
-                <div class="card-footer bg-transparent">
-                    <div class="d-flex gap-2">
-                        <a href="{{ route('user-management.edit', $user) }}" class="btn btn-outline-primary btn-sm flex-fill">
-                            <i class="bi bi-pencil-square me-1"></i>
-                            Modifier
-                        </a>
-                        @if(!$user->is_church_admin)
-                        <form method="POST" action="{{ route('user-management.destroy', $user) }}" class="flex-fill" onsubmit="return confirmDelete()">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-outline-danger btn-sm w-100">
-                                <i class="bi bi-trash me-1"></i>
-                                Supprimer
-                            </button>
-                        </form>
-                        @endif
-                    </div>
-                </div>
             </div>
-        </div>
         @empty
-        <div class="col-12">
-            <div class="text-center py-5">
-                <i class="bi bi-people display-1 text-muted"></i>
-                <h3 class="mt-3 text-muted">Aucun utilisateur trouvé</h3>
-                <p class="text-muted">Commencez par créer le premier utilisateur de votre église.</p>
-                <a href="{{ route('user-management.create') }}" class="btn-add-empty">
-                    <i class="bi bi-person-plus-fill"></i>
-                    Créer un utilisateur
-                </a>
+            <div class="account-row-empty">
+                <i class="bi bi-people"></i>
+                <div>Aucun utilisateur trouvé</div>
+                <small class="text-muted mt-2">Commencez par créer le premier utilisateur de votre église</small>
             </div>
-        </div>
         @endforelse
     </div>
 </div>

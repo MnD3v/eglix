@@ -78,7 +78,7 @@ class MemberController extends Controller
             'profile_photo' => ['nullable','image','mimes:jpg,jpeg,png,webp','max:4096'],
         ]);
 
-        // Upload photo to Firebase if provided
+        // Upload photo if provided
         if ($request->hasFile('profile_photo')) {
             $firebaseService = new FirebaseStorageService();
             $photoUrl = $firebaseService->uploadFileDirect($request->file('profile_photo'));
@@ -86,10 +86,12 @@ class MemberController extends Controller
             if ($photoUrl) {
                 // Upload réussi, stocker l'URL dans la BD
                 $validated['photo_url'] = $photoUrl;
+                $validated['profile_photo'] = $request->file('profile_photo')->store('members', 'public');
+            } else {
+                // En cas d'échec, stocker localement seulement
+                $validated['profile_photo'] = $request->file('profile_photo')->store('members', 'public');
+                $validated['photo_url'] = asset('storage/' . $validated['profile_photo']);
             }
-            
-            // Stocker aussi localement comme backup
-            $validated['profile_photo'] = $request->file('profile_photo')->store('members', 'public');
         }
 
         // Ajouter l'ID de l'église
@@ -190,13 +192,19 @@ class MemberController extends Controller
             'profile_photo' => ['nullable','image','mimes:jpg,jpeg,png,webp','max:4096'],
         ]);
 
-        // Upload photo to Firebase if provided
+        // Upload photo if provided
         if ($request->hasFile('profile_photo')) {
             $firebaseService = new FirebaseStorageService();
             $photoUrl = $firebaseService->uploadFileDirect($request->file('profile_photo'));
             
             if ($photoUrl) {
+                // Upload réussi, stocker l'URL dans la BD
                 $validated['photo_url'] = $photoUrl;
+                $validated['profile_photo'] = $request->file('profile_photo')->store('members', 'public');
+            } else {
+                // En cas d'échec, stocker localement seulement
+                $validated['profile_photo'] = $request->file('profile_photo')->store('members', 'public');
+                $validated['photo_url'] = asset('storage/' . $validated['profile_photo']);
             }
         }
 
@@ -408,16 +416,20 @@ class MemberController extends Controller
             'profile_photo' => ['nullable','image','mimes:jpg,jpeg,png,webp','max:4096'],
         ]);
 
-        // Upload photo to Firebase if provided
+        // Upload photo if provided
         if ($request->hasFile('profile_photo')) {
             $firebaseService = new FirebaseStorageService();
             $photoUrl = $firebaseService->uploadFileDirect($request->file('profile_photo'));
             
             if ($photoUrl) {
+                // Upload réussi, stocker l'URL dans la BD
                 $validated['photo_url'] = $photoUrl;
+                $validated['profile_photo'] = $request->file('profile_photo')->store('members', 'public');
+            } else {
+                // En cas d'échec, stocker localement seulement
+                $validated['profile_photo'] = $request->file('profile_photo')->store('members', 'public');
+                $validated['photo_url'] = asset('storage/' . $validated['profile_photo']);
             }
-            
-            $validated['profile_photo'] = $request->file('profile_photo')->store('members', 'public');
         }
 
         // Ajouter l'ID de l'église et les métadonnées

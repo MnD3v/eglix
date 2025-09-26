@@ -1,28 +1,164 @@
 @extends('layouts.app')
 
 @section('content')
+<style>
+/* Styles pour la liste des offrandes */
+.offerings-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.offering-row {
+    background: #ffffff;
+    border: 1px solid #f1f5f9;
+    border-radius: 12px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    gap: 1.5rem;
+    min-height: 80px;
+}
+
+.offering-row-separated {
+    margin-top: 0.5rem;
+    padding-top: 1.5rem;
+}
+
+.offering-row:hover {
+    background: #fafbfc;
+    border-color: #e2e8f0;
+}
+
+.offering-row-body {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+    flex: 1;
+}
+
+.offering-date {
+    flex-shrink: 0;
+}
+
+.offering-info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.offering-date {
+    margin-bottom: 4px;
+}
+
+.offering-type {
+    font-size: 16px;
+    font-weight: 700;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    color: #1e293b;
+    margin: 0;
+    line-height: 1.3;
+}
+
+.offering-details {
+    font-size: 14px;
+    color: #64748b;
+    margin: 4px 0 0 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.offering-amount {
+    flex-shrink: 0;
+    text-align: right;
+}
+
+.amount-value {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1e293b;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.offering-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.offering-row-empty {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: #64748b;
+}
+
+.offering-row-empty i {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+}
+
+/* Styles pour les champs de recherche arrondis */
+.date-input {
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    padding: 12px 16px;
+    font-size: 14px;
+}
+
+.date-input:focus {
+    border-color: #e2e8f0;
+    box-shadow: none;
+}
+
+.filter-btn {
+    border-radius: 12px;
+    padding: 12px 20px;
+    font-weight: 600;
+    color: #000000;
+}
+
+/* Icônes noires dans toute la section offrandes */
+.offerings-list .bi,
+.offerings-appbar .bi,
+.offering-details .bi,
+.offering-row-empty .bi,
+.filter-btn .bi {
+    color: #000000 !important;
+}
+
+/* Texte de date noir */
+.offering-date .badge {
+    color: #000000 !important;
+    background-color: #f8fafc !important;
+    border: 1px solid #e2e8f0 !important;
+}
+</style>
 <div class="container py-4">
-    <!-- Page Header -->
-    <div class="page-header">
-        <div class="d-flex justify-content-between align-items-center">
-            <div>
-                <h1 class="page-title">
-                    <i class="bi bi-gift me-3"></i>
-                    Offrandes
-                </h1>
-                <p class="page-subtitle">
-                    <i class="bi bi-heart me-2"></i>
-                    Gérez les offrandes des membres
-                </p>
-            </div>
-            <div class="d-flex gap-2">
-                <a href="{{ route('offerings.create') }}" class="btn btn">
-                    <i class="bi bi-plus-lg me-2"></i>
-                    <span class="btn-label">Ajouter une offrande</span>
+    <!-- AppBar Offrandes -->
+    <div class="appbar offerings-appbar">
+        <div class="appbar-content">
+            <div class="appbar-left">
+                <a href="{{ url('/') }}" class="appbar-back-btn">
+                    <i class="bi bi-arrow-left"></i>
                 </a>
-                <a href="{{ route('offering-types.index') }}" class="btn btn-outline-secondary">
-                    <i class="bi bi-tags me-2"></i>
-                    <span class="btn-label">Types d'offrande</span>
+                <div class="appbar-title-section">
+                    <h1 class="appbar-title">Offrandes</h1>
+                </div>
+            </div>
+            <div class="appbar-right">
+                <a href="{{ route('offering-types.index') }}" class="appbar-btn-white me-2">
+                    <i class="bi bi-tags"></i>
+                    <span class="btn-text">Types d'offrande</span>
+                </a>
+                <a href="{{ route('offerings.create') }}" class="appbar-btn-yellow">
+                    <i class="bi bi-plus-lg"></i>
+                    <span class="btn-text">Ajouter une offrande</span>
                 </a>
             </div>
         </div>
@@ -34,15 +170,14 @@
         <div class="row g-3 align-items-end">
             <div class="col-12 col-sm-4 col-md-3">
                 <label class="form-label small text-muted">Du</label>
-                <input type="date" name="from" value="{{ $filters['from'] ?? '' }}" class="form-control" />
+                <input type="date" name="from" value="{{ $filters['from'] ?? '' }}" class="form-control date-input" />
             </div>
             <div class="col-12 col-sm-4 col-md-3">
                 <label class="form-label small text-muted">Au</label>
-                <input type="date" name="to" value="{{ $filters['to'] ?? '' }}" class="form-control" />
+                <input type="date" name="to" value="{{ $filters['to'] ?? '' }}" class="form-control date-input" />
             </div>
             <div class="col-12 col-sm-4 col-md-6 d-flex gap-2">
-                <button class="btn btn" type="submit">Filtrer</button>
-                <a class="btn btn-outline-secondary" href="{{ route('offerings.index') }}">Réinitialiser</a>
+                <button class="btn btn filter-btn" type="submit">Filtrer</button>
             </div>
         </div>
     </form>
@@ -58,29 +193,39 @@
         </div>
     </div>
 
-    <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-3">
-        @forelse($offerings as $o)
-        <div class="col">
-            <div class="card card-soft h-100">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-start mb-2">
-                        <span class="badge bg-custom">{{ optional($o->received_at)->format('d/m/Y') }}</span>
-                        <div class="fw-bold numeric">{{ number_format(round($o->amount), 0, ',', ' ') }} FCFA</div>
+    <div class="offerings-list">
+        @forelse($offerings as $index => $o)
+            <div class="offering-row {{ $index > 0 ? 'offering-row-separated' : '' }}">
+                <div class="offering-row-body">
+                    <div class="offering-info">
+                        <div class="offering-date">
+                            <span class="badge bg-custom">{{ optional($o->received_at)->format('d/m/Y') }}</span>
+                        </div>
+                        <div class="offering-type">
+                            {{ ucfirst(str_replace('_',' ', $o->type ?? '—')) }}
+                        </div>
+                        <div class="offering-details">
+                            <i class="bi bi-wallet2 me-1"></i>{{ $o->payment_method ?? '—' }}
+                        </div>
                     </div>
-                    <div class="fw-semibold">{{ ucfirst(str_replace('_',' ', $o->type ?? '—')) }}</div>
-                    <div class="small text-muted mt-1">{{ $o->payment_method ?? '—' }}</div>
+                    <div class="offering-amount">
+                        <div class="amount-value">{{ number_format(round($o->amount), 0, ',', ' ') }} FCFA</div>
+                    </div>
                 </div>
-                <div class="card-footer d-flex justify-content-end gap-2">
+                <div class="offering-actions">
                     <a class="btn btn-sm btn-outline-secondary" href="{{ route('offerings.edit', $o) }}">Modifier</a>
-                    <form action="{{ route('offerings.destroy', $o) }}" method="POST" data-confirm="Supprimer ?" data-confirm-ok="Supprimer">
+                    <form action="{{ route('offerings.destroy', $o) }}" method="POST" data-confirm="Supprimer ?" data-confirm-ok="Supprimer" class="d-inline">
                         @csrf @method('DELETE')
                         <button class="btn btn-sm btn-outline-danger">Supprimer</button>
                     </form>
                 </div>
             </div>
-        </div>
         @empty
-        <div class="col-12"><div class="text-center text-muted py-5">Aucune offrande</div></div>
+            <div class="offering-row-empty">
+                <i class="bi bi-gift"></i>
+                <div>Aucune offrande trouvée</div>
+                <small class="text-muted mt-2">Commencez par enregistrer votre première offrande</small>
+            </div>
         @endforelse
     </div>
 

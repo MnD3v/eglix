@@ -11,7 +11,11 @@
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         body {
-            background: linear-gradient(135deg, #ff2600 0%, #000000 100%);
+            background: #f5f5f5;
+            background-image: 
+                linear-gradient(rgba(0,0,0,0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0,0,0,0.02) 1px, transparent 1px);
+            background-size: 20px 20px;
             min-height: 100vh;
             font-family: 'DM Sans', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
         }
@@ -25,33 +29,27 @@
         }
         
         .success-card {
-            background: white;
+            background: #ffffff;
             border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             overflow: hidden;
             max-width: 600px;
             width: 100%;
             margin: 0 1rem;
             text-align: center;
-            border: 2px solid #ff2600;
+            border: 1px solid #e2e8f0;
         }
         
         .success-header {
-            background: linear-gradient(135deg, #ff2600 0%, #000000 100%);
-            color: white;
+            background: #ffffff;
+            color: #000000;
             padding: 3rem 2rem;
             position: relative;
+            border-bottom: 1px solid #e2e8f0;
         }
         
         .success-header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/><circle cx="10" cy="60" r="0.5" fill="white" opacity="0.1"/><circle cx="90" cy="40" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
-            opacity: 0.3;
+            display: none;
         }
         
         .eglix-logo {
@@ -77,7 +75,7 @@
             width: 100px;
             height: 100px;
             border-radius: 50%;
-            background: rgba(255,255,255,0.2);
+            background: #f8f9fa;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -86,7 +84,8 @@
             animation: bounce 2s infinite;
             position: relative;
             z-index: 1;
-            border: 3px solid rgba(255,255,255,0.3);
+            border: 3px solid #e2e8f0;
+            color: #000000;
         }
         
         @keyframes bounce {
@@ -105,22 +104,24 @@
             font-size: 2rem;
             font-weight: 700;
             margin-bottom: 0.5rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
             position: relative;
             z-index: 1;
             font-family: 'DM Sans', sans-serif;
+            color: #000000;
         }
         
         .success-subtitle {
             font-size: 1.1rem;
-            opacity: 0.9;
+            opacity: 0.8;
             position: relative;
             z-index: 1;
             font-family: 'DM Sans', sans-serif;
+            color: #000000;
         }
         
         .success-content {
             padding: 2rem;
+            background: #ffffff;
         }
         
         .church-info {
@@ -128,31 +129,33 @@
             border-radius: 15px;
             padding: 1.5rem;
             margin-bottom: 2rem;
+            border: 1px solid #e2e8f0;
         }
         
         .church-logo {
             width: 60px;
             height: 60px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #e2e8f0;
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 0 auto 1rem;
-            color: white;
+            color: #000000;
             font-size: 1.5rem;
         }
         
         .church-name {
             font-size: 1.3rem;
             font-weight: 600;
-            color: #333;
+            color: #000000;
             margin-bottom: 0.5rem;
         }
         
         .church-description {
-            color: #666;
+            color: #000000;
             font-size: 0.95rem;
+            opacity: 0.8;
         }
         
         .next-steps {
@@ -161,7 +164,7 @@
         }
         
         .next-steps h4 {
-            color: #333;
+            color: #000000;
             font-size: 1.2rem;
             font-weight: 600;
             margin-bottom: 1rem;
@@ -178,69 +181,81 @@
             width: 30px;
             height: 30px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #ff2600 0%, #cc1f00 100%);
-            color: white;
+            background: #FFCC00;
+            color: #000000;
             display: flex;
             align-items: center;
             justify-content: center;
             margin-right: 1rem;
             font-size: 0.8rem;
-            font-weight: 600;
-            box-shadow: 0 2px 8px rgba(255, 38, 0, 0.3);
+            font-weight: 700;
+            box-shadow: 0 2px 8px rgba(255, 204, 0, 0.3);
         }
         
         .step-text {
-            color: #555;
+            color: #000000;
             font-size: 0.95rem;
+            opacity: 0.8;
         }
         
         .btn-primary {
-            background: linear-gradient(135deg, #ff2600 0%, #cc1f00 100%);
-            border: none;
-            border-radius: 10px;
+            background: #FFCC00;
+            color: #000000;
+            border: 1px solid #FFCC00;
+            border-radius: 12px;
             padding: 0.75rem 2rem;
             font-weight: 700;
             font-size: 1rem;
-            text-transform: uppercase;
+            text-transform: lowercase;
             letter-spacing: 1px;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(255, 38, 0, 0.3);
+            box-shadow: 0 4px 15px rgba(255, 204, 0, 0.3);
             font-family: 'DM Sans', sans-serif;
         }
         
         .btn-primary:hover {
-            background: linear-gradient(135deg, #cc1f00 0%, #ff2600 100%);
+            background: #e6b800;
+            color: #000000;
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(255, 38, 0, 0.4);
+            box-shadow: 0 8px 25px rgba(255, 204, 0, 0.4);
         }
         
         .btn-outline-primary {
-            border: 2px solid #ff2600;
-            color: #ff2600;
-            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+            color: #000000;
+            border-radius: 12px;
             padding: 0.75rem 2rem;
             font-weight: 700;
             font-size: 1rem;
-            text-transform: uppercase;
+            text-transform: lowercase;
             letter-spacing: 1px;
             transition: all 0.3s ease;
-            background: transparent;
+            background: #ffffff;
             font-family: 'DM Sans', sans-serif;
         }
         
         .btn-outline-primary:hover {
-            background: #ff2600;
-            border-color: #ff2600;
-            color: white;
+            background: #f8f9fa;
+            border-color: #e2e8f0;
+            color: #000000;
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(255, 38, 0, 0.4);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
         
         .alert-success {
-            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
-            border: none;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
             border-radius: 15px;
-            color: #155724;
+            color: #000000;
+        }
+        
+        .text-muted {
+            color: #000000 !important;
+            opacity: 0.6;
+        }
+        
+        .text-danger {
+            color: #000000 !important;
         }
         
         @media (max-width: 768px) {
@@ -271,14 +286,14 @@
             <div class="success-header">
                 <!-- Logo Eglix -->
                 <div class="eglix-logo">
-                    <img src="{{ asset('images/eglix.png') }}" alt="Eglix" class="eglix-logo-img">
+                    <img src="{{ asset('images/eglix-black.png') }}" alt="Eglix" class="eglix-logo-img">
                 </div>
                 
                 <div class="success-icon">
                     <i class="fas fa-check"></i>
                 </div>
-                <h1 class="success-title">Inscription réussie !</h1>
-                <p class="success-subtitle">Bienvenue dans notre communauté</p>
+                <h1 class="success-title">inscription réussie !</h1>
+                <p class="success-subtitle">bienvenue dans notre communauté</p>
             </div>
             
             <!-- Contenu principal -->
@@ -315,26 +330,26 @@
                 
                 <!-- Prochaines étapes -->
                 <div class="next-steps">
-                    <h4><i class="fas fa-list-check me-2"></i>Prochaines étapes</h4>
+                    <h4><i class="fas fa-list-check me-2"></i>prochaines étapes</h4>
                     
                     <div class="step-item">
                         <div class="step-icon">1</div>
-                        <div class="step-text">Votre inscription a été enregistrée avec succès</div>
+                        <div class="step-text">votre inscription a été enregistrée avec succès</div>
                     </div>
                     
                     <div class="step-item">
                         <div class="step-icon">2</div>
-                        <div class="step-text">L'équipe de l'église vous contactera bientôt</div>
+                        <div class="step-text">l'équipe de l'église vous contactera bientôt</div>
                     </div>
                     
                     <div class="step-item">
                         <div class="step-icon">3</div>
-                        <div class="step-text">Vous recevrez les informations sur les activités</div>
+                        <div class="step-text">vous recevrez les informations sur les activités</div>
                     </div>
                     
                     <div class="step-item">
                         <div class="step-icon">4</div>
-                        <div class="step-text">Participez aux cultes et événements de l'église</div>
+                        <div class="step-text">participez aux cultes et événements de l'église</div>
                     </div>
                 </div>
                 
@@ -342,12 +357,12 @@
                 <div class="d-grid gap-2 d-md-flex justify-content-md-center">
                     <a href="{{ route('members.public.create', $church->id) }}" class="btn btn-outline-primary">
                         <i class="fas fa-user-plus me-2"></i>
-                        Inscrire un autre membre
+                        inscrire un autre membre
                     </a>
                     @if($church->website)
                         <a href="{{ $church->website }}" target="_blank" class="btn btn-primary">
                             <i class="fas fa-external-link-alt me-2"></i>
-                            Visiter le site web
+                            visiter le site web
                         </a>
                     @endif
                 </div>
@@ -356,7 +371,7 @@
                 <div class="mt-4 pt-3 border-top">
                     <p class="text-muted mb-0">
                         <i class="fas fa-heart text-danger me-1"></i>
-                        Merci de faire partie de notre famille spirituelle !
+                        merci de faire partie de notre famille spirituelle !
                     </p>
                 </div>
             </div>

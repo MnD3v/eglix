@@ -54,6 +54,59 @@ class DocumentController extends Controller
     }
 
     /**
+     * Display all documents (all folders combined)
+     */
+    public function all(Request $request)
+    {
+        $query = Document::where('church_id', Auth::user()->church_id)
+            ->with('folder');
+
+        $documents = $query->orderBy('created_at', 'desc')->paginate(20);
+        $folders = DocumentFolder::where('church_id', Auth::user()->church_id)
+            ->active()
+            ->ordered()
+            ->get();
+
+        return view('documents.all', compact('documents', 'folders'));
+    }
+
+    /**
+     * Display all images (all folders combined)
+     */
+    public function images(Request $request)
+    {
+        $query = Document::where('church_id', Auth::user()->church_id)
+            ->where('file_type', 'image')
+            ->with('folder');
+
+        $documents = $query->orderBy('created_at', 'desc')->paginate(20);
+        $folders = DocumentFolder::where('church_id', Auth::user()->church_id)
+            ->active()
+            ->ordered()
+            ->get();
+
+        return view('documents.images', compact('documents', 'folders'));
+    }
+
+    /**
+     * Display all PDFs (all folders combined)
+     */
+    public function pdfs(Request $request)
+    {
+        $query = Document::where('church_id', Auth::user()->church_id)
+            ->where('file_type', 'pdf')
+            ->with('folder');
+
+        $documents = $query->orderBy('created_at', 'desc')->paginate(20);
+        $folders = DocumentFolder::where('church_id', Auth::user()->church_id)
+            ->active()
+            ->ordered()
+            ->get();
+
+        return view('documents.pdfs', compact('documents', 'folders'));
+    }
+
+    /**
      * Show the form for creating a new resource.
      */
     public function create(Request $request)

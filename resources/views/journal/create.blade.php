@@ -1,56 +1,115 @@
-{{-- resources/views/journal/create.blade.php --}}
 @extends('layouts.app')
-
 @section('content')
 <style>
-/* Design simple et épuré pour la sélection d'image */
+/* Styles pour les champs de formulaire arrondis */
+.form-control, .form-select, .form-label {
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #FFCC00;
+    box-shadow: 0 0 0 0.2rem rgba(255, 204, 0, 0.25);
+}
+
+.form-label {
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Styles pour les sections du formulaire */
+.form-section {
+    background: #ffffff;
+    border: 1px solid #f1f5f9;
+    border-radius: 16px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.section-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid #f1f5f9;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.section-subtitle {
+    font-size: 0.875rem;
+    color: #64748b;
+    margin-bottom: 1.5rem;
+}
+
+/* Styles pour les boutons */
+.btn {
+    border-radius: 12px;
+    font-weight: 600;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    padding: 12px 24px;
+    transition: all 0.3s ease;
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Design pour la sélection d'image */
 .photo-upload-container {
     margin-bottom: 1rem;
 }
 
 .photo-upload-area {
-    border: none;
-    border-radius: 0;
+    border: 2px dashed #e2e8f0;
+    border-radius: 12px;
     padding: 2rem;
     text-align: center;
     cursor: pointer;
     transition: all 0.3s ease;
-    background: white;
+    background: #f8fafc;
     position: relative;
     overflow: hidden;
 }
 
 .photo-upload-area:hover {
-    background: #ffffff;
+    background: #f1f5f9;
+    border-color: #FFCC00;
 }
 
 .photo-upload-area.dragover {
-    background: #ffffff;
+    background: #fef3c7;
+    border-color: #FFCC00;
 }
 
 .upload-button {
-    background: white !important;
-    border: 1px solid #333 !important;
-    border-radius: 4px !important;
+    background: #FFCC00 !important;
+    border: 2px solid #FFCC00 !important;
+    border-radius: 12px !important;
     padding: 12px 24px !important;
-    color: #333 !important;
-    font-weight: 400 !important;
+    color: #1e293b !important;
+    font-weight: 600 !important;
     font-size: 1rem !important;
     cursor: pointer !important;
     transition: all 0.3s ease !important;
     margin-bottom: 1rem !important;
     display: inline-block !important;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
-    box-shadow: none !important;
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
+    box-shadow: 0 2px 4px rgba(255, 204, 0, 0.2) !important;
 }
 
 .upload-button:hover {
-    background: #ffffff !important;
-    border-color: #000 !important;
-}
-
-.upload-button:active {
-    background: #e9e9e9 !important;
+    background: #e6b800 !important;
+    border-color: #e6b800 !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(255, 204, 0, 0.3) !important;
 }
 
 .upload-text {
@@ -59,23 +118,16 @@
 
 .upload-title {
     font-size: 1rem;
-    font-weight: 400;
-    color: #333;
+    font-weight: 600;
+    color: #1e293b;
     margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
 .upload-subtitle {
-    color: #666;
+    color: #64748b;
     margin: 0;
     font-size: 0.9rem;
-}
-
-.upload-click {
-    color: #333;
-    font-weight: 400;
-    text-decoration: underline;
-    cursor: pointer;
 }
 
 .upload-formats {
@@ -88,40 +140,20 @@
     z-index: 2;
 }
 
-.photo-preview {
-    text-align: center;
-}
-
-.photo-preview img {
-    width: 200px;
-    height: 200px;
-    object-fit: cover;
-    border-radius: 8px;
-}
-
-.upload-progress {
-    margin-top: 1rem;
-}
-
-.progress {
-    height: 8px;
-    border-radius: 4px;
-}
-
 /* Styles pour les images sélectionnées */
 .selected-image-item {
     position: relative;
-    border: 2px solid #e5e7eb;
-    border-radius: 8px;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
     overflow: hidden;
     background: white;
     transition: all 0.3s ease;
 }
 
 .selected-image-item:hover {
-    border-color: #8b5cf6;
+    border-color: #FFCC00;
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.15);
+    box-shadow: 0 4px 12px rgba(255, 204, 0, 0.15);
 }
 
 .selected-image {
@@ -157,7 +189,7 @@
 .image-info {
     padding: 8px;
     background: #ffffff;
-    border-top: 1px solid #e5e7eb;
+    border-top: 1px solid #e2e8f0;
 }
 
 .image-name {
@@ -178,6 +210,10 @@
 
 /* Responsive design */
 @media (max-width: 768px) {
+    .form-section {
+        padding: 1.5rem;
+    }
+    
     .photo-upload-area {
         padding: 1.5rem 1rem;
     }
@@ -192,97 +228,129 @@
     }
 }
 </style>
-<div class="container py-4">
-  <div class="d-flex justify-content-between align-items-center mb-3">
-    <h1 class="h3">Nouvelle entrée</h1>
-    <a href="{{ route('journal.index') }}" class="btn btn-outline-secondary">Retour</a>
-  </div>
-
-  <form id="journalForm" action="{{ route('journal.store') }}" method="POST" class="card card-soft p-3" style="position:relative;">
-    @csrf
-    <div class="row g-3">
-      <div class="col-12 col-md-8">
-        <label class="form-label">Titre</label>
-        <input type="text" name="title" class="form-control" required value="{{ old('title') }}">
-      </div>
-
-      <div class="col-12 col-md-4">
-        <label class="form-label">Catégorie</label>
-        <select name="category" class="form-select" required>
-          @foreach($categories as $key => $label)
-            <option value="{{ $key }}" @selected(old('category')===$key)>{{ $label }}</option>
-          @endforeach
-        </select>
-      </div>
-
-      <div class="col-12 col-md-4">
-        <label class="form-label">Date</label>
-        <input type="date" name="occurred_at" class="form-control" required value="{{ old('occurred_at', now()->format('Y-m-d')) }}">
-      </div>
-
-      <div class="col-12">
-        <label class="form-label">Description</label>
-        <textarea name="description" rows="6" class="form-control" placeholder="Détails...">{{ old('description') }}</textarea>
-      </div>
-
-      <div class="col-12">
-        <label class="form-label">Images</label>
-        <div class="photo-upload-container">
-          <div class="photo-upload-area" id="journalUploadArea" role="button" tabindex="0" aria-label="Zone de téléversement d'images - Cliquez ou glissez-déposez vos images ici">
-            <div class="photo-upload-content">
-              <button type="button" class="upload-button" id="journalUploadButton">
-                Sélectionner des images
-              </button>
-              <div class="upload-text">
-                <p class="upload-title">Ou déposez vos images ici</p>
-              </div>
-              <div class="upload-formats">
-                <small class="text-muted">JPG, PNG, WEBP • Max 4MB par image</small>
-              </div>
+<div class="container-fluid px-4 py-4">
+    <!-- AppBar Nouvelle Entrée -->
+    <div class="appbar journal-appbar">
+        <div class="appbar-content">
+            <div class="appbar-left">
+                <a href="{{ route('journal.index') }}" class="appbar-back-btn">
+                    <i class="bi bi-arrow-left"></i>
+                </a>
+                <div class="appbar-title-section">
+                    <h1 class="appbar-title">Nouvelle Entrée</h1>
+                </div>
             </div>
-          </div>
-          <input id="imagesInput" type="file" accept="image/*" multiple class="form-control d-none" aria-label="Sélectionner des images">
         </div>
+    </div>
+
+    <form id="journalForm" action="{{ route('journal.store') }}" method="POST" style="position:relative;">
+        @csrf
         
-        <!-- Zone d'affichage des images sélectionnées -->
-        <div id="selectedImagesContainer" class="mt-3" style="display: none;">
-          <h6 class="mb-2">Images sélectionnées :</h6>
-          <div id="selectedImagesGrid" class="row g-2">
-            <!-- Les images sélectionnées seront affichées ici -->
-          </div>
-        </div>
-        
-        <div class="form-text">
-          Les fichiers sont envoyés vers Firebase Storage ; seules les URLs sont stockées en base.
+        <!-- Section Informations de Base -->
+        <div class="form-section">
+            <h2 class="section-title">Informations de Base</h2>
+            <p class="section-subtitle">Détails principaux de l'entrée du journal</p>
+            
+            <div class="row g-3">
+                <div class="col-12 col-md-8">
+                    <label class="form-label">Titre</label>
+                    <input type="text" name="title" class="form-control" required value="{{ old('title') }}" placeholder="Ex: Célébration de Pâques, Réunion du conseil...">
+                </div>
+                <div class="col-12 col-md-4">
+                    <label class="form-label">Catégorie</label>
+                    <select name="category" class="form-select" required>
+                        @foreach($categories as $key => $label)
+                            <option value="{{ $key }}" @selected(old('category')===$key)>{{ $label }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-12 col-md-4">
+                    <label class="form-label">Date</label>
+                    <input type="date" name="occurred_at" class="form-control" required value="{{ old('occurred_at', now()->format('Y-m-d')) }}">
+                </div>
+            </div>
         </div>
 
-        <div id="uploadProgress" class="small text-muted mt-2"></div>
-        <div class="progress mt-2 d-none" id="uploadBarWrap" style="height: 12px; border-radius: 15px; background-color: #ffffff; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);">
-          <div class="progress-bar" id="uploadBar" style="width: 0%; border-radius: 15px; background: linear-gradient(90deg, #28a745, #20c997); transition: width 0.2s ease; box-shadow: 0 2px 4px rgba(40,167,69,0.3);"></div>
+        <!-- Section Description -->
+        <div class="form-section">
+            <h2 class="section-title">Description</h2>
+            <p class="section-subtitle">Détails sur l'événement ou l'activité</p>
+            
+            <div class="row g-3">
+                <div class="col-12">
+                    <label class="form-label">Description</label>
+                    <textarea name="description" rows="6" class="form-control" placeholder="Décrivez l'événement, les participants, les moments importants...">{{ old('description') }}</textarea>
+                </div>
+            </div>
         </div>
-        <div class="d-flex justify-content-between align-items-center mt-1 d-none" id="uploadInfo">
-          <small class="text-muted">
-            <i class="fas fa-cloud-upload-alt me-1"></i>
-            <span id="uploadStatus">Préparation...</span>
-          </small>
-          <small class="text-success fw-bold" id="uploadPercent">0%</small>
+
+        <!-- Section Images -->
+        <div class="form-section">
+            <h2 class="section-title">Images</h2>
+            <p class="section-subtitle">Ajoutez des photos pour illustrer cette entrée</p>
+            
+            <div class="row g-3">
+                <div class="col-12">
+                    <label class="form-label">Images</label>
+                    <div class="photo-upload-container">
+                        <div class="photo-upload-area" id="journalUploadArea" role="button" tabindex="0" aria-label="Zone de téléversement d'images - Cliquez ou glissez-déposez vos images ici">
+                            <div class="photo-upload-content">
+                                <button type="button" class="upload-button" id="journalUploadButton">
+                                    <i class="bi bi-cloud-upload me-2"></i>Sélectionner des images
+                                </button>
+                                <div class="upload-text">
+                                    <p class="upload-title">Ou déposez vos images ici</p>
+                                </div>
+                                <div class="upload-formats">
+                                    <small class="text-muted">JPG, PNG, WEBP • Max 4MB par image</small>
+                                </div>
+                            </div>
+                        </div>
+                        <input id="imagesInput" type="file" accept="image/*" multiple class="form-control d-none" aria-label="Sélectionner des images">
+                    </div>
+                    
+                    <!-- Zone d'affichage des images sélectionnées -->
+                    <div id="selectedImagesContainer" class="mt-3" style="display: none;">
+                        <h6 class="mb-2">Images sélectionnées :</h6>
+                        <div id="selectedImagesGrid" class="row g-2">
+                            <!-- Les images sélectionnées seront affichées ici -->
+                        </div>
+                    </div>
+                    
+                    <div class="form-text">
+                        Les fichiers sont envoyés vers Firebase Storage ; seules les URLs sont stockées en base.
+                    </div>
+
+                    <div id="uploadProgress" class="small text-muted mt-2"></div>
+                    <div class="progress mt-2 d-none" id="uploadBarWrap" style="height: 12px; border-radius: 15px; background-color: #ffffff; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);">
+                        <div class="progress-bar" id="uploadBar" style="width: 0%; border-radius: 15px; background: linear-gradient(90deg, #28a745, #20c997); transition: width 0.2s ease; box-shadow: 0 2px 4px rgba(40,167,69,0.3);"></div>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mt-1 d-none" id="uploadInfo">
+                        <small class="text-muted">
+                            <i class="bi bi-cloud-upload me-1"></i>
+                            <span id="uploadStatus">Préparation...</span>
+                        </small>
+                        <small class="text-success fw-bold" id="uploadPercent">0%</small>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
 
-    <div class="mt-3 d-flex gap-2">
-      <button class="btn btn" id="submitBtn">Enregistrer</button>
-      <a class="btn btn-outline-secondary" href="{{ route('journal.index') }}">Annuler</a>
-    </div>
+        <!-- Boutons d'action -->
+        <div class="d-flex gap-3 justify-content-end mt-4">
+            <button class="btn btn-primary" id="submitBtn">
+                <i class="bi bi-check-lg me-2" style="color: #000000;"></i>Enregistrer l'Entrée
+            </button>
+        </div>
 
-    <!-- Overlay loader -->
-    <div id="uploadOverlay" class="d-none" style="position:absolute; inset:0; background:rgba(255,255,255,.7); display:flex; align-items:center; justify-content:center; border-radius:12px;">
-      <div class="text-center">
-        <div class="spinner-border text-custom" role="status" aria-hidden="true"></div>
-        <div class="mt-2 small text-muted">Téléversement en cours...</div>
-      </div>
-    </div>
-  </form>
+        <!-- Overlay loader -->
+        <div id="uploadOverlay" class="d-none" style="position:absolute; inset:0; background:rgba(255,255,255,.7); display:flex; align-items:center; justify-content:center; border-radius:12px;">
+            <div class="text-center">
+                <div class="spinner-border text-custom" role="status" aria-hidden="true"></div>
+                <div class="mt-2 small text-muted">Téléversement en cours...</div>
+            </div>
+        </div>
+    </form>
 </div>
 @endsection
 

@@ -1,28 +1,299 @@
 @extends('layouts.app')
 
 @section('content')
+<style>
+/* Styles simples et doux pour les lignes de membres */
+.members-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.member-row {
+    background: #ffffff;
+    border: 1px solid #f1f5f9;
+    border-radius: 12px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    gap: 1.5rem;
+    min-height: 80px;
+}
+
+.member-row-separated {
+    margin-top: 0.5rem;
+    padding-top: 1.5rem;
+}
+
+.member-row:hover {
+    background: #fafbfc;
+    border-color: #e2e8f0;
+}
+
+.member-avatar-container {
+    position: relative;
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
+    order: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.member-photo {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    width: 48px;
+    height: 48px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid #ffffff;
+}
+
+
+.member-avatar-fallback {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 0;
+    display: none !important;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: #f1f5f9;
+    color: #64748b;
+    font-weight: 600;
+    font-size: 16px;
+    border: 2px solid #ffffff;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.member-photo[style*="display: none"] + .member-avatar-fallback {
+    display: flex !important;
+}
+
+.member-info {
+    flex: 1;
+    min-width: 0;
+    order: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    justify-content: center;
+}
+
+.member-name {
+    font-size: 16px;
+    font-weight: 700;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    color: #1e293b;
+    margin: 0;
+    line-height: 1.3;
+}
+
+
+.member-phone {
+    font-size: 14px;
+    color: #64748b;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+
+.member-actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    flex-shrink: 0;
+    order: 3;
+    min-height: 40px;
+}
+
+.member-actions .btn {
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 8px 16px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 120px;
+    background-color: #ffffff !important;
+    border: 1px solid #e2e8f0;
+    color: #000000 !important;
+}
+
+.member-actions .btn i {
+    color: #000000 !important;
+}
+
+
+
+
+.member-actions .btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff !important;
+    border-color: #cbd5e1;
+    color: #000000 !important;
+}
+
+.member-actions .btn:hover i {
+    color: #000000 !important;
+}
+
+/* Styles pour le champ de recherche arrondi */
+.search-group {
+    border-radius: 25px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.search-icon {
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-right: none;
+    border-radius: 25px 0 0 25px;
+    color: #64748b;
+}
+
+.search-input {
+    border: 1px solid #e2e8f0;
+    border-left: none;
+    border-right: none;
+    background-color: #ffffff;
+    border-radius: 0;
+    padding: 12px 16px;
+    font-size: 14px;
+}
+
+.search-input:focus {
+    border-color: #e2e8f0;
+    box-shadow: none;
+    background-color: #ffffff;
+}
+
+.search-btn {
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-left: none;
+    border-radius: 0 25px 25px 0;
+    color: #64748b;
+    font-weight: 600;
+    padding: 12px 20px;
+}
+
+.search-btn:hover {
+    background-color: #f1f5f9;
+    border-color: #cbd5e1;
+    color: #475569;
+}
+
+.member-row-body {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    cursor: pointer;
+    flex: 1;
+    transition: background-color 0.2s ease;
+    min-height: 32px;
+}
+
+.member-row-body:hover {
+    background: transparent;
+}
+
+/* Animation pour les lignes vides */
+.member-row-empty {
+    text-align: center;
+    padding: 40px 20px;
+    color: #94a3b8;
+    font-size: 16px;
+    background: #fafbfc;
+    border: 1px dashed #e2e8f0;
+    border-radius: 12px;
+}
+
+.member-row-empty i {
+    font-size: 32px;
+    margin-bottom: 12px;
+    opacity: 0.6;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .member-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.75rem;
+        padding: 1rem;
+    }
+    
+    .member-row-body {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 0.75rem;
+    }
+    
+    .member-avatar-container {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .member-photo,
+    .member-avatar-fallback {
+        width: 40px;
+        height: 40px;
+        font-size: 14px;
+    }
+    
+    .member-name {
+        font-size: 15px;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-weight: 700;
+    }
+    
+    .member-actions {
+        flex-direction: row;
+        gap: 6px;
+    }
+    
+    .member-actions .btn {
+        width: 28px;
+        height: 28px;
+        font-size: 12px;
+    }
+}
+</style>
 <div class="container py-4">
     <!-- AppBar Membres -->
     <div class="appbar members-appbar">
         <div class="appbar-content">
             <div class="appbar-left">
-                <div class="appbar-icon">
-                    <i class="bi bi-people"></i>
-                </div>
+                <a href="{{ url('/') }}" class="appbar-back-btn">
+                    <i class="bi bi-arrow-left"></i>
+                </a>
                 <div class="appbar-title-section">
                     <h1 class="appbar-title">Membres</h1>
-                    <div class="appbar-subtitle">
-                        <i class="bi bi-person-check appbar-subtitle-icon"></i>
-                        <span class="appbar-subtitle-text">Gérez les membres de votre église</span>
-                    </div>
                 </div>
             </div>
             <div class="appbar-right">
-                <button onclick="generateAndCopyLink()" class="btn-add me-2">
+                <button onclick="generateAndCopyLink()" class="appbar-btn-white me-2">
                     <i class="bi bi-share"></i>
                     <span class="btn-text">Partager le lien</span>
                 </button>
-                <a href="{{ route('members.create') }}" class="btn-add">
+                <a href="{{ route('members.create') }}" class="appbar-btn-yellow">
                     <i class="bi bi-person-plus"></i>
                     <span class="btn-text">Nouveau membre</span>
                 </a>
@@ -39,141 +310,109 @@
     <div class="row g-3 mb-3">
         <div class="col-6 col-lg-3">
             <div class="kpi-card accent-info p-3">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <div class="kpi-label">TOTAL</div>
-                        <div class="kpi-value">{{ $stats['total'] ?? 0 }}</div>
-                    </div>
-                    <div class="kpi-icon"><i class="bi bi-people"></i></div>
+                <div class="d-flex flex-column align-items-center text-center">
+                    <div class="kpi-value mb-2">{{ $stats['total'] ?? 0 }}</div>
+                    <div class="kpi-label">TOTAL</div>
+                    <div class="kpi-icon mt-2"><i class="bi bi-people"></i></div>
                 </div>
             </div>
         </div>
         <div class="col-6 col-lg-3">
             <div class="kpi-card accent-success p-3">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <div class="kpi-label">ACTIFS</div>
-                        <div class="kpi-value">{{ $stats['active'] ?? 0 }}</div>
-                    </div>
-                    <div class="kpi-icon"><i class="bi bi-check2-circle"></i></div>
+                <div class="d-flex flex-column align-items-center text-center">
+                    <div class="kpi-value mb-2">{{ $stats['active'] ?? 0 }}</div>
+                    <div class="kpi-label">ACTIFS</div>
+                    <div class="kpi-icon mt-2"><i class="bi bi-check2-circle"></i></div>
                 </div>
             </div>
         </div>
         <div class="col-6 col-lg-3">
             <div class="kpi-card accent-warning p-3">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <div class="kpi-label">INACTIFS</div>
-                        <div class="kpi-value">{{ $stats['inactive'] ?? 0 }}</div>
-                    </div>
-                    <div class="kpi-icon"><i class="bi bi-slash-circle"></i></div>
+                <div class="d-flex flex-column align-items-center text-center">
+                    <div class="kpi-value mb-2">{{ $stats['inactive'] ?? 0 }}</div>
+                    <div class="kpi-label">INACTIFS</div>
+                    <div class="kpi-icon mt-2"><i class="bi bi-slash-circle"></i></div>
                 </div>
             </div>
         </div>
         <div class="col-6 col-lg-3">
             <div class="kpi-card accent-purple p-3">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <div class="kpi-label">ENFANTS (<18)</div>
-                        <div class="kpi-value">{{ $stats['children'] ?? 0 }}</div>
-                    </div>
-                    <div class="kpi-icon"><i class="bi bi-emoji-smile"></i></div>
+                <div class="d-flex flex-column align-items-center text-center">
+                    <div class="kpi-value mb-2">{{ $stats['children'] ?? 0 }}</div>
+                    <div class="kpi-label">ENFANTS (<18)</div>
+                    <div class="kpi-icon mt-2"><i class="bi bi-emoji-smile"></i></div>
                 </div>
             </div>
         </div>
         <div class="col-6 col-lg-3">
             <div class="kpi-card p-3">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <div class="kpi-label">HOMMES</div>
-                        <div class="kpi-value">{{ $stats['male'] ?? 0 }}</div>
-                    </div>
-                    <div class="kpi-icon"><i class="bi bi-gender-male"></i></div>
+                <div class="d-flex flex-column align-items-center text-center">
+                    <div class="kpi-value mb-2">{{ $stats['male'] ?? 0 }}</div>
+                    <div class="kpi-label">HOMMES</div>
+                    <div class="kpi-icon mt-2"><i class="bi bi-gender-male"></i></div>
                 </div>
             </div>
         </div>
         <div class="col-6 col-lg-3">
             <div class="kpi-card p-3">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <div class="kpi-label">FEMMES</div>
-                        <div class="kpi-value">{{ $stats['female'] ?? 0 }}</div>
-                    </div>
-                    <div class="kpi-icon"><i class="bi bi-gender-female"></i></div>
+                <div class="d-flex flex-column align-items-center text-center">
+                    <div class="kpi-value mb-2">{{ $stats['female'] ?? 0 }}</div>
+                    <div class="kpi-label">FEMMES</div>
+                    <div class="kpi-icon mt-2"><i class="bi bi-gender-female"></i></div>
                 </div>
             </div>
         </div>
         <div class="col-6 col-lg-3">
             <div class="kpi-card p-3">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <div class="kpi-label">AUTRES</div>
-                        <div class="kpi-value">{{ $stats['other'] ?? 0 }}</div>
-                    </div>
-                    <div class="kpi-icon"><i class="bi bi-gender-ambiguous"></i></div>
+                <div class="d-flex flex-column align-items-center text-center">
+                    <div class="kpi-value mb-2">{{ $stats['other'] ?? 0 }}</div>
+                    <div class="kpi-label">AUTRES</div>
+                    <div class="kpi-icon mt-2"><i class="bi bi-gender-ambiguous"></i></div>
                 </div>
             </div>
         </div>
     </div>
 
     <form method="GET" class="mb-3">
-        <div class="input-group">
-            <span class="input-group-text"><i class="bi bi-search"></i></span>
-            <input type="text" class="form-control" placeholder="Rechercher un membre (nom, email, téléphone)" name="q" value="{{ $search ?? '' }}">
-            @if(!empty($search))
-            <a class="btn btn-outline-secondary" href="{{ route('members.index') }}">Effacer</a>
-            @endif
-            <button class="btn btn" type="submit">Rechercher</button>
+        <div class="input-group search-group">
+            <span class="input-group-text search-icon"><i class="bi bi-search"></i></span>
+            <input type="text" class="form-control search-input" placeholder="Rechercher un membre (nom, email, téléphone)" name="q" value="{{ $search ?? '' }}">
+            <button class="btn btn search-btn" type="submit">Rechercher</button>
         </div>
     </form>
 
-    <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-3">
-        @forelse($members as $member)
-            <div class="col">
-                <div class="card card-soft h-100 position-relative">
-                    <div class="card-body d-flex gap-3 card-link" data-href="{{ route('members.show', $member) }}" style="cursor: pointer;">
-                        <div class="flex-shrink-0">
-                            @if($member->photo_url || $member->profile_photo)
-                                @php
-                                    $photoUrl = $member->photo_url ?: asset('storage/' . $member->profile_photo);
-                                @endphp
-                                <img src="{{ $photoUrl }}" 
-                                     alt="Photo de {{ $member->first_name }} {{ $member->last_name }}" 
-                                     class="rounded-circle" 
-                                     style="width:48px;height:48px;object-fit:cover;border:2px solid #E0F2FE;"
-                                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                                @php $initials = strtoupper(mb_substr($member->first_name ?? '',0,1).mb_substr($member->last_name ?? '',0,1)); @endphp
-                                <div class="rounded-circle d-flex align-items-center justify-content-center" style="width:48px;height:48px;background:#E0F2FE;color:#0EA5E9;font-weight:700;display:none;">{{ $initials }}</div>
-                            @else
-                                @php $initials = strtoupper(mb_substr($member->first_name ?? '',0,1).mb_substr($member->last_name ?? '',0,1)); @endphp
-                                <div class="rounded-circle d-flex align-items-center justify-content-center" style="width:48px;height:48px;background:#E0F2FE;color:#0EA5E9;font-weight:700;">{{ $initials }}</div>
-                            @endif
-                        </div>
-                        <div class="flex-grow-1">
-                            <div class="d-flex justify-content-between align-items-start">
-                                <div>
-                                    <div class="fw-semibold text-dark">{{ $member->last_name }} {{ $member->first_name }}</div>
-                                    <div class="small text-muted">{{ $member->email ?: '—' }}</div>
-                                </div>
-                                <span class="badge bg-{{ $member->status === 'active' ? 'success' : 'secondary' }}">{{ $member->status }}</span>
-                            </div>
-                            <div class="mt-2 small text-muted"><i class="bi bi-telephone me-1"></i>{{ $member->phone ?: '—' }}</div>
-                            
+    <div class="members-list">
+        @forelse($members as $index => $member)
+            <div class="member-row {{ $index > 0 ? 'member-row-separated' : '' }}">
+                <div class="member-row-body card-link" data-href="{{ route('members.show', $member) }}">
+                    <div class="member-avatar-container">
+                        @php $initials = strtoupper(mb_substr($member->first_name ?? '',0,1).mb_substr($member->last_name ?? '',0,1)); @endphp
+                        
+                        @if($member->photo_url || $member->profile_photo)
+                            @php
+                                $photoUrl = $member->photo_url ?: asset('storage/' . $member->profile_photo);
+                            @endphp
+                            <img src="{{ $photoUrl }}" 
+                                 alt="Photo de {{ $member->first_name }} {{ $member->last_name }}" 
+                                 class="member-photo" 
+                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="member-avatar-fallback d-flex align-items-center justify-content-center">{{ $initials }}</div>
+                        @else
+                            <div class="member-avatar-fallback d-flex align-items-center justify-content-center" style="display: flex !important;">{{ $initials }}</div>
+                        @endif
+                    </div>
+                    <div class="member-info">
+                        <div class="member-name">{{ $member->last_name }} {{ $member->first_name }}</div>
+                        <div class="member-phone">
+                            <i class="bi bi-telephone"></i>
+                            <span>{{ $member->phone ?: '—' }}</span>
                         </div>
                     </div>
-                    <div class="card-footer d-flex justify-content-between gap-2">
-                        <div class="btn-group">
-                            <a class="btn btn-sm btn-outline-secondary" href="{{ route('members.edit', $member) }}">Modifier</a>
-                            <button class="btn btn-sm btn" data-bs-toggle="modal" data-bs-target="#addTitheModal-{{ $member->id }}">
-                                <i class="bi bi-cash-coin me-1"></i>Ajouter dîme
-                            </button>
-                        </div>
-                        <form action="{{ route('members.destroy', $member) }}" method="POST" data-confirm="Supprimer ce membre ?" data-confirm-ok="Supprimer">
-                            @csrf
-                            @method('DELETE')
-                            <button class="btn btn-sm btn-outline-danger">Supprimer</button>
-                        </form>
-                    </div>
+                </div>
+                <div class="member-actions">
+                    <button class="btn btn-light" data-bs-toggle="modal" data-bs-target="#addTitheModal-{{ $member->id }}" title="Ajouter une dîme">
+                        <i class="bi bi-cash-coin me-2"></i>Ajouter dîme
+                    </button>
                 </div>
             </div>
 
@@ -222,7 +461,11 @@
                 </div>
             </div>
         @empty
-            <div class="col-12"><div class="text-center text-muted py-5">Aucun membre</div></div>
+            <div class="member-row-empty">
+                <i class="bi bi-people"></i>
+                <div>Aucun membre trouvé</div>
+                <small class="text-muted mt-2">Commencez par ajouter votre premier membre</small>
+            </div>
         @endforelse
     </div>
 
@@ -375,5 +618,4 @@ function showSuccessMessage(link) {
     }, 10000);
 }
 </script>
-
 

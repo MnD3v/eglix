@@ -1,94 +1,194 @@
 @extends('layouts.app')
-
 @section('content')
-<div class="container-fluid">
-    <!-- En-tête de page -->
-    <div class="page-header">
-        <div class="d-flex justify-content-between align-items-center">
-            <div>
-                <h1 class="page-title">
-                    <i class="bi bi-person-plus-fill me-3"></i>
-                    Nouvel Utilisateur
-                </h1>
-                <p class="page-subtitle">
-                    <i class="bi bi-shield-check me-2"></i>
-                    Créez un compte utilisateur avec des permissions spécifiques
-                </p>
+<style>
+/* Styles pour les champs de formulaire arrondis */
+.form-control, .form-select, .form-label {
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #FFCC00;
+    box-shadow: 0 0 0 0.2rem rgba(255, 204, 0, 0.25);
+}
+
+.form-label {
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Styles pour les sections du formulaire */
+.form-section {
+    background: #ffffff;
+    border: 1px solid #f1f5f9;
+    border-radius: 16px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.section-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid #f1f5f9;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.section-subtitle {
+    font-size: 0.875rem;
+    color: #64748b;
+    margin-bottom: 1.5rem;
+}
+
+/* Styles pour les boutons */
+.btn {
+    border-radius: 12px;
+    font-weight: 600;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    padding: 12px 24px;
+    transition: all 0.3s ease;
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Styles pour les checkboxes */
+.form-check-input {
+    border-radius: 6px;
+    border: 2px solid #e2e8f0;
+}
+
+.form-check-input:checked {
+    background-color: #FFCC00;
+    border-color: #FFCC00;
+}
+
+.form-check-label {
+    font-weight: 500;
+    color: #1e293b;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+/* Styles pour les permissions */
+.permissions-section {
+    background: #f8fafc;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-top: 1rem;
+}
+
+.permissions-list .form-check {
+    padding: 0.75rem;
+    background: white;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    transition: all 0.3s ease;
+}
+
+.permissions-list .form-check:hover {
+    border-color: #FFCC00;
+    box-shadow: 0 2px 8px rgba(255, 204, 0, 0.15);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .form-section {
+        padding: 1.5rem;
+    }
+}
+</style>
+<div class="container-fluid px-4 py-4">
+    <!-- AppBar Nouvel Utilisateur -->
+    <div class="appbar accounts-appbar">
+        <div class="appbar-content">
+            <div class="appbar-left">
+                <a href="{{ route('user-management.index') }}" class="appbar-back-btn">
+                    <i class="bi bi-arrow-left"></i>
+                </a>
+                <div class="appbar-title-section">
+                    <h1 class="appbar-title">Nouvel Utilisateur</h1>
+                </div>
             </div>
-            <a href="{{ route('user-management.index') }}" class="btn btn-outline-secondary">
-                <i class="bi bi-arrow-left me-2"></i>
-                Retour
-            </a>
         </div>
     </div>
 
     <div class="row justify-content-center">
         <div class="col-lg-8">
-            <div class="card">
-                <div class="card-body p-4">
-                    <form method="POST" action="{{ route('user-management.store') }}" autocomplete="off">
-                        @csrf
-                        
-                        <!-- Champ caché pour empêcher l'auto-complétion -->
-                        <input type="text" style="display:none" name="fake_username" autocomplete="username">
-                        <input type="password" style="display:none" name="fake_password" autocomplete="current-password">
-                        
-                        <!-- Informations personnelles -->
-                        <div class="section-header mb-4">
-                            <h5 class="section-title">
-                                <i class="bi bi-person me-2"></i>
-                                Informations Personnelles
-                            </h5>
+            <form method="POST" action="{{ route('user-management.store') }}" autocomplete="off">
+                @csrf
+                
+                <!-- Champ caché pour empêcher l'auto-complétion -->
+                <input type="text" style="display:none" name="fake_username" autocomplete="username">
+                <input type="password" style="display:none" name="fake_password" autocomplete="current-password">
+                
+                <!-- Section Informations Personnelles -->
+                <div class="form-section">
+                    <h2 class="section-title">Informations Personnelles</h2>
+                    <p class="section-subtitle">Détails de base sur le nouvel utilisateur</p>
+                    
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="name" class="form-label">Nom Complet</label>
+                            <input type="text" class="form-control @error('name') is-invalid @enderror" 
+                                   id="name" name="name" value="{{ old('name') }}" required placeholder="Ex: Jean Dupont">
+                            @error('name')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
-
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="name" class="form-label">Nom complet <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control @error('name') is-invalid @enderror" 
-                                       id="name" name="name" value="{{ old('name') }}" required>
-                                @error('name')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="email" class="form-label">Adresse email <span class="text-danger">*</span></label>
-                                <input type="email" class="form-control @error('email') is-invalid @enderror" 
-                                       id="email" name="email" value="{{ old('email') }}" 
-                                       autocomplete="new-email" required>
-                                @error('email')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
+                        <div class="col-md-6">
+                            <label for="email" class="form-label">Adresse Email</label>
+                            <input type="email" class="form-control @error('email') is-invalid @enderror" 
+                                   id="email" name="email" value="{{ old('email') }}" 
+                                   autocomplete="new-email" required placeholder="Ex: jean.dupont@eglise.com">
+                            @error('email')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
+                    </div>
+                </div>
 
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="password" class="form-label">Mot de passe <span class="text-danger">*</span></label>
-                                <input type="password" class="form-control @error('password') is-invalid @enderror" 
-                                       id="password" name="password" autocomplete="new-password" required>
-                                @error('password')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                                <div class="form-text">Minimum 6 caractères</div>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="password_confirmation" class="form-label">Confirmer le mot de passe <span class="text-danger">*</span></label>
-                                <input type="password" class="form-control" 
-                                       id="password_confirmation" name="password_confirmation" 
-                                       autocomplete="new-password" required>
-                            </div>
+                <!-- Section Mot de Passe -->
+                <div class="form-section">
+                    <h2 class="section-title">Mot de Passe</h2>
+                    <p class="section-subtitle">Définissez un mot de passe sécurisé</p>
+                    
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="password" class="form-label">Mot de Passe</label>
+                            <input type="password" class="form-control @error('password') is-invalid @enderror" 
+                                   id="password" name="password" autocomplete="new-password" required placeholder="Minimum 6 caractères">
+                            @error('password')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                            <div class="form-text">Minimum 6 caractères</div>
                         </div>
-
-                        <!-- Rôle et permissions -->
-                        <div class="section-header mb-4 mt-5">
-                            <h5 class="section-title">
-                                <i class="bi bi-shield-check me-2"></i>
-                                Rôle et Permissions
-                            </h5>
+                        <div class="col-md-6">
+                            <label for="password_confirmation" class="form-label">Confirmer le Mot de Passe</label>
+                            <input type="password" class="form-control" 
+                                   id="password_confirmation" name="password_confirmation" 
+                                   autocomplete="new-password" required placeholder="Répétez le mot de passe">
                         </div>
+                    </div>
+                </div>
 
-                        <div class="mb-4">
-                            <label for="role_name" class="form-label">Rôle <span class="text-danger">*</span></label>
+                <!-- Section Rôle -->
+                <div class="form-section">
+                    <h2 class="section-title">Rôle</h2>
+                    <p class="section-subtitle">Définissez le rôle de l'utilisateur dans l'église</p>
+                    
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <label for="role_name" class="form-label">Rôle</label>
                             <input type="text" class="form-control @error('role_name') is-invalid @enderror" 
                                    id="role_name" name="role_name" value="{{ old('role_name') }}" 
                                    placeholder="Ex: Secrétaire, Trésorier, Pasteur..." required>
@@ -97,203 +197,87 @@
                             @enderror
                             <div class="form-text">Nom du rôle de l'utilisateur dans l'église</div>
                         </div>
+                    </div>
+                </div>
 
-                        <!-- Permissions détaillées -->
-                        <div class="permissions-section">
-                            <h6 class="mb-3">Sélectionnez les permissions à accorder :</h6>
-                            <div class="permissions-list">
-                                @php
-                                    $permissions = [
-                                        'members' => ['label' => 'Membres', 'icon' => 'people'],
-                                        'tithes' => ['label' => 'Dîmes', 'icon' => 'wallet2'],
-                                        'offerings' => ['label' => 'Offrandes', 'icon' => 'heart-fill'],
-                                        'donations' => ['label' => 'Dons', 'icon' => 'gift-fill'],
-                                        'expenses' => ['label' => 'Dépenses', 'icon' => 'receipt-cutoff'],
-                                        'reports' => ['label' => 'Rapports', 'icon' => 'graph-up'],
-                                        'services' => ['label' => 'Cultes', 'icon' => 'calendar-event'],
-                                        'journal' => ['label' => 'Journal', 'icon' => 'journal-text'],
-                                        'administration' => ['label' => 'Administration', 'icon' => 'gear']
-                                    ];
-                                @endphp
+                <!-- Section Permissions -->
+                <div class="form-section">
+                    <h2 class="section-title">Permissions</h2>
+                    <p class="section-subtitle">Sélectionnez les permissions à accorder à cet utilisateur</p>
+                    
+                    <div class="permissions-section">
+                        <div class="permissions-list">
+                            @php
+                                $permissions = [
+                                    'members' => ['label' => 'Membres', 'icon' => 'people'],
+                                    'tithes' => ['label' => 'Dîmes', 'icon' => 'wallet2'],
+                                    'offerings' => ['label' => 'Offrandes', 'icon' => 'heart-fill'],
+                                    'donations' => ['label' => 'Dons', 'icon' => 'gift-fill'],
+                                    'expenses' => ['label' => 'Dépenses', 'icon' => 'receipt-cutoff'],
+                                    'reports' => ['label' => 'Rapports', 'icon' => 'graph-up'],
+                                    'services' => ['label' => 'Cultes', 'icon' => 'calendar-event'],
+                                    'journal' => ['label' => 'Journal', 'icon' => 'journal-text'],
+                                    'administration' => ['label' => 'Administration', 'icon' => 'gear']
+                                ];
+                            @endphp
 
-                                <div class="row">
-                                    @foreach($permissions as $permission => $data)
-                                    <div class="col-md-6 col-lg-4 mb-3">
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" 
-                                                   name="permissions[]" value="{{ $permission }}" 
-                                                   id="perm_{{ $permission }}"
-                                                   {{ in_array($permission, old('permissions', [])) ? 'checked' : '' }}>
-                                            <label class="form-check-label" for="perm_{{ $permission }}">
-                                                <i class="bi bi-{{ $data['icon'] }} me-2"></i>
-                                                {{ $data['label'] }}
-                                            </label>
-                                        </div>
+                            <div class="row">
+                                @foreach($permissions as $permission => $data)
+                                <div class="col-md-6 col-lg-4 mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" 
+                                               name="permissions[]" value="{{ $permission }}" 
+                                               id="perm_{{ $permission }}"
+                                               {{ in_array($permission, old('permissions', [])) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="perm_{{ $permission }}">
+                                            <i class="bi bi-{{ $data['icon'] }} me-2"></i>
+                                            {{ $data['label'] }}
+                                        </label>
                                     </div>
-                                    @endforeach
                                 </div>
+                                @endforeach
                             </div>
                         </div>
-
-                        <!-- Statut -->
-                        <div class="section-header mb-4 mt-5">
-                            <h5 class="section-title">
-                                <i class="bi bi-toggle-on me-2"></i>
-                                Statut du Compte
-                            </h5>
-                        </div>
-
-                        <div class="form-check form-switch mb-4">
-                            <input class="form-check-input" type="checkbox" id="is_active" name="is_active" checked>
-                            <label class="form-check-label" for="is_active">
-                                Compte actif (l'utilisateur peut se connecter)
-                            </label>
-                        </div>
-
-                        <!-- Boutons d'action -->
-                        <div class="d-flex gap-3 justify-content-end">
-                            <a href="{{ route('user-management.index') }}" class="btn btn-outline-secondary">
-                                <i class="bi bi-x-circle me-2"></i>
-                                Annuler
-                            </a>
-                            <button type="submit" class="btn" id="createUserBtn" style="background: #ff2600; color: white;">
-                                <span class="btn-text">
-                                    <i class="bi bi-check-circle me-2" style="color: white;"></i>
-                                    Créer l'utilisateur
-                                </span>
-                                <span class="btn-loader" style="display: none;">
-                                    <svg class="spinner" width="20" height="20" viewBox="0 0 24 24" style="color: white;">
-                                        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-dasharray="60" stroke-dashoffset="60">
-                                            <animate attributeName="stroke-dasharray" dur="1.5s" values="0 60;60 0" repeatCount="indefinite"/>
-                                            <animate attributeName="stroke-dashoffset" dur="1.5s" values="0;-60" repeatCount="indefinite"/>
-                                        </circle>
-                                    </svg>
-                                    Création en cours...
-                                </span>
-                            </button>
-                        </div>
-                    </form>
+                    </div>
                 </div>
-            </div>
+
+                <!-- Section Statut -->
+                <div class="form-section">
+                    <h2 class="section-title">Statut du Compte</h2>
+                    <p class="section-subtitle">Définissez l'état du compte utilisateur</p>
+                    
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="is_active" name="is_active" checked>
+                                <label class="form-check-label" for="is_active">
+                                    <i class="bi bi-check-circle me-2"></i>Compte actif (l'utilisateur peut se connecter)
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Boutons d'action -->
+                <div class="d-flex gap-3 justify-content-end mt-4">
+                    <button type="submit" class="btn btn-primary" id="createUserBtn">
+                        <i class="bi bi-check-lg me-2" style="color: #000000;"></i>Créer l'Utilisateur
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
 
-<style>
-.section-header {
-    border-bottom: 2px solid #e9ecef;
-    padding-bottom: 0.5rem;
-}
-
-.section-title {
-    color: #495057;
-    font-weight: 600;
-    margin: 0;
-}
-
-.permissions-section {
-    background: #f8f9fa;
-    border-radius: 10px;
-    padding: 1.5rem;
-    margin-top: 1rem;
-}
-
-.permissions-list {
-    background: #f8f9fa;
-    border-radius: 10px;
-    padding: 1.5rem;
-}
-
-.permissions-list .row {
-    margin: 0;
-}
-
-.permissions-list .col-md-6,
-.permissions-list .col-lg-4 {
-    padding: 0.25rem 0.5rem;
-}
-
-.form-check {
-    padding: 0.5rem;
-    background: white;
-    border-radius: 6px;
-    border: 1px solid #e9ecef;
-    transition: all 0.2s ease;
-}
-
-.form-check:hover {
-    border-color: #667eea;
-    box-shadow: 0 2px 4px rgba(102, 126, 234, 0.1);
-}
-
-.form-check-input:checked {
-    background-color: #667eea;
-    border-color: #667eea;
-}
-
-.form-check-label {
-    font-size: 0.9rem;
-    color: #495057;
-    cursor: pointer;
-    margin-left: 0.5rem;
-}
-
-.card {
-    border: none;
-    border-radius: 15px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.btn {
-    border-radius: 8px;
-    font-weight: 500;
-    padding: 0.75rem 1.5rem;
-}
-
-.btn-loader {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-}
-
-.spinner {
-    animation: spin 1.5s linear infinite;
-}
-
-@keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-}
-
-@media (max-width: 768px) {
-    .permissions-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .permission-group {
-        padding: 0.75rem;
-    }
-}
-</style>
-
 <script>
-// Sélection automatique des permissions basée sur le rôle
 document.addEventListener('DOMContentLoaded', function() {
-    const roleNameInput = document.getElementById('role_name');
-    if (roleNameInput) {
-        roleNameInput.addEventListener('input', function() {
-            const roleName = this.value.toLowerCase();
-            const checkboxes = document.querySelectorAll('input[name="permissions[]"]');
-            
-            // Si le rôle contient "admin" ou "administrateur", cocher toutes les permissions
-            if (roleName.includes('admin') || roleName.includes('administrateur')) {
-                checkboxes.forEach(checkbox => {
-                    checkbox.checked = true;
-                });
-            }
-        });
-    }
+    const form = document.getElementById('createUserBtn').closest('form');
+    const submitBtn = document.getElementById('createUserBtn');
+    
+    form.addEventListener('submit', function(e) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="bi bi-check-lg me-2" style="color: #000000;"></i>Création en cours...';
+    });
 });
 </script>
 @endsection

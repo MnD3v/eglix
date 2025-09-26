@@ -2,10 +2,11 @@
 
 @section('content')
 <style>
+
 .subscription-container {
     max-width: 800px;
     margin: 0 auto;
-    padding: 2rem;
+    padding: 0;
 }
 
 .subscription-card {
@@ -14,25 +15,6 @@
     padding: 2rem;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     border: 1px solid #e5e7eb;
-}
-
-.subscription-header {
-    text-align: center;
-    margin-bottom: 2rem;
-    padding-bottom: 1rem;
-    border-bottom: 2px solid #f3f4f6;
-}
-
-.subscription-title {
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: #1f2937;
-    margin-bottom: 0.5rem;
-}
-
-.subscription-subtitle {
-    color: #6b7280;
-    font-size: 1rem;
 }
 
 .subscription-info {
@@ -46,7 +28,13 @@
     background: #f9fafb;
     border-radius: 12px;
     padding: 1.5rem;
-    border-left: 4px solid #3b82f6;
+    border-left: 4px solid #FFCC00;
+    transition: all 0.2s ease;
+}
+
+.info-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 204, 0, 0.15);
 }
 
 .info-label {
@@ -76,16 +64,19 @@
 .status-active {
     background-color: #dcfce7;
     color: #166534;
+    border: 1px solid #bbf7d0;
 }
 
 .status-expired {
     background-color: #fef2f2;
     color: #dc2626;
+    border: 1px solid #fecaca;
 }
 
 .status-suspended {
     background-color: #fef3c7;
     color: #d97706;
+    border: 1px solid #fed7aa;
 }
 
 .subscription-details {
@@ -93,13 +84,31 @@
     border-radius: 12px;
     padding: 1.5rem;
     margin-top: 1rem;
+    border: 1px solid #e2e8f0;
+    transition: all 0.2s ease;
+}
+
+.subscription-details:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .details-title {
     font-size: 1.125rem;
-    font-weight: 600;
-    color: #374151;
+    font-weight: 700;
+    color: #1f2937;
     margin-bottom: 1rem;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.details-title::before {
+    content: '';
+    width: 4px;
+    height: 20px;
+    background: #FFCC00;
+    border-radius: 2px;
 }
 
 .details-grid {
@@ -111,23 +120,37 @@
 .detail-item {
     display: flex;
     flex-direction: column;
+    padding: 1rem;
+    background: #ffffff;
+    border-radius: 8px;
+    border: 1px solid #f1f5f9;
+    transition: all 0.2s ease;
+}
+
+.detail-item:hover {
+    border-color: #FFCC00;
+    box-shadow: 0 2px 8px rgba(255, 204, 0, 0.1);
 }
 
 .detail-label {
     font-size: 0.875rem;
     color: #6b7280;
     margin-bottom: 0.25rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
 }
 
 .detail-value {
     font-size: 1rem;
     color: #1f2937;
-    font-weight: 500;
+    font-weight: 600;
+    font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
 @media (max-width: 768px) {
     .subscription-container {
-        padding: 1rem;
+        padding: 0 1rem;
     }
     
     .subscription-card {
@@ -144,12 +167,36 @@
 }
 </style>
 
-<div class="subscription-container">
-    <div class="subscription-card">
-        <div class="subscription-header">
-            <h1 class="subscription-title">Abonnement en cours</h1>
-            <p class="subscription-subtitle">{{ $church->name }}</p>
+<div class="container py-4">
+    <!-- AppBar Abonnements -->
+    <div class="appbar subscriptions-appbar">
+        <div class="appbar-content">
+            <div class="appbar-left">
+                <a href="{{ url('/') }}" class="appbar-back-btn">
+                    <i class="bi bi-arrow-left"></i>
+                </a>
+                <div class="appbar-title-section">
+                    <h1 class="appbar-title">Abonnement</h1>
+                </div>
+            </div>
+            <div class="appbar-right">
+                @if($church->hasActiveSubscription())
+                    <a href="{{ route('subscription.renewal') }}" class="appbar-btn-yellow">
+                        <i class="bi bi-arrow-clockwise"></i>
+                        <span class="btn-text">Renouveler</span>
+                    </a>
+                @else
+                    <a href="{{ route('subscription.request') }}" class="appbar-btn-yellow">
+                        <i class="bi bi-plus-lg"></i>
+                        <span class="btn-text">Demander</span>
+                    </a>
+                @endif
+            </div>
         </div>
+    </div>
+
+    <div class="subscription-container">
+        <div class="subscription-card">
 
         <div class="subscription-info">
             <div class="info-item">
@@ -219,6 +266,7 @@
             <p class="text-gray-700">{{ $church->subscription_notes }}</p>
         </div>
         @endif
+        </div>
     </div>
 </div>
 @endsection

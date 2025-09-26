@@ -36,6 +36,12 @@ Route::get('/register', [AuthController::class, 'showRegister'])->name('register
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
+// Routes de récupération de mot de passe
+Route::get('/forgot-password', [AuthController::class, 'showForgotPassword'])->name('password.request');
+Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])->name('password.email');
+Route::get('/reset-password/{token}', [AuthController::class, 'showResetForm'])->name('password.reset');
+Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('password.update');
+
 // Routes de test Firebase (à supprimer en production)
 Route::get('/firebase-test', [App\Http\Controllers\FirebaseTestController::class, 'page'])->name('firebase.test');
 Route::get('/firebase-test/api', [App\Http\Controllers\FirebaseTestController::class, 'test'])->name('firebase.test.api');
@@ -293,6 +299,9 @@ Route::prefix('reports/advanced')->name('reports.advanced.')->group(function () 
 // Routes pour la gestion des documents
 Route::prefix('documents')->name('documents.')->group(function () {
     Route::get('/', [DocumentController::class, 'index'])->name('index');
+    Route::get('/all', [DocumentController::class, 'all'])->name('all');
+    Route::get('/images', [DocumentController::class, 'images'])->name('images');
+    Route::get('/pdfs', [DocumentController::class, 'pdfs'])->name('pdfs');
     Route::get('/create', [DocumentController::class, 'create'])->name('create');
     Route::post('/', [DocumentController::class, 'store'])->name('store');
     Route::get('/{document}', [DocumentController::class, 'show'])->name('show');

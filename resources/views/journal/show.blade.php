@@ -2,119 +2,123 @@
 
 @section('content')
 <style>
-/* Design moderne pour la page de détail du journal */
-.journal-header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    border-radius: 16px;
-    padding: 2rem;
-    margin: 0 0 2rem 0;
-    position: relative;
-    overflow: hidden;
-}
-
-.journal-header::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/><circle cx="10" cy="60" r="0.5" fill="white" opacity="0.1"/><circle cx="90" cy="40" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
-    opacity: 0.3;
-}
-
-.journal-header-content {
-    position: relative;
-    z-index: 2;
-}
-
-.journal-title {
-    font-size: 2.5rem;
-    font-weight: 700;
-    margin-bottom: 0.5rem;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-}
-
-.journal-meta {
+/* Design cohérent pour la page de détail du journal */
+.journal-detail-header {
+    background: #ffffff;
+    border: 1px solid #f1f5f9;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: 1.5rem;
-    margin-bottom: 1rem;
+}
+
+.journal-detail-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.journal-detail-title {
+    font-size: 24px;
+    font-weight: 700;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    color: #1e293b;
+    margin: 0 0 8px 0;
+    line-height: 1.3;
+}
+
+.journal-detail-meta {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
     flex-wrap: wrap;
 }
 
-.journal-date {
-    background: rgba(255,255,255,0.2);
-    padding: 0.5rem 1rem;
-    border-radius: 25px;
+.journal-detail-date {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    color: #000000;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 14px;
     font-weight: 500;
-    backdrop-filter: blur(10px);
 }
 
-.journal-category {
-    background: rgba(255,255,255,0.15);
-    padding: 0.5rem 1rem;
-    border-radius: 25px;
-    font-weight: 400;
-    backdrop-filter: blur(10px);
+.journal-detail-category {
+    background: #f1f5f9;
+    color: #64748b;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
 }
 
-.journal-actions {
-    position: absolute;
-    top: 1.5rem;
-    right: 1.5rem;
+.journal-detail-actions {
     display: flex;
-    gap: 0.75rem;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
 }
 
-.journal-action-btn {
-    background: rgba(255,255,255,0.2);
-    border: 1px solid rgba(255,255,255,0.3);
-    color: white;
-    padding: 0.75rem 1.25rem;
-    border-radius: 12px;
+.journal-detail-btn {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    color: #64748b;
+    padding: 8px 16px;
+    border-radius: 8px;
     text-decoration: none;
+    font-size: 14px;
     font-weight: 500;
-    transition: all 0.3s ease;
-    backdrop-filter: blur(10px);
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
 }
 
-.journal-action-btn:hover {
-    background: rgba(255,255,255,0.3);
-    color: white;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+.journal-detail-btn:hover {
+    background: #f8fafc;
+    border-color: #cbd5e1;
+    color: #475569;
+    text-decoration: none;
+}
+
+.journal-detail-btn.btn-primary {
+    background: #3b82f6;
+    border-color: #3b82f6;
+    color: #ffffff;
+}
+
+.journal-detail-btn.btn-primary:hover {
+    background: #2563eb;
+    border-color: #2563eb;
+    color: #ffffff;
 }
 
 .journal-content {
-    background: white;
-    border-radius: 16px;
-    padding: 2rem;
-    margin-bottom: 2rem;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    border: 1px solid #e5e7eb;
+    background: #ffffff;
+    border: 1px solid #f1f5f9;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
 }
 
 .journal-description {
-    font-size: 1.1rem;
-    line-height: 1.7;
+    font-size: 16px;
+    line-height: 1.6;
     color: #374151;
     white-space: pre-wrap;
+    margin: 0;
 }
 
-.journal-description::first-letter {
-    font-size: 3rem;
-    font-weight: 700;
-    float: left;
-    line-height: 1;
-    margin: 0.1rem 0.5rem 0 0;
-    color: #667eea;
-}
-
-/* Galerie d'images moderne */
+/* Galerie d'images cohérente */
 .image-gallery {
-    position: relative;
+    background: #ffffff;
+    border: 1px solid #f1f5f9;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
 }
 
 .gallery-header {
@@ -123,46 +127,50 @@
     align-items: center;
     margin-bottom: 1.5rem;
     padding-bottom: 1rem;
-    border-bottom: 2px solid #f3f4f6;
+    border-bottom: 1px solid #e2e8f0;
 }
 
 .gallery-title {
-    font-size: 1.5rem;
+    font-size: 18px;
     font-weight: 600;
-    color: #1f2937;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    color: #1e293b;
     margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .gallery-count {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    padding: 0.5rem 1rem;
-    border-radius: 25px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    color: #000000;
+    padding: 6px 12px;
+    border-radius: 8px;
     font-weight: 500;
-    font-size: 0.9rem;
+    font-size: 14px;
 }
 
 .gallery-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 1.5rem;
+    gap: 1rem;
     margin-top: 1rem;
 }
 
 .gallery-item {
     position: relative;
-    border-radius: 16px;
+    border-radius: 8px;
     overflow: hidden;
-    background: white;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    transition: all 0.2s ease;
     cursor: pointer;
-    border: 1px solid #e5e7eb;
 }
 
 .gallery-item:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    border-color: #cbd5e1;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .gallery-image {
@@ -178,9 +186,9 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.4) 100%);
+    background: rgba(0,0,0,0.5);
     opacity: 0;
-    transition: opacity 0.3s ease;
+    transition: opacity 0.2s ease;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -192,20 +200,19 @@
 
 .gallery-icon {
     color: white;
-    font-size: 2.5rem;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    font-size: 2rem;
 }
 
 .gallery-info {
-    padding: 1rem;
-    background: #f8f9fa;
-    border-top: 1px solid #e5e7eb;
+    padding: 12px;
+    background: #f8fafc;
+    border-top: 1px solid #e2e8f0;
 }
 
 .gallery-title-item {
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: #374151;
+    font-size: 14px;
+    font-weight: 500;
+    color: #64748b;
     margin: 0;
     white-space: nowrap;
     overflow: hidden;
@@ -309,28 +316,28 @@
 
 /* Responsive design */
 @media (max-width: 768px) {
-    .journal-header {
-        padding: 1.5rem;
-        margin-bottom: 1.5rem;
+    .journal-detail-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
     }
     
-    .journal-title {
-        font-size: 2rem;
+    .journal-detail-title {
+        font-size: 20px;
     }
     
-    .journal-actions {
-        position: static;
-        margin-top: 1rem;
-        justify-content: center;
+    .journal-detail-actions {
+        width: 100%;
+        justify-content: flex-end;
     }
     
-    .journal-meta {
-        justify-content: center;
+    .journal-detail-meta {
+        justify-content: flex-start;
     }
     
     .gallery-grid {
         grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-        gap: 1rem;
+        gap: 0.75rem;
     }
     
     .gallery-image {
@@ -350,7 +357,11 @@
     }
     
     .journal-content {
-        padding: 1.5rem;
+        padding: 1rem;
+    }
+    
+    .image-gallery {
+        padding: 1rem;
     }
 }
 </style>
@@ -358,29 +369,29 @@
 <div class="container py-4">
     @include('partials.back-button')
     
-    <!-- En-tête moderne du journal -->
-    <div class="journal-header">
-        <div class="journal-header-content">
-            <h1 class="journal-title">{{ $entry->title }}</h1>
-            <div class="journal-meta">
-                <div class="journal-date">
-                    <i class="fas fa-calendar-alt me-2"></i>
-                    {{ optional($entry->occurred_at)->format('d F Y') }}
+    <!-- En-tête cohérent du journal -->
+    <div class="journal-detail-header">
+        <div class="journal-detail-info">
+            <h1 class="journal-detail-title">{{ $entry->title }}</h1>
+            <div class="journal-detail-meta">
+                <div class="journal-detail-date">
+                    <i class="bi bi-calendar3 me-1"></i>
+                    {{ optional($entry->occurred_at)->format('d/m/Y') }}
                 </div>
                 @if($entry->category)
-                <div class="journal-category">
-                    <i class="fas fa-tag me-2"></i>
+                <div class="journal-detail-category">
+                    <i class="bi bi-tag me-1"></i>
                     {{ $entry->category }}
                 </div>
                 @endif
             </div>
         </div>
-        <div class="journal-actions">
-            <a href="{{ route('journal.edit', $entry) }}" class="journal-action-btn">
-                <i class="fas fa-edit me-2"></i>Modifier
+        <div class="journal-detail-actions">
+            <a href="{{ route('journal.edit', $entry) }}" class="journal-detail-btn btn-primary">
+                <i class="bi bi-pencil me-1"></i>Modifier
             </a>
-            <a href="{{ route('journal.index') }}" class="journal-action-btn">
-                <i class="fas fa-list me-2"></i>Journal
+            <a href="{{ route('journal.index') }}" class="journal-detail-btn">
+                <i class="bi bi-list me-1"></i>Journal
             </a>
         </div>
     </div>
@@ -392,31 +403,29 @@
 
     <!-- Galerie d'images -->
     @if($entry->images->count())
-    <div class="card card-soft p-3">
+    <div class="image-gallery">
         <div class="gallery-header">
             <h2 class="gallery-title">
-                <i class="fas fa-images me-2"></i>Galerie d'images
+                <i class="bi bi-images"></i>Galerie d'images
             </h2>
             <span class="gallery-count">{{ $entry->images->count() }} image{{ $entry->images->count() > 1 ? 's' : '' }}</span>
         </div>
         
-        <div class="image-gallery">
-            <div class="gallery-grid">
-                @foreach($entry->images as $index => $img)
-                <div class="gallery-item" onclick="openModal({{ $index }})">
-                    <img src="{{ str_starts_with($img->path, 'http') ? $img->path : asset('storage/'.$img->path) }}" 
-                         alt="Image {{ $index + 1 }}" 
-                         class="gallery-image"
-                         loading="lazy">
-                    <div class="gallery-overlay">
-                        <i class="fas fa-search-plus gallery-icon"></i>
-                    </div>
-                    <div class="gallery-info">
-                        <p class="gallery-title-item">Image {{ $index + 1 }}</p>
-                    </div>
+        <div class="gallery-grid">
+            @foreach($entry->images as $index => $img)
+            <div class="gallery-item" onclick="openModal({{ $index }})">
+                <img src="{{ str_starts_with($img->path, 'http') ? $img->path : asset('storage/'.$img->path) }}" 
+                     alt="Image {{ $index + 1 }}" 
+                     class="gallery-image"
+                     loading="lazy">
+                <div class="gallery-overlay">
+                    <i class="bi bi-zoom-in gallery-icon"></i>
                 </div>
-                @endforeach
+                <div class="gallery-info">
+                    <p class="gallery-title-item">Image {{ $index + 1 }}</p>
+                </div>
             </div>
+            @endforeach
         </div>
     </div>
     @endif
@@ -427,10 +436,10 @@
     <div class="modal-content">
         <span class="modal-close" onclick="closeModal()">&times;</span>
         <div class="modal-nav modal-prev" onclick="previousImage()">
-            <i class="fas fa-chevron-left"></i>
+            <i class="bi bi-chevron-left"></i>
         </div>
         <div class="modal-nav modal-next" onclick="nextImage()">
-            <i class="fas fa-chevron-right"></i>
+            <i class="bi bi-chevron-right"></i>
         </div>
         <img id="modalImage" class="modal-image" src="" alt="">
     </div>

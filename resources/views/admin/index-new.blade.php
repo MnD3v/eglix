@@ -28,19 +28,19 @@
     <!-- Statistiques -->
     <div class="stats-grid">
         <div class="stat-card">
-            <div class="stat-value" style="color: #ff2600;">{{ $stats['total_churches'] }}</div>
+            <div class="stat-value" style="color: #FFCC00;">{{ $stats['total_churches'] }}</div>
             <div class="stat-label">Total Églises</div>
         </div>
         <div class="stat-card">
-            <div class="stat-value" style="color: #ff2600;">{{ $stats['active_subscriptions'] }}</div>
+            <div class="stat-value" style="color: #FFCC00;">{{ $stats['active_subscriptions'] }}</div>
             <div class="stat-label">Abonnements actifs</div>
         </div>
         <div class="stat-card">
-            <div class="stat-value" style="color: #ff2600;">{{ $stats['expired_subscriptions'] }}</div>
+            <div class="stat-value" style="color: #FFCC00;">{{ $stats['expired_subscriptions'] }}</div>
             <div class="stat-label">Abonnements expirés</div>
         </div>
         <div class="stat-card">
-            <div class="stat-value" style="color: #ff2600;">{{ $stats['churches_without_subscription'] }}</div>
+            <div class="stat-value" style="color: #FFCC00;">{{ $stats['churches_without_subscription'] }}</div>
             <div class="stat-label">Sans abonnement</div>
         </div>
     </div>
@@ -63,9 +63,6 @@
                 </select>
                 
                 <button type="submit" class="btn btn">Filtrer</button>
-                @if($search || $subscriptionFilter)
-                    <a href="{{ route('admin.index') }}" class="btn btn-secondary">Effacer</a>
-                @endif
             </div>
         </form>
     </div>

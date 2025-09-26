@@ -134,3 +134,5 @@ Route::get('register-success/{church}', [MemberController::class, 'registrationS
 ## 🎉 **Résultat**
 
 Le système permet maintenant aux administrateurs d'église de générer facilement des liens de partage sécurisés pour permettre aux personnes intéressées de s'inscrire individuellement en tant que membres de leur église, avec un processus d'inscription complet et sécurisé.
+
+

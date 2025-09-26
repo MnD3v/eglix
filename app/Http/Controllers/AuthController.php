@@ -6,7 +6,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Password;
 use App\Models\User;
+use App\Mail\ResetPasswordMail;
+use Illuminate\Support\Facades\Mail;
 
 class AuthController extends Controller
 {
@@ -425,5 +428,88 @@ class AuthController extends Controller
         }
 
         return $user;
+    }
+
+    /**
+     * Afficher le formulaire de demande de récupération de mot de passe
+     */
+    public function showForgotPassword()
+    {
+        return view('auth.forgot-password');
+    }
+
+    /**
+     * Envoyer le lien de récupération de mot de passe
+     */
+    public function sendResetLink(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email|exists:users,email'
+        ], [
+            'email.required' => 'L\'adresse email est requise.',
+            'email.email' => 'L\'adresse email doit être valide.',
+            'email.exists' => 'Cette adresse email n\'existe pas dans notre système.'
+        ]);
+
+        // Récupérer l'utilisateur
+        $user = User::where('email', $request->email)->first();
+        
+        // Générer le token de réinitialisation
+        $token = Password::getRepository()->create($user);
+        
+        // Construire l'URL de réinitialisation
+        $resetUrl = route('password.reset', ['token' => $token, 'email' => $user->email]);
+        
+        // Envoyer l'email personnalisé
+        try {
+            Mail::to($user->email)->send(new ResetPasswordMail($resetUrl, $user));
+            
+            return back()->with(['status' => 'Nous avons envoyé un lien de réinitialisation à votre adresse email.']);
+        } catch (\Exception $e) {
+            \Log::error('Erreur envoi email réinitialisation: ' . $e->getMessage());
+            return back()->withErrors(['email' => 'Une erreur est survenue lors de l\'envoi de l\'email. Veuillez réessayer.']);
+        }
+    }
+
+    /**
+     * Afficher le formulaire de réinitialisation de mot de passe
+     */
+    public function showResetForm(Request $request, $token)
+    {
+        return view('auth.reset-password', [
+            'token' => $token,
+            'email' => $request->email
+        ]);
+    }
+
+    /**
+     * Réinitialiser le mot de passe
+     */
+    public function resetPassword(Request $request)
+    {
+        $request->validate([
+            'token' => 'required',
+            'email' => 'required|email',
+            'password' => 'required|min:8|confirmed',
+        ], [
+            'email.required' => 'L\'adresse email est requise.',
+            'email.email' => 'L\'adresse email doit être valide.',
+            'password.required' => 'Le mot de passe est requis.',
+            'password.min' => 'Le mot de passe doit contenir au moins 8 caractères.',
+            'password.confirmed' => 'La confirmation du mot de passe ne correspond pas.',
+        ]);
+
+        $status = \Illuminate\Support\Facades\Password::reset(
+            $request->only('email', 'password', 'password_confirmation', 'token'),
+            function ($user, $password) {
+                $user->forceFill([
+                    'password' => Hash::make($password)
+                ])->save();
+            }
+        );
+
+        return $status === \Illuminate\Support\Facades\Password::PASSWORD_RESET
+            ? redirect()->route('login')->with('status', __($status))
+            : back()->withErrors(['email' => [__($status)]]);
     }
 }

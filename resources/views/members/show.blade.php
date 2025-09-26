@@ -1,167 +1,127 @@
 @extends('layouts.app')
 
 @section('content')
-<style>
-/* Styles spécifiques pour la page des détails de membre */
-.status-badge.status-active {
-    background-color: rgba(255, 255, 255, 0.2) !important;
-    color: white !important;
-    border: 1px solid rgba(255, 255, 255, 0.3) !important;
-}
-
-.status-badge.status-active i {
-    color: white !important;
-}
-
-.profile-actions .btn-outline-light {
-    background-color: rgba(255, 255, 255, 0.1) !important;
-    border-color: rgba(255, 255, 255, 0.3) !important;
-    color: white !important;
-}
-
-.profile-actions .btn-outline-light:hover {
-    background-color: rgba(255, 255, 255, 0.2) !important;
-    border-color: rgba(255, 255, 255, 0.5) !important;
-    color: white !important;
-}
-
-.profile-actions .btn-outline-light i {
-    color: white !important;
-}
-
-.profile-actions .btn {
-    background-color: rgba(255, 255, 255, 0.1) !important;
-    border-color: rgba(255, 255, 255, 0.3) !important;
-    color: white !important;
-}
-
-.profile-actions .btn:hover {
-    background-color: rgba(255, 255, 255, 0.2) !important;
-    border-color: rgba(255, 255, 255, 0.5) !important;
-    color: white !important;
-}
-
-.profile-actions .btn i {
-    color: white !important;
-}
-</style>
 <div class="container py-4">
-    @include('partials.back-button')
 	@if(session('success'))
-		<div class="alert alert-success">{{ session('success') }}</div>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
 	@endif
 
-	<!-- Profile Header -->
-	<div class="member-profile-header fade-in">
-		<div class="profile-background"></div>
-		<div class="profile-content">
-			<div class="profile-main">
-				<div class="profile-info-section">
-					@php $initials = strtoupper(mb_substr($member->first_name ?? '',0,1).mb_substr($member->last_name ?? '',0,1)); @endphp
-					<div class="profile-avatar">
-						{{ $initials }}
-					</div>
-					<div class="profile-info">
-						<h1 class="profile-name">{{ $member->last_name }} {{ $member->first_name }}</h1>
-						<div class="profile-meta">
-							<span class="status-badge status-{{ $member->status }}">
-								<i class="bi bi-circle-fill me-1"></i>{{ ucfirst($member->status) }}
-							</span>
-							<span class="meta-item">
-								<i class="bi bi-calendar-event me-1"></i>Rejoint le {{ optional($member->joined_at)->format('d/m/Y') ?: '—' }}
-							</span>
-							<span class="meta-item">
-								<i class="bi bi-droplet me-1"></i>Baptême: {{ optional($member->baptized_at)->format('d/m/Y') ?: '—' }}
-							</span>
-						</div>
-					</div>
-				</div>
-				<div class="profile-actions">
-					<a class="btn btn-outline-light" href="{{ route('members.edit', $member) }}">
-						<i class="bi bi-pencil me-2"></i>Modifier
-					</a>
-					<a class="btn btn" href="{{ route('tithes.create', ['member_id'=>$member->id]) }}">
-						<i class="bi bi-cash-coin me-2"></i>Enregistrer une dîme
-					</a>
-				</div>
-			</div>
-		</div>
-	</div>
+    <!-- AppBar -->
+    <div class="appbar members-appbar">
+        <div class="appbar-content">
+            <div class="appbar-left">
+                <a href="{{ route('members.index') }}" class="appbar-back-btn">
+                    <i class="bi bi-arrow-left"></i>
+                </a>
+                <div class="appbar-title-section">
+                    <h1 class="appbar-title">{{ $member->last_name }} {{ $member->first_name }}</h1>
+                </div>
+            </div>
+            <div class="appbar-right">
+                <a href="{{ route('members.edit', $member) }}" class="appbar-btn-white me-2">
+                    <i class="bi bi-pencil"></i>
+                    <span class="btn-text">Modifier</span>
+                </a>
+                <a href="{{ route('tithes.create', ['member_id'=>$member->id]) }}" class="appbar-btn-yellow me-2">
+                    <i class="bi bi-cash-coin"></i>
+                    <span class="btn-text">Ajouter dîme</span>
+                </a>
+                <form action="{{ route('members.destroy', $member) }}" method="POST" data-confirm="Supprimer ce membre ?" data-confirm-ok="Supprimer" class="d-inline">
+                    @csrf
+                    @method('DELETE')
+                    <button class="appbar-btn-white" type="submit" title="Supprimer">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
 
-	<!-- Info Grid -->
+    <!-- Informations du membre -->
 	<div class="row g-4 mb-4">
 		<div class="col-lg-8">
-			<div class="info-card slide-in-left">
-				<div class="info-header">
-					<h3 class="info-title">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
 						<i class="bi bi-person-lines-fill me-2"></i>
 						Informations personnelles
 					</h3>
 				</div>
-				<div class="info-content">
+                <div class="card-body">
 					<div class="row g-4">
 						<div class="col-md-6">
 							<div class="info-item">
-								<div class="info-label">
+                                <label class="info-label">
 									<i class="bi bi-envelope me-2"></i>Email
-								</div>
+                                </label>
 								<div class="info-value">{{ $member->email ?? 'Non renseigné' }}</div>
 							</div>
 						</div>
 						<div class="col-md-6">
 							<div class="info-item">
-								<div class="info-label">
+                                <label class="info-label">
 									<i class="bi bi-telephone me-2"></i>Téléphone
-								</div>
+                                </label>
 								<div class="info-value">{{ $member->phone ?? 'Non renseigné' }}</div>
 							</div>
 						</div>
 						<div class="col-md-6">
 							<div class="info-item">
-								<div class="info-label">
+                                <label class="info-label">
 									<i class="bi bi-gender-ambiguous me-2"></i>Genre
-								</div>
+                                </label>
 								<div class="info-value">{{ ucfirst($member->gender ?? 'Non renseigné') }}</div>
 							</div>
 						</div>
 						<div class="col-md-6">
 							<div class="info-item">
-								<div class="info-label">
+                                <label class="info-label">
 									<i class="bi bi-heart me-2"></i>Statut marital
-								</div>
+                                </label>
 								<div class="info-value">{{ ucfirst($member->marital_status ?? 'Non renseigné') }}</div>
 							</div>
 						</div>
 						<div class="col-md-6">
 							<div class="info-item">
-								<div class="info-label">
+                                <label class="info-label">
 									<i class="bi bi-calendar-date me-2"></i>Date de naissance
-								</div>
+                                </label>
 								<div class="info-value">{{ optional($member->birth_date)->format('d/m/Y') ?? 'Non renseigné' }}</div>
 							</div>
 						</div>
-						<div class="col-md-6">
-							<div class="info-item">
-								<div class="info-label">
-									<i class="bi bi-briefcase me-2"></i>Fonction
-								</div>
-								<div class="info-value">{{ $member->function ?? 'Non renseigné' }}</div>
-							</div>
-						</div>
+                        <div class="col-md-6">
+                            <div class="info-item">
+                                <label class="info-label">
+                                    <i class="bi bi-briefcase me-2"></i>Fonction
+                                </label>
+                                <div class="info-value">{{ $member->function ?? 'Non renseigné' }}</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="info-item">
+                                <label class="info-label">
+                                    <i class="bi bi-building me-2"></i>Domaine d'Activité
+                                </label>
+                                <div class="info-value">{{ $member->activity_domain ?? 'Non renseigné' }}</div>
+                            </div>
+                        </div>
 						<div class="col-12">
 							<div class="info-item">
-								<div class="info-label">
+                                <label class="info-label">
 									<i class="bi bi-geo-alt me-2"></i>Adresse
-								</div>
+                                </label>
 								<div class="info-value">{{ $member->address ?? 'Non renseigné' }}</div>
 							</div>
 						</div>
 						@if($member->notes)
 						<div class="col-12">
 							<div class="info-item">
-								<div class="info-label">
+                                <label class="info-label">
 									<i class="bi bi-sticky me-2"></i>Notes
-								</div>
+                                </label>
 								<div class="info-value">{{ $member->notes }}</div>
 							</div>
 						</div>
@@ -171,14 +131,14 @@
 			</div>
 		</div>
 		<div class="col-lg-4">
-			<div class="stats-card slide-in-right">
-				<div class="stats-header">
-					<h3 class="stats-title">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
 						<i class="bi bi-graph-up me-2"></i>
 						Statistiques dîmes
 					</h3>
 				</div>
-				<div class="stats-content">
+                <div class="card-body">
 				@php
 					$allTithes = $member->tithes()->get();
 					$totalTithes = (float) $allTithes->sum('amount');
@@ -191,7 +151,7 @@
 						</div>
 						<div class="stat-info">
 							<div class="stat-label">Total dîmes</div>
-							<div class="stat-value">{{ number_format(round($totalTithes), 0, ',', ' ') }} FCFA</div>
+							<div class="stat-value" style="color: #000000;">{{ number_format(round($totalTithes), 0, ',', ' ') }} FCFA</div>
 						</div>
 					</div>
 					<div class="stat-item">
@@ -200,7 +160,7 @@
 						</div>
 						<div class="stat-info">
 							<div class="stat-label">Ce mois</div>
-							<div class="stat-value">{{ number_format(round($thisMonthTithes), 0, ',', ' ') }} FCFA</div>
+							<div class="stat-value" style="color: #000000;">{{ number_format(round($thisMonthTithes), 0, ',', ' ') }} FCFA</div>
 						</div>
 					</div>
 					<div class="stat-item">
@@ -227,116 +187,108 @@
 	</div>
 
 	<!-- Section Remarques -->
-	<div class="remarks-section scale-in">
-		<div class="remarks-header">
-			<h3 class="remarks-title">
+    <div class="card mb-4">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h3 class="card-title mb-0">
 				<i class="bi bi-chat-square-text me-2"></i>
 				Remarques disciplinaires
 			</h3>
-			<button class="btn btn btn-add-remark" data-bs-toggle="modal" data-bs-target="#addRemarkModal">
-				<i class="bi bi-plus-circle me-2"></i>Ajouter une remarque
-			</button>
+            <button class="appbar-btn-yellow" data-bs-toggle="modal" data-bs-target="#addRemarkModal">
+                <i class="bi bi-plus-circle"></i>
+                <span class="btn-text">Ajouter une remarque</span>
+            </button>
 		</div>
-		
-		<div id="remarks-container" class="remarks-list">
+        <div class="card-body">
+            <div id="remarks-container">
 			@forelse($member->getFormattedRemarks() as $index => $remark)
-			<div class="remark-item" data-index="{{ $index }}">
-				<div class="remark-content">
-					<div class="remark-text">{{ $remark['remark'] }}</div>
-					<div class="remark-meta">
-						<span class="remark-date">
+                <div class="remark-item border rounded p-3 mb-3" data-index="{{ $index }}">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div class="flex-grow-1">
+                            <p class="mb-2">{{ $remark['remark'] }}</p>
+                            <small class="text-muted">
 							<i class="bi bi-calendar3 me-1"></i>{{ $remark['added_at'] }}
-						</span>
-						<span class="remark-author">
+                                <span class="mx-2">•</span>
 							<i class="bi bi-person me-1"></i>{{ $remark['added_by'] }}
-						</span>
+                            </small>
 					</div>
-				</div>
-				<button class="btn btn-remove-remark" onclick="removeRemark({{ $index }})" title="Supprimer cette remarque">
+                        <button class="btn btn-sm btn-outline-danger ms-2" onclick="removeRemark({{ $index }})" title="Supprimer cette remarque">
 					<i class="bi bi-trash"></i>
 				</button>
+                    </div>
 			</div>
 			@empty
-			<div class="remarks-empty">
-				<div class="empty-icon">
-					<i class="bi bi-chat-square-text"></i>
-				</div>
-				<h4 class="empty-title">Aucune remarque</h4>
-				<p class="empty-description">Ce membre n'a pas encore de remarques disciplinaires.</p>
-				<button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#addRemarkModal">
-					<i class="bi bi-plus-circle me-2"></i>Ajouter la première remarque
-				</button>
+                <div class="text-center text-muted py-4">
+                    <i class="bi bi-chat-square-text display-4 opacity-50"></i>
+                    <h4 class="mt-3 mb-2">Aucune remarque</h4>
+                    <p class="mb-3">Ce membre n'a pas encore de remarques disciplinaires.</p>
+                
 			</div>
 			@endforelse
+            </div>
 		</div>
 	</div>
 
 	<!-- Graphique des dîmes sur l'année -->
-	<div class="tithes-chart-section animate-on-scroll mb-4">
-		<div class="card card-soft">
-			<div class="card-body">
-				<div class="d-flex align-items-center justify-content-between mb-3">
-					<h3 class="card-title mb-0">
+    <div class="card mb-4">
+        <div class="card-header">
+            <h3 class="card-title">
 						<i class="bi bi-graph-up me-2"></i>
 						Évolution des dîmes ({{ $chart['year'] ?? now()->year }})
 					</h3>
-					<div class="text-muted small">
-						<i class="bi bi-calendar3 me-1"></i>
-						Année {{ $chart['year'] ?? now()->year }}
 					</div>
-				</div>
+        <div class="card-body">
 				<div style="height: 300px;">
 					<canvas id="memberTithesChart"></canvas>
-				</div>
 			</div>
 		</div>
 	</div>
 
 	<!-- Historique des dîmes -->
-	<div class="tithes-section animate-on-scroll">
-		<div class="tithes-header">
-			<h3 class="tithes-title">
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h3 class="card-title mb-0">
 				<i class="bi bi-cash-coin me-2"></i>
 				Historique des dîmes
 			</h3>
-			<a class="btn btn btn-add-tithe" href="{{ route('tithes.create', ['member_id'=>$member->id]) }}">
-				<i class="bi bi-plus-circle me-2"></i>Ajouter une dîme
-			</a>
+            <a class="appbar-btn-yellow" href="{{ route('tithes.create', ['member_id'=>$member->id]) }}">
+                <i class="bi bi-plus-circle"></i>
+                <span class="btn-text">Ajouter une dîme</span>
+            </a>
 		</div>
-		
-		<div class="tithes-content">
+        <div class="card-body">
 			@forelse($member->tithes()->latest('paid_at')->get() as $tithe)
-			<div class="tithe-item">
+            <div class="tithe-item border rounded p-3 mb-3">
+                <div class="d-flex justify-content-between align-items-center">
 				<div class="tithe-info">
-					<div class="tithe-date">
-						<i class="bi bi-calendar3 me-2"></i>
-						{{ optional($tithe->paid_at)->format('d/m/Y') }}
+                        <div class="d-flex align-items-center mb-1">
+                            <i class="bi bi-calendar3 me-2 text-muted"></i>
+                            <span class="fw-medium">{{ optional($tithe->paid_at)->format('d/m/Y') }}</span>
 					</div>
-					<div class="tithe-method">
-						<i class="bi bi-credit-card me-2"></i>
-						{{ $tithe->payment_method ?? 'Non spécifié' }}
+                        <div class="d-flex align-items-center mb-1">
+                            <i class="bi bi-credit-card me-2 text-muted"></i>
+                            <span class="text-muted">{{ $tithe->payment_method ?? 'Non spécifié' }}</span>
 					</div>
 					@if($tithe->reference)
-					<div class="tithe-reference">
-						<i class="bi bi-hash me-2"></i>
-						{{ $tithe->reference }}
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-hash me-2 text-muted"></i>
+                            <span class="text-muted">{{ $tithe->reference }}</span>
 					</div>
 					@endif
 				</div>
 				<div class="tithe-amount">
-					{{ number_format(round($tithe->amount), 0, ',', ' ') }} FCFA
+                        <span class="fw-bold" style="color: #000000;">{{ number_format(round($tithe->amount), 0, ',', ' ') }} FCFA</span>
+                    </div>
 				</div>
 			</div>
 					@empty
-			<div class="tithes-empty">
-				<div class="empty-icon">
-					<i class="bi bi-cash-coin"></i>
-				</div>
-				<h4 class="empty-title">Aucune dîme</h4>
-				<p class="empty-description">Ce membre n'a pas encore enregistré de dîmes.</p>
-				<a class="btn btn" href="{{ route('tithes.create', ['member_id'=>$member->id]) }}">
-					<i class="bi bi-plus-circle me-2"></i>Enregistrer la première dîme
-				</a>
+            <div class="text-center text-muted py-4">
+                <i class="bi bi-cash-coin display-4 opacity-50"></i>
+                <h4 class="mt-3 mb-2">Aucune dîme</h4>
+                <p class="mb-3">Ce membre n'a pas encore enregistré de dîmes.</p>
+                <a class="appbar-btn-yellow" href="{{ route('tithes.create', ['member_id'=>$member->id]) }}">
+                    <i class="bi bi-plus-circle"></i>
+                    <span class="btn-text">Enregistrer la première dîme</span>
+                </a>
 			</div>
 					@endforelse
 		</div>
@@ -346,23 +298,23 @@
 <!-- Modal pour ajouter une remarque -->
 <div class="modal fade" id="addRemarkModal" tabindex="-1" aria-labelledby="addRemarkModalLabel" aria-hidden="true">
 	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title" id="addRemarkModalLabel">Ajouter une remarque</h5>
-				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="modal-content" style="border-radius: 16px; border: none; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);">
+            <div class="modal-header" style="border-bottom: 1px solid #e2e8f0; padding: 20px 24px 16px;">
+                <h5 class="modal-title" id="addRemarkModalLabel" style="font-weight: 600; color: #1e293b; font-family: 'Plus Jakarta Sans', sans-serif;">Ajouter une remarque</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="background: none; border: none; font-size: 1.2rem; color: #64748b;"></button>
 			</div>
 			<form id="addRemarkForm">
-				<div class="modal-body">
+                <div class="modal-body" style="padding: 20px 24px;">
 					<div class="mb-3">
-						<label for="remarkText" class="form-label">Remarque</label>
-						<textarea class="form-control" id="remarkText" name="remark" rows="4" placeholder="Décrivez la remarque disciplinaire ou l'observation..." required maxlength="500"></textarea>
-						<div class="form-text">Maximum 500 caractères</div>
+                        <label for="remarkText" class="form-label" style="font-weight: 600; color: #1e293b; text-transform: uppercase; letter-spacing: 0.5px; font-size: 0.8rem;">Remarque</label>
+                        <textarea class="form-control" id="remarkText" name="remark" rows="4" placeholder="Décrivez la remarque disciplinaire ou l'observation..." required maxlength="500" style="border-radius: 12px; border: 1px solid #e2e8f0; padding: 12px 16px; font-size: 0.9rem;"></textarea>
+                        <div class="form-text" style="color: #64748b; font-size: 0.8rem;">Maximum 500 caractères</div>
 					</div>
 				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-					<button type="submit" class="btn btn">
-						<i class="bi bi-plus me-1"></i>Ajouter la remarque
+                <div class="modal-footer" style="border-top: 1px solid #e2e8f0; padding: 16px 24px 20px; gap: 12px;">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" style="border-radius: 8px; font-weight: 500; padding: 8px 16px; border: 1px solid #e2e8f0; color: #64748b; background: transparent;">Annuler</button>
+                    <button type="submit" class="btn btn-primary" style="border-radius: 8px; font-weight: 700; padding: 8px 16px; background-color: #000000; border: 1px solid #000000; color: #ffffff;">
+                        <i class="bi bi-plus me-1" style="color: #ffffff;"></i>Ajouter la remarque
 					</button>
 				</div>
 			</form>
@@ -549,13 +501,13 @@ document.addEventListener('DOMContentLoaded', function(){
             datasets: [{
                 label: 'Dîmes (FCFA)',
                 data,
-                borderColor: '#FF2600',
+                borderColor: '#FFCC00',
                 backgroundColor: gradient,
                 fill: true,
                 tension: 0.4,
                 pointRadius: 5,
                 pointHoverRadius: 7,
-                pointBackgroundColor: '#FF2600',
+                pointBackgroundColor: '#FFCC00',
                 pointBorderColor: '#fff',
                 pointBorderWidth: 2,
                 borderWidth: 3
@@ -581,7 +533,7 @@ document.addEventListener('DOMContentLoaded', function(){
                     backgroundColor: 'rgba(0,0,0,0.8)',
                     titleColor: '#fff',
                     bodyColor: '#fff',
-                    borderColor: '#FF2600',
+                    borderColor: '#FFCC00',
                     borderWidth: 1,
                     callbacks: { 
                         label: (ctx) => `${ctx.dataset.label}: ${Math.round(Number(ctx.parsed.y)).toLocaleString('fr-FR')} FCFA`

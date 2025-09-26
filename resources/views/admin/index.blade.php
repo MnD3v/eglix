@@ -63,9 +63,6 @@
                 </select>
                 
                 <button type="submit" class="btn btn">Filtrer</button>
-                @if($search || $subscriptionFilter)
-                    <a href="{{ route('admin.index') }}" class="btn btn-secondary">Effacer</a>
-                @endif
             </div>
         </form>
     </div>

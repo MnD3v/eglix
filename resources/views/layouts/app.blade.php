@@ -10,41 +10,42 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/@mdi/font@7.4.47/css/materialdesignicons.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="{{ asset('css/appbar.css') }}" rel="stylesheet">
     <style>
-        /* Couleurs personnalisées - Toutes les couleurs primaires sont maintenant #ff2600 */
+        /* Couleurs personnalisées - Toutes les couleurs primaires sont maintenant #FFCC00 */
         .btn {
-            background: #ff2600 !important;
-            border-color: #ff2600 !important;
-            color: white !important;
+            background: #FFCC00 !important;
+            border-color: #FFCC00 !important;
+            color: black !important;
         }
         
         .btn:hover {
-            background: #e02200 !important;
-            border-color: #e02200 !important;
-            color: white !important;
+            background: #e6b800 !important;
+            border-color: #e6b800 !important;
+            color: black !important;
         }
         
         .bg-custom { 
-            background-color: #ff2600 !important; 
-            color: white !important;
+            background-color: #FFCC00 !important; 
+            color: black !important;
         }
         
         .text-custom { 
-            color: #ff2600 !important; 
+            color: #FFCC00 !important; 
         }
         
         .badge.bg-custom { 
-            background-color: #ff2600 !important; 
+            background-color: #FFCC00 !important; 
             color: white !important;
         }
         
         /* Boutons d'ajout - Design cohérent et moderne */
         .btn-add {
-            background: linear-gradient(135deg, #ff2600 0%, #e02200 100%);
+            background: linear-gradient(135deg, #FFCC00 0%, #e02200 100%);
             border: none;
             border-radius: 12px;
             padding: 12px 24px;
@@ -114,7 +115,7 @@
         
         /* Bouton d'état vide */
         .btn-add-empty {
-            background: linear-gradient(135deg, #ff2600 0%, #e02200 100%);
+            background: linear-gradient(135deg, #FFCC00 0%, #e02200 100%);
             border: none;
             border-radius: 12px;
             padding: 16px 32px;
@@ -201,7 +202,7 @@
             width: 40px;
             height: 40px;
             border: 4px solid #f3f3f3;
-            border-top: 4px solid #ff2600;
+            border-top: 4px solid #FFCC00;
             border-radius: 50%;
             animation: spin 1s linear infinite;
             z-index: 1001;
@@ -245,10 +246,10 @@
         }
         
         :root {
-            --bs-primary: #FF2600; /* brand red */
+            --bs-primary: #FFCC00; /* brand red */
             --bs-primary-rgb: 255, 38, 0;
             --bs-secondary: #64748B; /* slate-500 */
-            --bs-link-color: #FF2600;
+            --bs-link-color: #FFCC00;
             --bs-link-hover-color: #cc1e00;
             --bs-primary-text-emphasis: #661000;
             --bs-primary-bg-subtle: #FFE1DB;
@@ -256,8 +257,7 @@
         }
         body { 
             font-family: 'DM Sans', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif; 
-            background: url('{{ asset("images/auth-background.png") }}') center/cover no-repeat fixed;
-            background-attachment: fixed;
+            background: #ffffff;
             min-height: 100vh;
         }
         /* Numeric typography using Plus Jakarta Sans across the app */
@@ -270,31 +270,15 @@
         .navbar-brand { font-weight: 700; }
         .nav-link.active { color: var(--bs-primary) !important; }
 
-        /* Styles globaux pour les titres de page */
+        /* Styles globaux pour les titres de page - Style élégant et minimaliste */
         .page-header {
-            background: #000000;
-            color: white;
-            border-radius: 12px;
-            padding: 1.5rem 2rem;
+            background: #ffffff;
+            color: #1e293b;
+            border-radius: 0;
+            padding: 2rem 0;
             margin: 0 0 2rem 0;
             position: relative;
-            overflow: hidden;
-        }
-
-        .page-header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/><circle cx="10" cy="60" r="0.5" fill="white" opacity="0.1"/><circle cx="90" cy="40" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
-            opacity: 0.3;
-        }
-
-        .page-header > * {
-            position: relative;
-            z-index: 2;
+            border-bottom: 1px solid #f1f5f9;
         }
 
         /* Styles cohérents pour les contenants de titres */
@@ -306,17 +290,18 @@
         }
 
         .section-header {
-            padding: 1rem 1.25rem;
-            background: #f8f9fa;
-            border-radius: 8px;
-            margin-bottom: 1rem;
-            font-weight: 600;
+            background: #ffffff;
+            border-radius: 0;
+            padding: 2rem 0;
+            margin: 0 0 2rem 0;
+            position: relative;
+            border-bottom: 1px solid #f1f5f9;
         }
 
         .content-header {
             padding: 0.75rem 1rem;
             background: #f8f9fa;
-            border-left: 4px solid #ff2600;
+            border-left: 4px solid #FFCC00;
             margin-bottom: 1rem;
             font-weight: 600;
         }
@@ -349,7 +334,7 @@
             padding: 0.5rem 1rem;
             font-size: 0.875rem;
             border-radius: 8px;
-            background: #ff2600;
+            background: #FFCC00;
             border: none;
             color: white;
         }
@@ -360,22 +345,22 @@
         }
 
         .page-title {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: white;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1e293b;
             margin-bottom: 0.5rem;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
             display: flex;
             align-items: center;
             gap: 1rem;
+            font-family: 'Plus Jakarta Sans', sans-serif;
         }
 
         .page-title i {
-            background: rgba(255, 255, 255, 0.2);
+            background: #f8fafc;
             border-radius: 8px;
             padding: 0.75rem;
-            font-size: 1.5rem;
-            color: white !important;
+            font-size: 1.25rem;
+            color: #64748b !important;
         }
 
         /* Styles pour le total des dîmes */
@@ -443,39 +428,40 @@
         /* Force primary color across common components */
         .btn {
             --bs-btn-color: #fff;
-            --bs-btn-bg: #FF2600;
-            --bs-btn-border-color: #FF2600;
+            --bs-btn-bg: #FFCC00;
+            --bs-btn-border-color: #FFCC00;
             --bs-btn-hover-color: #fff;
             --bs-btn-hover-bg: #e52200;
             --bs-btn-hover-border-color: #e52200;
             --bs-btn-active-color: #fff;
             --bs-btn-active-bg: #cc1e00;
             --bs-btn-active-border-color: #cc1e00;
-            --bs-btn-disabled-bg: #FF2600;
-            --bs-btn-disabled-border-color: #FF2600;
+            --bs-btn-disabled-bg: #FFCC00;
+            --bs-btn-disabled-border-color: #FFCC00;
         }
         .btn-outline-primary {
-            --bs-btn-color: #FF2600;
-            --bs-btn-border-color: #FF2600;
+            --bs-btn-color: #FFCC00;
+            --bs-btn-border-color: #FFCC00;
             --bs-btn-hover-color: #fff;
-            --bs-btn-hover-bg: #FF2600;
-            --bs-btn-hover-border-color: #FF2600;
+            --bs-btn-hover-bg: #FFCC00;
+            --bs-btn-hover-border-color: #FFCC00;
             --bs-btn-active-color: #fff;
             --bs-btn-active-bg: #e52200;
             --bs-btn-active-border-color: #e52200;
         }
-        .text-custom { color: #FF2600 !important; }
-        .bg-custom { background-color: #FF2600 !important; }
-        .border-primary { border-color: #FF2600 !important; }
-        .link-primary { color: #FF2600 !important; }
+        .text-custom { color: #FFCC00 !important; }
+        .bg-custom { background-color: #FFCC00 !important; }
+        .border-primary { border-color: #FFCC00 !important; }
+        .link-primary { color: #FFCC00 !important; }
         .page-item.active .page-link {
-            background-color: #FF2600;
-            border-color: #FF2600;
+            background-color: #FFCC00;
+            border-color: #FFCC00;
+            color: black !important;
         }
-        .form-check-input:checked { background-color: #FF2600; border-color: #FF2600; }
-        .nav-pills .nav-link.active, .nav-pills .show>.nav-link { background-color: #FF2600; }
-        .progress-bar.bg-custom { background-color: #FF2600 !important; }
-        .badge.bg-custom { background-color: #FF2600 !important; }
+        .form-check-input:checked { background-color: #FFCC00; border-color: #FFCC00; }
+        .nav-pills .nav-link.active, .nav-pills .show>.nav-link { background-color: #FFCC00; color: black !important; }
+        .progress-bar.bg-custom { background-color: #FFCC00 !important; }
+        .badge.bg-custom { background-color: #FFCC00 !important; }
         .alert-primary { color: #661000; background-color: #FFE1DB; border-color: #FFC0B5; }
 
         /* Buttons: show icon + text on desktop, icon-only on mobile (outside sidebar) */
@@ -484,17 +470,17 @@
         }
 
         /* Accents and cards */
-        .kpi-card { position: relative; border: 1px solid #eef2f7; box-shadow: 0 6px 16px rgba(2, 6, 23, .05); border-radius: 16px; background: #fff; overflow: hidden; }
-        .kpi-card:before { content:""; position:absolute; top:0; left:0; right:0; height:4px; background: var(--accent, #FF2600); }
+        .kpi-card { position: relative; border: 1px solid #eef2f7; box-shadow: none; border-radius: 16px; background: #f8fafc; overflow: hidden; }
+        .kpi-card:before { display: none; }
         .kpi-card .kpi-label { color: #6b7280; letter-spacing: .04em; font-size: .78rem; text-transform: uppercase; }
         .kpi-card .kpi-value { font-weight: 800; font-size: 1.6rem; color: #0f172a; }
         .kpi-icon { width: 40px; height: 40px; border-radius: 12px; display:flex; align-items:center; justify-content:center; font-size: 1.2rem; }
-        .accent-primary { --accent: linear-gradient(90deg,#FF2600,#e52200); }
+        .accent-primary { --accent: linear-gradient(90deg,#FFCC00,#e52200); }
         .accent-success { --accent: linear-gradient(90deg,#22C55E,#16A34A); }
         .accent-info { --accent: linear-gradient(90deg,#38BDF8,#0EA5E9); }
         .accent-warning { --accent: linear-gradient(90deg,#F59E0B,#F97316); }
         .accent-purple { --accent: linear-gradient(90deg,#7C3AED,#6366F1); }
-        .accent-primary .kpi-icon { background: rgba(255,38,0,.12); color:#FF2600; }
+        .accent-primary .kpi-icon { background: rgba(255,38,0,.12); color:#FFCC00; }
         .accent-success .kpi-icon { background: rgba(34,197,94,.12); color:#22C55E; }
         .accent-info .kpi-icon { background: rgba(56,189,248,.12); color:#0EA5E9; }
         .accent-warning .kpi-icon { background: rgba(245,158,11,.12); color:#F59E0B; }
@@ -710,48 +696,47 @@
             }
         }
 
-        /* Styles pour les titres de section */
+        /* Styles pour les titres de section - Style élégant et minimaliste */
         .section-header {
-            background: #1a1a1a;
-            border-radius: 16px;
-            padding: 30px;
-            margin-top: 30px;
-            margin-bottom: 30px;
+            background: #ffffff;
+            border-radius: 0;
+            padding: 2rem 0;
+            margin: 0 0 2rem 0;
             position: relative;
-            overflow: hidden;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            border-bottom: 1px solid #f1f5f9;
         }
 
         .section-title {
-            color: white;
-            font-size: 2.2rem;
-            font-weight: 700;
+            color: #1e293b;
+            font-size: 1.25rem;
+            font-weight: 600;
             margin: 0;
             position: relative;
             z-index: 2;
             display: flex;
             align-items: center;
-            gap: 20px;
+            gap: 1rem;
+            font-family: 'Plus Jakarta Sans', sans-serif;
         }
 
         .section-title-icon {
-            width: 60px;
-            height: 60px;
-            background: #ff6b35;
-            border-radius: 12px;
+            width: 40px;
+            height: 40px;
+            background: #f8fafc;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 28px;
-            color: white;
+            font-size: 1.25rem;
+            color: #64748b;
             flex-shrink: 0;
         }
 
         .section-subtitle {
-            color: #a0a0a0;
+            color: #64748b;
             font-size: 1rem;
             font-weight: 400;
-            margin: 8px 0 0 80px;
+            margin: 0.5rem 0 0 0;
             position: relative;
             z-index: 2;
             display: flex;
@@ -761,43 +746,42 @@
 
         .section-subtitle-icon {
             font-size: 14px;
-            color: #666;
+            color: #94a3b8;
         }
 
         .section-actions {
             position: absolute;
-            right: 30px;
+            right: 0;
             top: 50%;
             transform: translateY(-50%);
             z-index: 2;
         }
 
         .section-action-btn {
-            background: #ff6b35;
-            border: none;
-            border-radius: 12px;
-            padding: 12px 20px;
-            color: white;
-            font-weight: 600;
-            font-size: 1rem;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            color: #475569;
+            font-weight: 500;
+            font-size: 0.875rem;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 0.5rem;
             text-decoration: none;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 10px rgba(255, 107, 53, 0.3);
+            transition: all 0.2s ease;
         }
 
         .section-action-btn:hover {
-            background: #e55a2b;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.4);
-            color: white;
+            background: #f1f5f9;
+            border-color: #cbd5e1;
+            color: #334155;
             text-decoration: none;
+            transform: translateY(-1px);
         }
 
         .section-action-btn i {
-            font-size: 18px;
+            font-size: 1rem;
         }
 
         /* Responsive pour les titres */
@@ -839,9 +823,9 @@
         /* KPI links */
         .kpi-link { text-decoration: none; color: inherit; display: block; }
         .kpi-link:focus { outline: none; }
-        .kpi-link:focus .kpi-card { box-shadow: 0 0 0 4px rgba(255,38,0,.15), 0 6px 16px rgba(2,6,23,.06); }
+        .kpi-link:focus .kpi-card { box-shadow: 0 0 0 4px rgba(255,38,0,.15); }
         .kpi-card { transition: transform .15s ease, box-shadow .15s ease; }
-        .kpi-link:hover .kpi-card { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(2,6,23,.08); }
+        .kpi-link:hover .kpi-card { transform: translateY(-2px); box-shadow: none; }
         .card-soft { background: #ffffff; border: 1px solid #e5e7eb; border-radius: 14px; }
         .card-title { font-weight: 600; }
 
@@ -852,8 +836,8 @@
             bottom: 0;
             left: 0;
             width: 220px;
-            background-color: #000000; /* noir pur */
-            padding-top: 16px;
+            background-color: #F1F1F1; /* fond gris clair */
+            padding-top: 0;
             z-index: 1030;
             overflow-y: auto; /* scrollable */
             -webkit-overflow-scrolling: touch;
@@ -861,6 +845,8 @@
             /* hide scrollbar but keep scroll */
             -ms-overflow-style: none; /* IE/Edge */
             scrollbar-width: none; /* Firefox */
+            border-right: 1px solid #e2e8f0;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
         }
         .sidebar-header { overflow: visible; }
         .sidebar-header img { max-width: 130px; height: auto !important; display: inline-block; }
@@ -873,32 +859,51 @@
             display: flex;
             align-items: center;
             justify-content: flex-start;
-            gap: 10px;
+            gap: 12px;
             width: 100%;
-            height: 44px;
-            padding: 0 16px;
-            color: #94A3B8; /* slate-400 */
+            height: 48px;
+            padding: 0 20px;
+            color: #64748b; /* slate-500 */
             text-decoration: none;
-            font-weight: 500;
+            font-weight: 300;
+            font-size: 14px;
+            transition: all 0.2s ease;
+            border-radius: 0;
+            margin: 2px 12px;
+            border-radius: 8px;
         }
         .sidebar a .sidebar-text {
             display: inline;
         }
-        .sidebar a:hover, .sidebar a.active { color: #fff; background-color: rgba(255,38,0,.14); }
+        .sidebar a:hover { 
+            color: #1e293b; 
+            background-color: #f1f5f9; 
+            transform: translateX(2px);
+        }
+        .sidebar a.active { 
+            color: #1e293b; 
+            background-color: #E0E0E0; 
+            font-weight: 500;
+            border-radius: 12px;
+            margin: 4px 8px;
+            padding: 12px 16px;
+        }
+        .sidebar a.active i {
+            color: #FFD700;
+        }
+
         main.dashboard-main { 
             margin-left: 220px; 
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
+            background: #ffffff;
             min-height: 100vh;
             border-radius: 0;
         }
 
-        /* Cartes avec transparence pour cohérence */
+        /* Cartes avec fond blanc */
         .card {
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
 
         /* Container avec transparence */
@@ -908,12 +913,11 @@
 
         /* Cartes de statistiques modernes */
         .stats-card {
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
             border-radius: 20px;
             padding: 24px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
@@ -925,14 +929,7 @@
         }
 
         .stats-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, #ff2600, #e02200);
-            border-radius: 20px 20px 0 0;
+            display: none;
         }
 
         .stats-icon {
@@ -949,7 +946,7 @@
         }
 
         .stats-icon-primary {
-            background: linear-gradient(135deg, #ff2600, #e02200);
+            background: linear-gradient(135deg, #FFCC00, #e02200);
         }
 
         .stats-icon-success {
@@ -985,7 +982,7 @@
 
         /* Header hero band */
         .hero {
-            background: linear-gradient(135deg, #FF2600 0%, #e52200 100%);
+            background: linear-gradient(135deg, #FFCC00 0%, #e52200 100%);
             color: #fff;
             border-radius: 14px;
         }
@@ -998,8 +995,8 @@
             .sidebar-backdrop { position: fixed; inset: 0; background: rgba(2,6,23,.45); z-index: 1025; display: none; }
             .sidebar-backdrop.show { display: block; }
             main.dashboard-main { margin-left: 0; }
-            .mobile-topbar { position: sticky; top: 0; z-index: 1040; background: #000000; color: #fff; height: 56px; display: flex; align-items: center; padding: 0 12px; }
-            .sidebar-toggle { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border: 1px solid rgba(255,255,255,.15); border-radius: 8px; color: #fff; background: transparent; }
+            .mobile-topbar { position: sticky; top: 0; z-index: 1040; background: #ffffff; color: #1e293b; height: 56px; display: flex; align-items: center; padding: 0 12px; border-bottom: 1px solid #e2e8f0; }
+            .sidebar-toggle { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border: 1px solid #e2e8f0; border-radius: 8px; color: #64748b; background: transparent; }
             .mobile-brand { display: inline-flex; align-items: center; gap: 10px; margin-left: 10px; }
             .mobile-brand img { height: 28px; }
             .mobile-brand span { font-weight: 700; letter-spacing: .3px; }
@@ -1265,7 +1262,7 @@
         /* Styles pour la page de détail des membres */
         .member-profile-header {
             position: relative;
-            background: #FF2600;
+            background: #FFCC00;
             border-radius: 20px;
             margin-bottom: 2rem;
             overflow: hidden;
@@ -1448,7 +1445,7 @@
             width: 48px;
             height: 48px;
             border-radius: 12px;
-            background: #FF2600;
+            background: #FFCC00;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -1480,7 +1477,7 @@
         }
 
         .btn-add-remark, .btn-add-tithe {
-            background: #FF2600;
+            background: #FFCC00;
             border: none;
             padding: 0.75rem 1.5rem;
             border-radius: 12px;
@@ -1501,7 +1498,7 @@
             background: #ffffff;
             border-radius: 12px;
             margin-bottom: 1rem;
-            border-left: 4px solid #FF2600;
+            border-left: 4px solid #FFCC00;
             transition: all 0.3s ease;
         }
 
@@ -2155,19 +2152,16 @@
     <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
     
     <div class="sidebar">
-        <div class="sidebar-header" style="padding: 20px 16px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 10px;">
-            <img src="{{ asset('images/eglix.png') }}" alt="Eglix" style=" height: 50px; margin-bottom: 15px;">
+        <!-- Barre jaune en haut -->
+        <div style="height: 4px; background: linear-gradient(90deg, #f59e0b, #fbbf24);"></div>
+        
+        <div class="sidebar-header" style="padding: 20px 16px; text-align: center; border-bottom: 1px solid #e2e8f0; margin-bottom: 16px;">
+            <img src="{{ asset('images/eglix-black.png') }}" alt="Eglix" style="height: 50px; margin-bottom: 15px;">
             
             @auth
-            <div class="user-info" style="background-color: transparent; color: white; font-size: 0.9rem; padding: 0.75rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2);">
-                <div style="font-weight: 600; margin-bottom: 5px; color: #fff;">
-                    <i class="bi bi-person-circle me-2"></i>
-                    {{ Auth::user()->name }}
-                </div>
-                <div style="font-size: 0.8rem; opacity: 0.9; color: rgba(255,255,255,0.9);">
-                    <i class="bi bi-building me-2"></i>
-                    {{ Auth::user()->church->name ?? 'Église' }}
-                </div>
+            <div style="background-color: #000000; color: white; font-size: 0.9rem; padding: 12px; border-radius: 12px; display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 700;">
+                <i class="bi bi-shop" style="color: #FFCC00; font-size: 16px;"></i>
+                <span>{{ Auth::user()->church->name ?? 'Église' }}</span>
             </div>
             @endauth
         </div>
@@ -2209,19 +2203,48 @@
         <a href="{{ route('user-management.index') }}" class="{{ request()->is('user-management*') ? 'active' : '' }}" title="Comptes"><i class="bi bi-people-fill"></i><span class="sidebar-text">Comptes</span></a>
         @endif
         
-        <!-- Bouton de déconnexion -->
+        <!-- Informations utilisateur -->
         <div style="margin-top: 20px; padding: 0 16px;">
-            <button type="button" class="btn btn-outline-light btn-sm w-100" style="border-radius: 8px; font-size: 0.875rem;" title="Se déconnecter" onclick="confirmLogout()">
-                <i class="bi bi-box-arrow-right me-2"></i>
-                <span class="sidebar-text">Déconnexion</span>
+            <div class="user-info-card" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px; margin-bottom: 16px;">
+                <div class="d-flex flex-column align-items-center mb-3">
+                    <div class="user-avatar" style="width: 40px; height: 40px; background: #FFD700; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 8px;">
+                        <i class="bi bi-person-fill" style="color: #000000; font-size: 1.2rem;"></i>
+                    </div>
+                    <div class="user-details text-center">
+                        <h6 class="mb-1" style="font-weight: 600; color: #1e293b; font-size: 0.9rem;">{{ Auth::user()->name }}</h6>
+                        <small class="text-muted" style="font-size: 0.75rem;">{{ Auth::user()->email }}</small>
+                    </div>
+                </div>
+                <div class="user-role" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 8px 12px;">
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-shield-check me-2" style="color: #FFD700; font-size: 0.9rem;"></i>
+                        <span style="font-size: 0.8rem; font-weight: 500; color: #64748b;">
+                            @if(Auth::user()->isChurchAdmin())
+                                Administrateur
+                            @elseif(Auth::user()->hasPermission('users.view'))
+                                Gestionnaire
+                            @else
+                                Utilisateur
+                            @endif
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Bouton de déconnexion -->
+        <div style="padding: 0 16px;">
+            <button type="button" class="btn btn-sm w-100" style="border-radius: 8px; font-size: 0.875rem; background-color: #000000 !important; border: 1px solid #000000 !important; color: #ffffff !important; font-weight: 700;" title="Se déconnecter" onclick="confirmLogout()">
+                <i class="bi bi-box-arrow-right me-2" style="color: #ffffff !important;"></i>
+                <span class="sidebar-text" style="color: #ffffff !important; font-weight: 700;">Déconnexion</span>
             </button>
         </div>
         
         <!-- Crédit développeur en bas de sidebar -->
-        <div class="sidebar-footer" style="margin-top: auto; padding: 16px; border-top: 1px solid rgba(255,255,255,0.1); text-align: center;">
-            <p class="text-muted mb-2 small" style="font-size: 0.75rem;">Développé par</p>
-            <a href="#" target="_blank" rel="noopener" style="display: inline-block;">
-                <img src="{{ asset('images/lafiatech-white.png') }}" alt="Lafiatech" style="height: 24px; opacity: 0.8; transition: opacity 0.2s;">
+        <div class="sidebar-footer" style="margin-top: auto; padding: 16px; border-top: 1px solid #e2e8f0; text-align: center;">
+            <p class="text-muted mb-2 small" style="font-size: 0.75rem; color: #94a3b8;">Développé par</p>
+            <a href="https://lafia.tech" target="_blank" rel="noopener" style="display: inline-block;">
+                <img src="{{ asset('images/lafiatech.png') }}" alt="Lafiatech" style="height: 24px; opacity: 0.6; transition: opacity 0.2s;">
             </a>
         </div>
     </div>
@@ -2233,15 +2256,15 @@
     <!-- Global Confirm Modal -->
     <div class="modal fade" id="confirmModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Confirmation</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-content" style="border-radius: 16px; border: none; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);">
+                <div class="modal-header" style="border-bottom: 1px solid #e2e8f0; padding: 20px 24px 16px;">
+                    <h5 class="modal-title" style="font-weight: 600; color: #1e293b; font-family: 'Plus Jakarta Sans', sans-serif;">Confirmation</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="background: none; border: none; font-size: 1.2rem; color: #64748b;"></button>
                 </div>
-                <div class="modal-body" id="confirmModalMessage">Êtes-vous sûr ?</div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>
-                    <button type="button" class="btn btn-danger" id="confirmModalOk">Supprimer</button>
+                <div class="modal-body" id="confirmModalMessage" style="padding: 20px 24px;">Êtes-vous sûr ?</div>
+                <div class="modal-footer" style="border-top: 1px solid #e2e8f0; padding: 16px 24px 20px; gap: 12px;">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" style="border-radius: 8px; font-weight: 500; padding: 8px 16px; border: 1px solid #e2e8f0; color: #64748b; background: transparent;">Annuler</button>
+                    <button type="button" class="btn btn-danger" id="confirmModalOk" style="border-radius: 8px; font-weight: 700; padding: 8px 16px; background-color: #000000; border: 1px solid #000000; color: #ffffff;">Supprimer</button>
                 </div>
             </div>
         </div>
@@ -2341,7 +2364,8 @@
             `;
             
             modalOk.innerHTML = '<i class="bi bi-box-arrow-right me-2"></i>Se déconnecter';
-            modalOk.className = 'btn btn-danger';
+            modalOk.className = 'btn';
+            modalOk.style.cssText = 'border-radius: 8px; font-weight: 700; padding: 8px 16px; background-color: #000000; border: 1px solid #000000; color: #ffffff;';
             
             // Supprimer les anciens événements
             modalOk.replaceWith(modalOk.cloneNode(true));
@@ -2395,7 +2419,7 @@
         
         .select2-container.select2-container--focus .select2-selection--single,
         .select2-container.select2-container--open .select2-selection--single {
-            border-color: #FF2600;
+            border-color: #FFCC00;
             box-shadow: 0 0 0 3px rgba(255, 38, 0, 0.15);
         }
         
@@ -2429,7 +2453,7 @@
         .select2-container .select2-results__option--highlighted[aria-selected] {
             background-color: #fef2f2;
             color: #374151;
-            border-left: 3px solid #FF2600;
+            border-left: 3px solid #FFCC00;
         }
         
         .select2-container .select2-search--dropdown .select2-search__field {
@@ -2441,7 +2465,7 @@
         }
         
         .select2-container .select2-search--dropdown .select2-search__field:focus {
-            border-color: #FF2600;
+            border-color: #FFCC00;
             outline: none;
             box-shadow: 0 0 0 3px rgba(255, 38, 0, 0.15);
         }
@@ -2557,7 +2581,7 @@
             right: 16px;
             top: 50%;
             transform: translateY(-50%);
-            color: #FF2600;
+            color: #FFCC00;
             font-size: 14px;
         }
 
@@ -2853,7 +2877,7 @@
         // Configuration commune pour Select2
         const select2Config = {
             placeholder: "Rechercher...",
-            allowClear: true,
+            allowClear: false,
             width: '100%',
             language: {
                 noResults: function() {
@@ -2913,7 +2937,7 @@
                 const config = {
                     ...select2Config,
                     placeholder: placeholder,
-                    allowClear: !$(this).prop('required') && !$(this).is('[data-no-clear]')
+                    allowClear: false
                 };
                 
                 $(this).select2(config);
@@ -2934,7 +2958,7 @@
                         const config = {
                             ...select2Config,
                             placeholder: placeholder,
-                            allowClear: !$(this).prop('required') && !$(this).is('[data-no-clear]')
+                            allowClear: false
                         };
                         
                         $(this).select2(config);
@@ -2942,6 +2966,9 @@
                 }, 100);
             }
         });
+    });
+
+    
     });
     </script>
     

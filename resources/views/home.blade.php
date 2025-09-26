@@ -1,27 +1,37 @@
 @extends('layouts.app')
 
 @section('content')
+<!-- Import de la police EB Garamond -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
 <div class="container py-4">
-    <!-- Page Header -->
-    <div class="page-header fade-in">
-        <div class="d-flex justify-content-between align-items-center">
-            <div>
-                <h1 class="page-title">
-                    <i class="bi bi-speedometer2 me-3"></i>
-                    Tableau de bord
-                </h1>
-                <p class="page-subtitle">
-                    <i class="bi bi-graph-up me-2"></i>
-                    Vue d'ensemble des activités et finances de l'église
-                </p>
-            </div>
+    <!-- Section de salutation élégante -->
+    <div class="greeting-section">
+        <div class="greeting-content">
+            <h1 class="greeting-title">
+                @php
+                    $hour = now()->hour;
+                    if ($hour < 12) {
+                        $greeting = 'Bonjour';
+                        $emoji = '🌅';
+                    } elseif ($hour < 18) {
+                        $greeting = 'Bon après-midi';
+                        $emoji = '☀️';
+                    } else {
+                        $greeting = 'Bonsoir';
+                        $emoji = '🌙';
+                    }
+                @endphp
+                {{ $greeting }} {{ Auth::user()->name }} ! {{ $emoji }}
+            </h1>
+            <p class="greeting-subtitle">
+                🎉 La journée est bien partie. Que diriez-vous de consulter vos statistiques ?
+            </p>
         </div>
     </div>
 
-    <!-- Filter Tabs -->
-    <div class="filter-tabs slide-in-up">
-        <button class="filter-tab active" data-filter="all">Tous</button>
-    </div>
+
 
     <!-- KPIs Section -->
     <div class="kpis-section mb-4" data-section="financial">
@@ -31,24 +41,13 @@
                 <a href="{{ route('members.index') }}" class="text-decoration-none">
                     <div class="kpi-card stat-card animate-on-scroll">
                         <div class="kpi-header">
-                            <div class="kpi-icon members">
-                                <i class="bi bi-people-fill"></i>
-                            </div>
-                            <div class="kpi-info">
-                                <h3 class="kpi-title">Membres actifs</h3>
-                                <p class="kpi-description">Nombre de membres actifs</p>
-                            </div>
                         </div>
                         <div class="kpi-meta">
-                            <div class="kpi-value">{{ $stats['active_members'] ?? '—' }}</div>
+                            <div class="kpi-value">{{ $stats['active_members'] ?? '0' }}</div>
                         </div>
-                        <div class="kpi-actions">
-                            <a href="{{ route('members.index') }}" class="action-btn" title="Voir">
-                                <i class="bi bi-eye"></i>
-                            </a>
-                            <a href="{{ route('members.create') }}" class="action-btn" title="Ajouter">
-                                <i class="bi bi-plus"></i>
-                            </a>
+                        <div class="kpi-info">
+                            <h3 class="kpi-title">Membres actifs</h3>
+                            <p class="kpi-description">Nombre de membres actifs</p>
                         </div>
                     </div>
                 </a>
@@ -67,33 +66,29 @@
                     }
                     elseif (($k['label'] ?? '') === 'Offrandes') { 
                         $href = route('offerings.index'); 
-                        $icon = 'bi-gift-fill';
+                        $icon = 'bi-gift';
                         $color = 'offerings';
                     }
                     elseif (($k['label'] ?? '') === 'Dons') { 
                         $href = route('donations.index'); 
-                        $icon = 'bi-heart-fill';
+                        $icon = 'bi-heart';
                         $color = 'donations';
                     }
                     elseif (($k['label'] ?? '') === 'Dépenses') { 
                         $href = route('expenses.index'); 
-                        $icon = 'bi-credit-card-fill';
+                        $icon = 'bi-credit-card';
                         $color = 'expenses';
                     }
                 @endphp
                 <a href="{{ $href }}" class="text-decoration-none">
                     <div class="kpi-card stat-card animate-on-scroll">
                         <div class="kpi-header">
-                            <div class="kpi-icon {{ $color }}">
-                                <i class="bi {{ $icon }}"></i>
-                            </div>
-                            <div class="kpi-info">
-                                <h3 class="kpi-title">{{ $k['label'] }}</h3>
-                                <p class="kpi-description">Montant {{ strtolower($k['label']) }}</p>
-                            </div>
                         </div>
                         <div class="kpi-meta">
-                            <div class="kpi-value">{{ number_format(round($k['label']==='Dépenses' ? ($k['current'] ?? 0) : $k['value']), 0, ',', ' ') }} FCFA</div>
+                            <div class="kpi-value">
+                                {{ number_format(round($k['label']==='Dépenses' ? ($k['current'] ?? 0) : $k['value']), 0, ',', ' ') }}
+                                <span class="kpi-currency">FCFA</span>
+                            </div>
                             @if(!is_null($k['delta']))
                                 @php $up = ($k['is_expense'] ?? false) ? ($k['delta'] < 0) : ($k['delta'] >= 0); @endphp
                                 <div class="kpi-trend {{ $up ? 'trend-up' : 'trend-down' }}">
@@ -102,13 +97,9 @@
                                 </div>
                             @endif
                         </div>
-                        <div class="kpi-actions">
-                            <a href="{{ $href }}" class="action-btn" title="Voir">
-                                <i class="bi bi-eye"></i>
-                            </a>
-                            <a href="{{ $href }}/create" class="action-btn" title="Ajouter">
-                                <i class="bi bi-plus"></i>
-                            </a>
+                        <div class="kpi-info">
+                            <h3 class="kpi-title">{{ $k['label'] }}</h3>
+                            <p class="kpi-description">Montant {{ strtolower($k['label']) }}</p>
                         </div>
                     </div>
                 </a>
@@ -144,97 +135,97 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 
 <style>
+/* Section de salutation élégante */
+.greeting-section {
+    padding: 0;
+    margin-bottom: 2rem;
+    overflow: hidden;
+}
+
+.greeting-content {
+    padding-top: 2rem;
+    text-align: left;
+}
+
+.greeting-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0 0 1rem 0;
+    line-height: 1.2;
+    font-family: 'EB Garamond', serif;
+    letter-spacing: -0.02em;
+}
+
+.greeting-subtitle {
+    font-size: 1.125rem;
+    color: #64748b;
+    margin: 0;
+    line-height: 1.6;
+    font-weight: 400;
+    max-width: 600px;
+}
+
+/* Responsive pour la section de salutation */
+@media (max-width: 768px) {
+    .greeting-content {
+        padding: 2rem 1.5rem;
+        text-align: center;
+    }
+    
+    .greeting-title {
+        font-size: 2rem;
+    }
+    
+    .greeting-subtitle {
+        font-size: 1rem;
+    }
+}
+
 /* Les styles pour l'en-tête de page sont maintenant définis dans le layout principal */
 
-/* Filter Tabs */
-.filter-tabs {
-    display: flex;
-    gap: 0.5rem;
-    margin-bottom: 2rem;
-    padding: 0.25rem;
-    background: #F9FAFB;
-    border-radius: 8px;
-    width: fit-content;
-}
 
-.filter-tab {
-    padding: 0.5rem 1rem;
-    border: none;
-    background: transparent;
-    color: #6B7280;
-    font-weight: 500;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    font-size: 0.875rem;
-}
-
-.filter-tab.active {
-    background: #FF2600;
-    color: white;
-}
-
-.filter-tab:hover:not(.active) {
-    background: #E5E7EB;
-    color: #374151;
-}
-
-/* KPI Cards */
+/* KPI Cards - Style minimaliste élégant */
 .kpi-card {
-    background: white;
-    border: 1px solid #E5E7EB;
-    border-radius: 8px;
-    padding: 1.5rem;
+    background: rgba(0, 0, 0, 0.02);
+    border: 1px solid #e2e8f0;
+    border-radius: 24px;
+    padding: 2rem;
     margin-bottom: 1rem;
-    transition: all 0.2s ease;
+    transition: all 0.3s ease;
     position: relative;
+    min-height: 140px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .kpi-card:hover {
-    border-color: #D1D5DB;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+    border-color: #cbd5e1;
 }
 
 .kpi-header {
-    display: flex;
-    align-items: flex-start;
-    gap: 1rem;
     margin-bottom: 1rem;
 }
-
-.kpi-icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.25rem;
-    color: white;
-    flex-shrink: 0;
-}
-
-.kpi-icon.members { background: #6B7280; }
-.kpi-icon.tithes { background: #FF2600; }
-.kpi-icon.offerings { background: #22C55E; }
-.kpi-icon.donations { background: #8B5CF6; }
-.kpi-icon.expenses { background: #F59E0B; }
 
 .kpi-info {
     flex: 1;
     min-width: 0;
+    margin-top: 1rem;
 }
 
 .kpi-title {
-    font-size: 1.125rem;
+    font-size: 1rem;
     font-weight: 600;
-    color: #1F2937;
-    margin-bottom: 0.25rem;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
     line-height: 1.4;
+    font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
 .kpi-description {
-    color: #6B7280;
+    color: #64748b;
     font-size: 0.875rem;
     margin-bottom: 0;
     line-height: 1.4;
@@ -245,50 +236,33 @@
 }
 
 .kpi-value {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+    line-height: 1;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.kpi-currency {
     font-size: 1.5rem;
     font-weight: 700;
-    color: #1F2937;
-    margin-bottom: 0.5rem;
+    color: #1e293b;
+    margin-left: 0.25rem;
 }
 
 .kpi-trend {
     font-size: 0.875rem;
-    font-weight: 600;
+    font-weight: 500;
     display: flex;
     align-items: center;
     gap: 0.25rem;
+    color: #64748b;
 }
 
 .trend-up { color: #22C55E; }
 .trend-down { color: #EF4444; }
 
-.kpi-actions {
-    display: flex;
-    gap: 0.5rem;
-    justify-content: flex-end;
-}
-
-.action-btn {
-    width: 32px;
-    height: 32px;
-    border: 1px solid #E5E7EB;
-    background: white;
-    border-radius: 6px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #6B7280;
-    text-decoration: none;
-    transition: all 0.2s ease;
-    font-size: 0.875rem;
-}
-
-.action-btn:hover {
-    border-color: #D1D5DB;
-    background: #F9FAFB;
-    color: #374151;
-    text-decoration: none;
-}
 
 /* Transaction Card */
 .transaction-card {
@@ -302,7 +276,6 @@
 
 .transaction-card:hover {
     border-color: #D1D5DB;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .transaction-header {
@@ -459,7 +432,6 @@
 
 .chart-card:hover {
     border-color: #D1D5DB;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .chart-header {
@@ -523,7 +495,6 @@
 
 .image-card:hover {
     border-color: #D1D5DB;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 /* Empty State */
@@ -546,10 +517,6 @@
 
 /* Responsive */
 @media (max-width: 768px) {
-    .filter-tabs {
-        width: 100%;
-        justify-content: center;
-    }
     
     .kpi-header {
         flex-direction: column;
@@ -574,22 +541,6 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Gestion des onglets de filtrage (simplifié)
-    const filterTabs = document.querySelectorAll('.filter-tab');
-    const sections = document.querySelectorAll('[data-section]');
-    filterTabs.forEach(tab => {
-        tab.addEventListener('click', function() {
-            const filter = this.getAttribute('data-filter');
-            // Update active tab
-            filterTabs.forEach(t => t.classList.remove('active'));
-            this.classList.add('active');            
-            
-            // Show all sections (only "Tous" button remains)
-            sections.forEach(section => {
-                section.style.display = 'block';
-            });
-        });
-    });    
     // Gestion des onglets de transactions
     const transactionTabs = document.querySelectorAll('.transaction-tab');
     const transactionPanes = document.querySelectorAll('.transaction-pane');    
@@ -639,13 +590,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 { 
                     label: 'Dîmes', 
                     data: @json($chart['tithes'] ?? []), 
-                    borderColor: '#FF2600', 
+                    borderColor: '#6B7280', 
                     backgroundColor: gradientTithes, 
                     fill: true, 
                     tension: 0.4,
                     pointRadius: 4, 
                     pointHoverRadius: 6,
-                    pointBackgroundColor: '#FF2600',
+                    pointBackgroundColor: '#6B7280',
                     pointBorderColor: '#fff',
                     pointBorderWidth: 2
                 },
@@ -705,7 +656,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     backgroundColor: 'rgba(0,0,0,0.8)',
                     titleColor: '#fff',
                     bodyColor: '#fff',
-                    borderColor: '#FF2600',
+                    borderColor: '#6B7280',
                     borderWidth: 1,
                     callbacks: { 
                         label: (ctx) => `${ctx.dataset.label}: ${Math.round(Number(ctx.parsed.y)).toLocaleString('fr-FR')} FCFA` 
@@ -742,6 +693,236 @@ document.addEventListener('DOMContentLoaded', function() {
     const lineChart = new Chart(ctxLine, lineConfig);
 });
 </script>
+
+<!-- Sections de support -->
+<div class="container py-4">
+    <div class="row g-4">
+        <!-- Rejoignez-nous sur YouTube -->
+        <div class="col-md-6">
+            <div class="support-card">
+                <div class="support-card-body">
+                    <div class="support-icon youtube-icon">
+                        <i class="bi bi-play-fill"></i>
+                    </div>
+                    <div class="support-content">
+                        <h3 class="support-title">Rejoignez-nous sur Youtube</h3>
+                        <p class="support-description">Découvrez des vidéos pratiques pour apprendre à utiliser Eglix</p>
+                        <a href="#" class="btn btn-dark support-btn">Accéder maintenant</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Partagez vos suggestions -->
+        <div class="col-md-6">
+            <div class="support-card">
+                <div class="support-card-body">
+                    <div class="support-icon suggestions-icon">
+                        <i class="bi bi-chat-heart-fill"></i>
+                    </div>
+                    <div class="support-content">
+                        <h3 class="support-title">Partagez vos suggestions</h3>
+                        <p class="support-description">Vos suggestions nous aident à améliorer Eglix</p>
+                        <a href="#" class="btn btn-outline-primary support-btn">Partager</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Rejoignez-nous sur WhatsApp -->
+        <div class="col-md-6">
+            <div class="support-card">
+                <div class="support-card-body">
+                    <div class="support-icon whatsapp-icon">
+                        <i class="bi bi-whatsapp"></i>
+                    </div>
+                    <div class="support-content">
+                        <h3 class="support-title">Rejoignez-nous sur WhatsApp</h3>
+                        <p class="support-description">Rejoignez notre canal WhatsApp</p>
+                        <a href="#" class="btn btn-success support-btn">Rejoindre</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Styles pour les cartes de support - Style exact de l'image */
+.support-card {
+    background: #ffffff;
+    border: none;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: none;
+    transition: all 0.3s ease;
+    height: 100%;
+}
+
+.support-card:hover {
+    transform: none;
+    box-shadow: none;
+}
+
+.support-card-body {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+    height: 100%;
+}
+
+.support-icon {
+    width: 60px;
+    height: 60px;
+    background: #f5f5f5;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border: none;
+    position: relative;
+}
+
+.support-icon i {
+    font-size: 1.8rem;
+    color: #333333;
+}
+
+/* Icône YouTube avec carré arrondi et étoile */
+.support-icon.youtube-icon {
+    background: #f5f5f5;
+}
+
+.support-icon.youtube-icon::before {
+    content: '';
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    background: #333333;
+    border-radius: 6px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.support-icon.youtube-icon::after {
+    content: '★';
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    font-size: 12px;
+    color: #333333;
+}
+
+.support-icon.youtube-icon i {
+    position: relative;
+    z-index: 1;
+    color: #ffffff;
+    font-size: 1.2rem;
+}
+
+
+/* Icône Suggestions avec bulle de chat et cœur */
+.support-icon.suggestions-icon {
+    background: #f5f5f5;
+}
+
+.support-icon.suggestions-icon i {
+    color: #FFD700;
+    font-size: 1.5rem;
+}
+
+/* Icône WhatsApp */
+.support-icon.whatsapp-icon {
+    background: #f5f5f5;
+}
+
+.support-icon.whatsapp-icon i {
+    color: #25D366;
+    font-size: 1.8rem;
+}
+
+.support-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    width: 100%;
+}
+
+.support-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #000000;
+    margin-bottom: 0.5rem;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    line-height: 1.3;
+}
+
+.support-description {
+    font-size: 0.875rem;
+    color: #000000;
+    margin-bottom: 1.5rem;
+    line-height: 1.4;
+    font-weight: 400;
+}
+
+.support-btn {
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 0.875rem;
+    padding: 10px 20px;
+    align-self: flex-start;
+    transition: all 0.3s ease;
+    border: none;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.support-btn.btn-dark {
+    background-color: #000000 !important;
+    color: #ffffff !important;
+    border: none !important;
+}
+
+
+.support-btn.btn-outline-primary {
+    background-color: transparent;
+    color: #007bff;
+    border: 1px solid #007bff;
+}
+
+.support-btn.btn-success {
+    background-color: #25D366;
+    color: #ffffff;
+}
+
+.support-btn:hover {
+    transform: none;
+    box-shadow: none;
+    opacity: 0.9;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .support-card-body {
+        align-items: center;
+        text-align: center;
+    }
+    
+    .support-icon {
+        align-self: center;
+    }
+    
+    .support-btn {
+        align-self: center;
+    }
+}
+</style>
 @endsection
 
 

@@ -17,12 +17,12 @@
         .header {
             text-align: center;
             margin-bottom: 30px;
-            border-bottom: 2px solid #FF2600;
+            border-bottom: 2px solid #FFCC00;
             padding-bottom: 20px;
         }
         
         .header h1 {
-            color: #FF2600;
+            color: #FFCC00;
             font-size: 24px;
             margin: 0 0 10px 0;
         }
@@ -42,7 +42,7 @@
             font-weight: bold;
             padding: 10px;
             margin: 0 0 15px 0;
-            border-left: 4px solid #FF2600;
+            border-left: 4px solid #FFCC00;
         }
         
         .summary-grid {
@@ -65,7 +65,7 @@
         }
         
         .summary-card h3 {
-            color: #FF2600;
+            color: #FFCC00;
             font-size: 14px;
             margin: 0 0 15px 0;
             padding-bottom: 5px;

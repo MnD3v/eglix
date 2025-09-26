@@ -2,192 +2,173 @@
 
 @section('content')
 <style>
-.administration-card {
-    transition: all 0.3s ease;
-    border: none;
+/* Styles pour la liste des fonctions d'administration */
+.administration-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.administration-row {
     background: #ffffff;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    border: 1px solid #f1f5f9;
     border-radius: 12px;
-    overflow: hidden;
-    position: relative;
-    border: 1px solid #f1f3f4;
-}
-
-.administration-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.12);
-    border-color: #e8f0fe;
-}
-
-.status-badge {
-    background: #34a853;
-    border: none;
-    border-radius: 16px;
-    padding: 0.4rem 0.8rem;
-    font-weight: 500;
-    font-size: 0.75rem;
-    color: white;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.status-badge.bg-success {
-    background: #34a853;
-}
-
-.status-badge.bg-warning {
-    background: #fbbc04;
-    color: #1a1a1a;
-}
-
-.status-badge.bg-secondary {
-    background: #5f6368;
-}
-
-.function-title {
-    color: #202124;
-    font-weight: 600;
-    font-size: 1.1rem;
-    margin-bottom: 0.5rem;
-}
-
-.member-avatar {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: #e8f0fe;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 600;
-    font-size: 0.9rem;
-    color: #1a73e8;
-    margin-right: 12px;
-}
-
-.member-info {
-    display: flex;
-    align-items: center;
-    margin-bottom: 12px;
-}
-
-.member-name {
-    color: #202124;
-    font-weight: 600;
-    font-size: 0.95rem;
-    margin: 0;
-}
-
-.member-details {
-    color: #5f6368;
-    font-size: 0.8rem;
-    margin: 2px 0 0 0;
-}
-
-.date-info {
-    background: #f8f9fa;
-    border-radius: 8px;
-    padding: 8px 12px;
-    margin: 8px 0;
-    border-left: 3px solid #1a73e8;
-}
-
-.date-info i {
-    color: #5f6368;
-    font-size: 0.85rem;
-    margin-right: 6px;
-}
-
-.date-text {
-    color: #5f6368;
-    font-size: 0.8rem;
-    font-weight: 500;
-}
-
-.notes-section {
-    background: #f8f9fa;
-    border-radius: 8px;
-    padding: 8px 12px;
-    margin: 8px 0;
-    border-left: 3px solid #34a853;
-}
-
-.notes-text {
-    color: #5f6368;
-    font-size: 0.8rem;
-    font-style: italic;
-    margin: 0;
-    line-height: 1.4;
-}
-
-.action-buttons {
-    opacity: 0;
-    transition: all 0.3s ease;
-    transform: translateY(8px);
-}
-
-.administration-card:hover .action-buttons {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-.action-btn {
-    border-radius: 6px;
-    padding: 0.4rem 0.8rem;
-    font-weight: 500;
-    font-size: 0.8rem;
     transition: all 0.2s ease;
-    border: 1px solid;
-    text-decoration: none;
-    display: inline-flex;
+    display: flex;
     align-items: center;
+    padding: 1rem 1.5rem;
+    gap: 1.5rem;
+    min-height: 80px;
+}
+
+.administration-row-separated {
+    margin-top: 0.5rem;
+    padding-top: 1.5rem;
+}
+
+.administration-row:hover {
+    background: #fafbfc;
+    border-color: #e2e8f0;
+}
+
+.administration-row-body {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+    flex: 1;
+}
+
+.administration-info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
     gap: 4px;
 }
 
-.action-btn:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+.administration-date {
+    margin-bottom: 4px;
 }
 
-.btn.action-btn {
-    background: #ffffff;
-    border-color: #dadce0;
-    color: #5f6368;
+.administration-title {
+    font-size: 16px;
+    font-weight: 700;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    color: #1e293b;
+    margin: 0;
+    line-height: 1.3;
 }
 
-.btn.action-btn:hover {
-    background: #f8f9fa;
-    border-color: #5f6368;
-    color: #202124;
+.administration-details {
+    font-size: 14px;
+    color: #64748b;
+    margin: 4px 0 0 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
 }
 
-.btn-secondary.action-btn {
-    background: #1a73e8;
-    border-color: #1a73e8;
-    color: white;
+.administration-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
 }
 
-.btn-secondary.action-btn:hover {
-    background: #1557b0;
-    border-color: #1557b0;
+.administration-row-empty {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: #64748b;
 }
 
-.btn-danger.action-btn {
-    background: #ffffff;
-    border-color: #ea4335;
-    color: #ea4335;
+.administration-row-empty i {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
 }
 
-.btn-danger.action-btn:hover {
-    background: #fce8e6;
-    border-color: #d33b2c;
-    color: #d33b2c;
+/* Styles pour les champs de recherche arrondis */
+.search-group {
+    border-radius: 25px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.card-separator {
-    height: 1px;
-    background: #e8eaed;
-    margin: 12px 0;
+.search-icon {
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-right: none;
+    border-radius: 25px 0 0 25px;
+    color: #000000;
+}
+
+.search-input {
+    border: 1px solid #e2e8f0;
+    border-left: none;
+    border-right: none;
+    background-color: #ffffff;
+    border-radius: 0;
+    padding: 12px 16px;
+    font-size: 14px;
+}
+
+.search-input:focus {
+    border-color: #e2e8f0;
+    box-shadow: none;
+    background-color: #ffffff;
+}
+
+.search-btn {
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-left: none;
+    border-radius: 0 25px 25px 0;
+    color: #000000;
+    font-weight: 600;
+    padding: 12px 20px;
+}
+
+.search-btn:hover {
+    background-color: #f1f5f9;
+    border-color: #cbd5e1;
+    color: #000000;
+}
+
+.filter-select {
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    padding: 12px 16px;
+    font-size: 14px;
+}
+
+.filter-select:focus {
+    border-color: #e2e8f0;
+    box-shadow: none;
+}
+
+.filter-btn {
+    border-radius: 12px;
+    padding: 12px 20px;
+    font-weight: 600;
+    color: #000000;
+}
+
+/* Icônes noires dans toute la section administration */
+.administration-list .bi,
+.administration-appbar .bi,
+.administration-details .bi,
+.administration-row-empty .bi,
+.search-icon .bi,
+.search-btn .bi,
+.filter-btn .bi {
+    color: #000000 !important;
+}
+
+/* Texte de date noir */
+.administration-date .badge {
+    color: #000000 !important;
+    background-color: #f8fafc !important;
+    border: 1px solid #e2e8f0 !important;
 }
 </style>
 <div class="container py-4">
@@ -195,23 +176,19 @@
     <div class="appbar administration-appbar">
         <div class="appbar-content">
             <div class="appbar-left">
-                <div class="appbar-icon">
-                    <i class="bi bi-person-badge"></i>
-                </div>
+                <a href="{{ url('/') }}" class="appbar-back-btn">
+                    <i class="bi bi-arrow-left"></i>
+                </a>
                 <div class="appbar-title-section">
                     <h1 class="appbar-title">Gestion des Fonctions</h1>
-                    <div class="appbar-subtitle">
-                        <i class="bi bi-shield-check appbar-subtitle-icon"></i>
-                        <span class="appbar-subtitle-text">Gérez les fonctions d'administration et leurs permissions</span>
-                    </div>
                 </div>
             </div>
             <div class="appbar-right">
-                <a href="{{ route('administration-function-types.index') }}" class="appbar-btn-secondary">
+                <a href="{{ route('administration-function-types.index') }}" class="appbar-btn-white me-2">
                     <i class="bi bi-tags"></i>
-                    <span>Types de fonctions</span>
+                    <span class="btn-text">Types de fonctions</span>
                 </a>
-                <a href="{{ route('administration.create') }}" class="btn-add">
+                <a href="{{ route('administration.create') }}" class="appbar-btn-yellow">
                     <i class="bi bi-person-plus"></i>
                     <span class="btn-text">Nouvelle fonction</span>
                 </a>
@@ -295,17 +272,15 @@
     <form method="GET" class="mb-4">
         <div class="row g-3 align-items-end">
             <div class="col-12 col-md-4">
-                <div class="input-group">
-                    <span class="input-group-text"><i class="bi bi-search"></i></span>
-                    <input type="text" class="form-control" placeholder="Rechercher par membre, fonction..." name="q" value="{{ $search ?? '' }}">
-                    @if(!empty($search))
-                    <a class="btn btn-outline-secondary" href="{{ route('administration.index') }}">Effacer</a>
-                    @endif
+                <div class="input-group search-group">
+                    <span class="input-group-text search-icon"><i class="bi bi-search"></i></span>
+                    <input type="text" class="form-control search-input" placeholder="Rechercher par membre, fonction..." name="q" value="{{ $search ?? '' }}">
+                    <button class="btn btn search-btn" type="submit"><i class="bi bi-search"></i> <span class="btn-label d-none d-lg-inline">Rechercher</span></button>
                 </div>
             </div>
             <div class="col-6 col-md-3">
                 <label class="form-label small text-muted mb-1">Fonction</label>
-                <select name="function" class="form-select">
+                <select name="function" class="form-select filter-select">
                     <option value="">Toutes les fonctions</option>
                     @foreach($availableFunctions as $function)
                         <option value="{{ $function }}" {{ $functionFilter === $function ? 'selected' : '' }}>{{ $function }}</option>
@@ -314,7 +289,7 @@
             </div>
             <div class="col-6 col-md-3">
                 <label class="form-label small text-muted mb-1">Statut</label>
-                <select name="status" class="form-select">
+                <select name="status" class="form-select filter-select">
                     <option value="">Tous les statuts</option>
                     <option value="active" {{ $statusFilter === 'active' ? 'selected' : '' }}>Actives</option>
                     <option value="inactive" {{ $statusFilter === 'inactive' ? 'selected' : '' }}>Inactives</option>
@@ -322,108 +297,53 @@
                 </select>
             </div>
             <div class="col-12 col-md-2">
-                <button class="btn btn w-100" type="submit"><i class="bi bi-funnel"></i> <span class="btn-label">Filtrer</span></button>
+                <button class="btn btn filter-btn w-100" type="submit"><i class="bi bi-funnel"></i> <span class="btn-label">Filtrer</span></button>
             </div>
         </div>
     </form>
 
     <!-- Liste des fonctions -->
-    <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-4">
-        @forelse($functions as $function)
-        <div class="col">
-            <div class="card card-soft h-100 position-relative administration-card" style="cursor: pointer;" onclick="window.location.href='{{ route('administration.show', $function) }}'">
-                <!-- Status indicator -->
-                <div class="position-absolute top-0 end-0 m-3">
-                    <span class="badge status-badge
-                        @if($function->status === 'Actif') bg-success
-                        @elseif($function->status === 'Inactif') bg-warning
-                        @else bg-secondary
-                        @endif">
-                        {{ $function->status }}
-                    </span>
-                </div>
-
-                <div class="card-body" style="padding: 1.25rem; padding-top: 2.5rem;">
-                    <!-- Function name -->
-                    <h5 class="function-title">
-                        {{ $function->function_name }}
-                    </h5>
-                    
-                    <!-- Member info with avatar -->
-                    <div class="member-info">
-                        <div class="member-avatar">
-                            {{ substr($function->member->first_name, 0, 1) }}{{ substr($function->member->last_name, 0, 1) }}
+    <div class="administration-list">
+        @forelse($functions as $index => $function)
+            <div class="administration-row {{ $index > 0 ? 'administration-row-separated' : '' }}">
+                <div class="administration-row-body">
+                    <div class="administration-info">
+                        <div class="administration-date">
+                            <span class="badge bg-custom">{{ $function->start_date->format('d/m/Y') }}</span>
                         </div>
-                        <div>
-                            <p class="member-name">{{ $function->member->last_name }} {{ $function->member->first_name }}</p>
-                            <p class="member-details">{{ $function->member->email ?? 'Aucun email' }}</p>
+                        <div class="administration-title">
+                            <a href="{{ route('administration.show', $function) }}" class="link-dark text-decoration-none">{{ $function->function_name }}</a>
+                        </div>
+                        <div class="administration-details">
+                            <i class="bi bi-person me-1"></i>{{ $function->member->last_name }} {{ $function->member->first_name }}
+                            <span class="ms-2"><i class="bi bi-envelope me-1"></i>{{ $function->member->email ?? 'Aucun email' }}</span>
                             @if($function->member->phone)
-                                <p class="member-details">
-                                    <i class="bi bi-telephone me-1"></i>{{ $function->member->phone }}
-                                </p>
+                                <span class="ms-2"><i class="bi bi-telephone me-1"></i>{{ $function->member->phone }}</span>
+                            @endif
+                            @if($function->status === 'Actif')
+                                <span class="ms-2"><i class="bi bi-check-circle me-1"></i>Actif</span>
+                            @elseif($function->status === 'Inactif')
+                                <span class="ms-2"><i class="bi bi-pause-circle me-1"></i>Inactif</span>
+                            @else
+                                <span class="ms-2"><i class="bi bi-x-circle me-1"></i>Terminé</span>
                             @endif
                         </div>
                     </div>
-                    
-                    <!-- Date info -->
-                    <div class="date-info">
-                        <div class="d-flex align-items-center">
-                            <i class="bi bi-calendar3"></i>
-                            <span class="date-text">Depuis le {{ $function->start_date->format('d/m/Y') }}</span>
-                        </div>
-                        
-                        @if($function->end_date)
-                            <div class="d-flex align-items-center mt-1">
-                                <i class="bi bi-calendar-event"></i>
-                                <span class="date-text" style="color: #ea4335;">Jusqu'au {{ $function->end_date->format('d/m/Y') }}</span>
-                            </div>
-                        @else
-                            <div class="d-flex align-items-center mt-1">
-                                <i class="bi bi-infinity"></i>
-                                <span class="date-text" style="color: #34a853;">En cours</span>
-                            </div>
-                        @endif
-                    </div>
-                    
-                    <!-- Notes -->
-                    @if($function->notes)
-                        <div class="notes-section">
-                            <p class="notes-text">"{{ Str::limit($function->notes, 60) }}"</p>
-                        </div>
-                    @endif
-                    
-                    <!-- Separator -->
-                    <div class="card-separator"></div>
                 </div>
-                
-                <!-- Action buttons -->
-                <div class="card-footer bg-transparent border-0 action-buttons" style="padding: 0.75rem 1.25rem;">
-                    <div class="d-flex gap-2">
-                        <a class="btn btn-secondary action-btn" href="{{ route('administration.edit', $function) }}" onclick="event.stopPropagation()">
-                            <i class="bi bi-gear"></i>Gérer
-                        </a>
-                        <form action="{{ route('administration.destroy', $function) }}" method="POST" data-confirm="Supprimer cette fonction ?" data-confirm-ok="Supprimer" style="display: inline;" onclick="event.stopPropagation()">
-                            @csrf
-                            @method('DELETE')
-                            <button class="btn btn-danger action-btn" type="submit">
-                                <i class="bi bi-trash"></i>Supprimer
-                            </button>
-                        </form>
-                    </div>
+                <div class="administration-actions">
+                    <a href="{{ route('administration.edit', $function) }}" class="btn btn-sm btn-outline-primary">Gérer</a>
+                    <form action="{{ route('administration.destroy', $function) }}" method="POST" data-confirm="Supprimer cette fonction ?" data-confirm-ok="Supprimer" class="d-inline">
+                        @csrf @method('DELETE')
+                        <button type="submit" class="btn btn-sm btn-outline-danger">Supprimer</button>
+                    </form>
                 </div>
             </div>
-        </div>
         @empty
-        <div class="col-12">
-            <div class="text-center text-muted py-5">
-                <i class="bi bi-person-badge" style="font-size: 3rem; opacity: 0.3;"></i>
-                <p class="mt-3">Aucune fonction administrative</p>
-                <a href="{{ route('administration.create') }}" class="btn-add-empty">
-                    <i class="bi bi-person-plus"></i>
-                    Ajouter la première fonction
-                </a>
+            <div class="administration-row-empty">
+                <i class="bi bi-person-badge"></i>
+                <div>Aucune fonction administrative</div>
+                <small class="text-muted mt-2">Commencez par ajouter la première fonction</small>
             </div>
-        </div>
         @endforelse
     </div>
 
