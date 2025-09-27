@@ -270,9 +270,17 @@
     }
     
     .member-actions .btn {
-        width: 28px;
-        height: 28px;
+        width: auto;
+        height: auto;
         font-size: 12px;
+        padding: 6px 12px;
+        min-width: 100px;
+        white-space: nowrap;
+    }
+    
+    /* Forcer l'affichage du texte pour le bouton dîme sur mobile */
+    .show-text-mobile .btn-label {
+        display: inline !important;
     }
 }
 </style>
@@ -305,71 +313,102 @@
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
 
+    <!-- Indicateur de filtre actif -->
+    @if($status || $gender || $age)
+        <div class="alert alert-light mb-3">
+            <i class="bi bi-funnel"></i>
+            <strong>Filtre actif :</strong>
+            @if($status)
+                <span class="badge bg-secondary me-2">Statut: {{ ucfirst($status) }}</span>
+            @endif
+            @if($gender)
+                <span class="badge bg-secondary me-2">Genre: {{ ucfirst($gender) }}</span>
+            @endif
+            @if($age === 'children')
+                <span class="badge bg-secondary me-2">Âge: Enfants (<18 ans)</span>
+            @endif
+            <a href="{{ route('members.index') }}" class="btn btn-sm btn-outline-secondary ms-2">
+                <i class="bi bi-x-circle"></i> Supprimer les filtres
+            </a>
+        </div>
+    @endif
 
     <!-- Statistiques membres -->
-    <div class="row g-3 mb-3">
+    <div class="row g-2 g-lg-3 mb-4">
         <div class="col-6 col-lg-3">
-            <div class="kpi-card accent-info p-3">
-                <div class="d-flex flex-column align-items-center text-center">
-                    <div class="kpi-value mb-2">{{ $stats['total'] ?? 0 }}</div>
-                    <div class="kpi-label">TOTAL</div>
-                    <div class="kpi-icon mt-2"><i class="bi bi-people"></i></div>
+            <a href="{{ route('members.index') }}" class="text-decoration-none">
+                <div class="kpi-card stat-card">
+                    <div class="kpi-header">
+                    </div>
+                    <div class="kpi-meta">
+                        <div class="kpi-value">{{ $stats['total'] ?? 0 }}</div>
+                    </div>
+                    <div class="kpi-info">
+                        <h3 class="kpi-title">Total membres</h3>
+                        <p class="kpi-description" style="color: #64748b !important;">Nombre total de membres</p>
+                    </div>
                 </div>
-            </div>
+            </a>
         </div>
         <div class="col-6 col-lg-3">
-            <div class="kpi-card accent-success p-3">
-                <div class="d-flex flex-column align-items-center text-center">
-                    <div class="kpi-value mb-2">{{ $stats['active'] ?? 0 }}</div>
-                    <div class="kpi-label">ACTIFS</div>
-                    <div class="kpi-icon mt-2"><i class="bi bi-check2-circle"></i></div>
+            <a href="{{ route('members.index', ['status' => 'active']) }}" class="text-decoration-none">
+                <div class="kpi-card stat-card">
+                    <div class="kpi-header">
+                    </div>
+                    <div class="kpi-meta">
+                        <div class="kpi-value">{{ $stats['active'] ?? 0 }}</div>
+                    </div>
+                    <div class="kpi-info">
+                        <h3 class="kpi-title">Membres actifs</h3>
+                        <p class="kpi-description" style="color: #64748b !important;">Membres en activité</p>
+                    </div>
                 </div>
-            </div>
+            </a>
         </div>
         <div class="col-6 col-lg-3">
-            <div class="kpi-card accent-warning p-3">
-                <div class="d-flex flex-column align-items-center text-center">
-                    <div class="kpi-value mb-2">{{ $stats['inactive'] ?? 0 }}</div>
-                    <div class="kpi-label">INACTIFS</div>
-                    <div class="kpi-icon mt-2"><i class="bi bi-slash-circle"></i></div>
+            <a href="{{ route('members.index', ['age' => 'children']) }}" class="text-decoration-none">
+                <div class="kpi-card stat-card">
+                    <div class="kpi-header">
+                    </div>
+                    <div class="kpi-meta">
+                        <div class="kpi-value">{{ $stats['children'] ?? 0 }}</div>
+                    </div>
+                    <div class="kpi-info">
+                        <h3 class="kpi-title">Enfants (<18 ans)</h3>
+                        <p class="kpi-description" style="color: #64748b !important;">Membres mineurs</p>
+                    </div>
                 </div>
-            </div>
+            </a>
         </div>
         <div class="col-6 col-lg-3">
-            <div class="kpi-card accent-purple p-3">
-                <div class="d-flex flex-column align-items-center text-center">
-                    <div class="kpi-value mb-2">{{ $stats['children'] ?? 0 }}</div>
-                    <div class="kpi-label">ENFANTS (<18)</div>
-                    <div class="kpi-icon mt-2"><i class="bi bi-emoji-smile"></i></div>
+            <a href="{{ route('members.index', ['gender' => 'male']) }}" class="text-decoration-none">
+                <div class="kpi-card stat-card">
+                    <div class="kpi-header">
+                    </div>
+                    <div class="kpi-meta">
+                        <div class="kpi-value">{{ $stats['male'] ?? 0 }}</div>
+                    </div>
+                    <div class="kpi-info">
+                        <h3 class="kpi-title">Hommes</h3>
+                        <p class="kpi-description" style="color: #64748b !important;">Membres masculins</p>
+                    </div>
                 </div>
-            </div>
+            </a>
         </div>
         <div class="col-6 col-lg-3">
-            <div class="kpi-card p-3">
-                <div class="d-flex flex-column align-items-center text-center">
-                    <div class="kpi-value mb-2">{{ $stats['male'] ?? 0 }}</div>
-                    <div class="kpi-label">HOMMES</div>
-                    <div class="kpi-icon mt-2"><i class="bi bi-gender-male"></i></div>
+            <a href="{{ route('members.index', ['gender' => 'female']) }}" class="text-decoration-none">
+                <div class="kpi-card stat-card">
+                    <div class="kpi-header">
+                    </div>
+                    <div class="kpi-meta">
+                        <div class="kpi-value">{{ $stats['female'] ?? 0 }}</div>
+                    </div>
+                    <div class="kpi-info">
+                        <h3 class="kpi-title">Femmes</h3>
+                        <p class="kpi-description" style="color: #64748b !important;">Membres féminins</p>
+                    </div>
                 </div>
-            </div>
-        </div>
-        <div class="col-6 col-lg-3">
-            <div class="kpi-card p-3">
-                <div class="d-flex flex-column align-items-center text-center">
-                    <div class="kpi-value mb-2">{{ $stats['female'] ?? 0 }}</div>
-                    <div class="kpi-label">FEMMES</div>
-                    <div class="kpi-icon mt-2"><i class="bi bi-gender-female"></i></div>
-                </div>
-            </div>
-        </div>
-        <div class="col-6 col-lg-3">
-            <div class="kpi-card p-3">
-                <div class="d-flex flex-column align-items-center text-center">
-                    <div class="kpi-value mb-2">{{ $stats['other'] ?? 0 }}</div>
-                    <div class="kpi-label">AUTRES</div>
-                    <div class="kpi-icon mt-2"><i class="bi bi-gender-ambiguous"></i></div>
-                </div>
-            </div>
+            </a>
         </div>
     </div>
 
@@ -410,7 +449,7 @@
                     </div>
                 </div>
                 <div class="member-actions">
-                    <button class="btn btn-light" data-bs-toggle="modal" data-bs-target="#addTitheModal-{{ $member->id }}" title="Ajouter une dîme">
+                    <button class="btn btn-light show-text-mobile" data-bs-toggle="modal" data-bs-target="#addTitheModal-{{ $member->id }}" title="Ajouter une dîme">
                         <i class="bi bi-cash-coin me-2"></i>Ajouter dîme
                     </button>
                 </div>

@@ -19,8 +19,30 @@ class MemberController extends Controller
     public function index(Request $request)
     {
         $search = trim((string) $request->get('q'));
+        $status = $request->get('status');
+        $gender = $request->get('gender');
+        $age = $request->get('age');
+        
         $query = Member::where('church_id', Auth::user()->church_id);
 
+        // Filtre par statut
+        if ($status) {
+            $query->where('status', $status);
+        }
+
+        // Filtre par genre
+        if ($gender) {
+            $query->where('gender', $gender);
+        }
+
+        // Filtre par âge (enfants)
+        if ($age === 'children') {
+            $now = now();
+            $query->whereNotNull('birth_date')
+                  ->where('birth_date', '>', $now->copy()->subYears(18));
+        }
+
+        // Recherche textuelle
         if ($search !== '') {
             $query->where(function ($q) use ($search) {
                 $q->where('first_name', 'like', "%{$search}%")
@@ -45,7 +67,7 @@ class MemberController extends Controller
             'children' => Member::where('church_id', $churchId)->whereNotNull('birth_date')->where('birth_date','>', $now->copy()->subYears(18))->count(),
         ];
 
-        return view('members.index', compact('members', 'search','stats'));
+        return view('members.index', compact('members', 'search', 'status', 'gender', 'age', 'stats'));
     }
 
     /**

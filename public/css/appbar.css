@@ -333,18 +333,20 @@
     .appbar {
         padding: 20px 20px 20px 20px;
         margin: 0 0 24px 0;
-        padding-top: 80px; /* Espace pour éviter le chevauchement avec le logo */
+        padding-top: 0; /* Aucun espace en haut pour mobile */
     }
     
     .appbar-content {
         flex-direction: column;
         gap: 20px;
-        align-items: stretch;
+        align-items: flex-start; /* Alignement à gauche */
     }
     
     .appbar-left {
-        justify-content: center;
-        text-align: center;
+        justify-content: flex-start; /* Alignement à gauche */
+        text-align: left; /* Texte aligné à gauche */
+        flex-direction: row; /* Garde l'icône et le titre en ligne */
+        gap: 12px;
     }
     
     .appbar-title {
@@ -352,40 +354,44 @@
     }
     
     .appbar-right {
-        justify-content: center;
+        justify-content: flex-start; /* Alignement à gauche */
         flex-wrap: wrap;
+        flex-direction: row; /* Garde les boutons en ligne */
+        gap: 8px;
     }
     
     .appbar-btn-secondary,
     .appbar-btn-primary {
-        flex: 1;
-        min-width: 140px;
+        flex: none; /* Largeur automatique */
+        min-width: auto;
         justify-content: center;
     }
 }
 
 @media (max-width: 480px) {
     .appbar {
-        padding-top: 100px; /* Plus d'espace sur très petits écrans */
+        padding-top: 0; /* Aucun espace en haut sur très petits écrans */
     }
     
     .appbar-left {
-        flex-direction: column;
+        flex-direction: row; /* Garde l'icône et le titre en ligne */
         gap: 12px;
+        justify-content: flex-start; /* Alignement à gauche */
     }
     
     .appbar-title-section {
-        text-align: center;
+        text-align: left; /* Titre aligné à gauche */
     }
     
     .appbar-right {
-        flex-direction: column;
+        flex-direction: row; /* Garde les boutons en ligne */
         gap: 8px;
+        justify-content: flex-start; /* Alignement à gauche */
     }
     
     .appbar-btn-secondary,
     .appbar-btn-primary {
-        width: 100%;
+        width: auto; /* Largeur automatique */
     }
 }
 

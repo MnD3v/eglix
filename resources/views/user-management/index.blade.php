@@ -429,6 +429,50 @@
     .user-management-title {
         font-size: 1.5rem;
     }
+    
+    /* Responsive pour les cartes de comptes */
+    .account-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.75rem;
+        padding: 1rem;
+    }
+    
+    .account-row-body {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 0.75rem;
+    }
+    
+    .account-info {
+        width: 100%;
+        text-align: center;
+    }
+    
+    .account-name {
+        font-size: 15px;
+        word-break: break-word;
+    }
+    
+    .account-details {
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 4px;
+    }
+    
+    .account-actions {
+        flex-direction: row;
+        justify-content: center;
+        gap: 6px;
+        flex-wrap: wrap;
+    }
+    
+    .account-actions .btn {
+        font-size: 12px;
+        padding: 6px 12px;
+        min-width: 80px;
+    }
 }
 
 /* Amélioration de la marge et de l'espacement */

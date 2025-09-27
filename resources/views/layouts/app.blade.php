@@ -849,10 +849,18 @@
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
         }
         .sidebar-header { overflow: visible; }
-        .sidebar-header img { max-width: 130px; height: auto !important; display: inline-block; }
+        .sidebar-header img { 
+            max-width: 130px; 
+            height: auto !important; 
+            display: inline-block;
+            margin-top: 0; /* Pas de margin sur desktop */
+        }
         @media (max-width: 991.98px) {
             .sidebar-header { padding-top: 24px; }
-            .sidebar-header img { max-width: 100px; margin-top: 12px; }
+            .sidebar-header img { 
+                max-width: 100px; 
+                margin-top: 70px; /* Margin de 70px sur mobile */
+            }
         }
         .sidebar::-webkit-scrollbar { display: none; width: 0; height: 0; }
         .sidebar a {
@@ -865,7 +873,7 @@
             padding: 0 20px;
             color: #64748b; /* slate-500 */
             text-decoration: none;
-            font-weight: 300;
+            font-weight: 500;
             font-size: 14px;
             transition: all 0.2s ease;
             border-radius: 0;
@@ -883,13 +891,13 @@
         .sidebar a.active { 
             color: #1e293b; 
             background-color: #E0E0E0; 
-            font-weight: 500;
+            font-weight: 700;
             border-radius: 12px;
             margin: 4px 8px;
             padding: 12px 16px;
         }
         .sidebar a.active i {
-            color: #FFD700;
+            color: #000000;
         }
 
         main.dashboard-main { 
