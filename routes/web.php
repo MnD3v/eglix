@@ -23,10 +23,9 @@ use App\Http\Controllers\ChurchController;
 use App\Http\Controllers\UserManagementController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\AdminController;
-use App\Http\Controllers\ReportsController;
-use App\Http\Controllers\AdvancedReportsController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\DocumentFolderController;
+use App\Http\Controllers\SitemapController;
 use Illuminate\Support\Facades\Auth;
 
 // Routes d'authentification
@@ -42,15 +41,12 @@ Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])->name(
 Route::get('/reset-password/{token}', [AuthController::class, 'showResetForm'])->name('password.reset');
 Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('password.update');
 
-// Routes de test Firebase (à supprimer en production)
-Route::get('/firebase-test', [App\Http\Controllers\FirebaseTestController::class, 'page'])->name('firebase.test');
-Route::get('/firebase-test/api', [App\Http\Controllers\FirebaseTestController::class, 'test'])->name('firebase.test.api');
+// Sitemap pour le SEO
+Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 
-// Route temporaire pour afficher tous les utilisateurs (à supprimer en production)
-Route::get('/users-list', function() {
-    $users = App\Models\User::with('church', 'role')->get();
-    return view('users-list', compact('users'));
-})->name('users.list');
+// Routes de test Firebase supprimées pour la sécurité
+
+// Route users-list supprimée pour la sécurité
 
 // Routes publiques pour l'inscription des membres (sans authentification)
 Route::get('members/create/{church_id}', [App\Http\Controllers\MemberController::class, 'showPublicRegistrationForm'])->name('members.public.create');
@@ -238,94 +234,66 @@ Route::middleware(['auth', 'auth.ensure'])->group(function () {
     return view('home', compact('stats','recentTithes','recentDonations','recentOfferings','chart','offeringsByType','from','to','kpis'));
 });
 
-// Routes pour l'inscription individuelle via lien unique (AVANT la route resource)
-Route::get('members/share-link', [App\Http\Controllers\MemberController::class, 'generateRegistrationLink'])->name('members.generate-link');
+    // Routes pour l'inscription individuelle via lien unique (AVANT la route resource)
+    Route::get('members/share-link', [App\Http\Controllers\MemberController::class, 'generateRegistrationLink'])->name('members.generate-link');
 
-Route::resource('members', MemberController::class)->middleware('validate.image.upload');
-// Routes pour les remarques des membres
-Route::post('members/{member}/remarks', [App\Http\Controllers\MemberRemarkController::class, 'store'])->name('members.remarks.store');
-Route::delete('members/{member}/remarks/{index}', [App\Http\Controllers\MemberRemarkController::class, 'destroy'])->name('members.remarks.destroy');
-Route::get('members/{member}/remarks', [App\Http\Controllers\MemberRemarkController::class, 'index'])->name('members.remarks.index');
-Route::get('register/{token}', [App\Http\Controllers\MemberController::class, 'showRegistrationForm'])->name('members.register');
-Route::post('register/{token}', [App\Http\Controllers\MemberController::class, 'processRegistration'])->name('members.register.process');
-Route::get('register-success/{church}', [App\Http\Controllers\MemberController::class, 'registrationSuccess'])->name('members.register.success');
-
-// Routes pour les dîmes (spécifiques avant les routes de ressource)
-Route::get('tithes/total', [TitheController::class, 'getTotal'])->name('tithes.total');
-Route::resource('tithes', TitheController::class);
-Route::resource('offerings', OfferingController::class);
-// Types d'offrandes
-Route::resource('offering-types', App\Http\Controllers\OfferingTypeController::class);
-Route::post('offering-types/{offering_type}/toggle', [App\Http\Controllers\OfferingTypeController::class, 'toggle'])->name('offering-types.toggle');
-Route::get('offerings-bulk', [OfferingController::class, 'bulk'])->name('offerings.bulk');
-Route::post('offerings-bulk', [OfferingController::class, 'bulkStore'])->name('offerings.bulk.store');
-Route::resource('donations', DonationController::class);
-Route::resource('expenses', ExpenseController::class);
-Route::resource('projects', ProjectController::class);
-Route::resource('journal', JournalEntryController::class)->middleware('validate.image.upload');
-Route::resource('administration', AdministrationController::class);
-Route::resource('administration-function-types', AdministrationFunctionTypeController::class);
-Route::post('administration-function-types/{administrationFunctionType}/toggle', [AdministrationFunctionTypeController::class, 'toggle'])->name('administration-function-types.toggle');
-
-// Routes pour les rapports
-Route::get('/reports', [ReportsController::class, 'index'])->name('reports.index');
-Route::get('/reports/tithes', [ReportsController::class, 'tithes'])->name('reports.tithes');
-Route::get('/reports/offerings', [ReportsController::class, 'offerings'])->name('reports.offerings');
-Route::get('/reports/donations', [ReportsController::class, 'donations'])->name('reports.donations');
-Route::get('/reports/expenses', [ReportsController::class, 'expenses'])->name('reports.expenses');
-
-// Routes pour les exports
-Route::get('/reports/tithes/export', [ReportsController::class, 'exportTithes'])->name('reports.tithes.export');
-Route::get('/reports/offerings/export', [ReportsController::class, 'exportOfferings'])->name('reports.offerings.export');
-Route::get('/reports/donations/export', [ReportsController::class, 'exportDonations'])->name('reports.donations.export');
-Route::get('/reports/expenses/export', [ReportsController::class, 'exportExpenses'])->name('reports.expenses.export');
-
-// Routes pour les rapports avancés
-Route::prefix('reports/advanced')->name('reports.advanced.')->group(function () {
-    Route::get('/', [AdvancedReportsController::class, 'dashboard'])->name('dashboard');
-    Route::get('/comparison', [AdvancedReportsController::class, 'comparisonReport'])->name('comparison');
-    Route::get('/projection', [AdvancedReportsController::class, 'projectionReport'])->name('projection');
+    Route::resource('members', MemberController::class)->middleware('validate.image.upload');
     
-    // Exports avancés
-    Route::get('/export/excel', [AdvancedReportsController::class, 'exportExcel'])->name('export.excel');
-    Route::get('/export/pdf', [AdvancedReportsController::class, 'exportPdf'])->name('export.pdf');
-    Route::get('/export/json', [AdvancedReportsController::class, 'exportJson'])->name('export.json');
-    Route::get('/export/csv', [AdvancedReportsController::class, 'exportCsv'])->name('export.csv');
+    // Routes pour les remarques des membres
+    Route::post('members/{member}/remarks', [App\Http\Controllers\MemberRemarkController::class, 'store'])->name('members.remarks.store');
+    Route::delete('members/{member}/remarks/{index}', [App\Http\Controllers\MemberRemarkController::class, 'destroy'])->name('members.remarks.destroy');
+    Route::get('members/{member}/remarks', [App\Http\Controllers\MemberRemarkController::class, 'index'])->name('members.remarks.index');
+    Route::get('register/{token}', [App\Http\Controllers\MemberController::class, 'showRegistrationForm'])->name('members.register');
+    Route::post('register/{token}', [App\Http\Controllers\MemberController::class, 'processRegistration'])->name('members.register.process');
+    Route::get('register-success/{church}', [App\Http\Controllers\MemberController::class, 'registrationSuccess'])->name('members.register.success');
+
+    // Routes pour les dîmes (spécifiques avant les routes de ressource)
+    Route::get('tithes/total', [TitheController::class, 'getTotal'])->name('tithes.total');
+    Route::resource('tithes', TitheController::class);
+    Route::resource('offerings', OfferingController::class);
     
-    // API pour données temps réel
-    Route::get('/api/data', [AdvancedReportsController::class, 'apiData'])->name('api.data');
-});
+    // Types d'offrandes
+    Route::resource('offering-types', App\Http\Controllers\OfferingTypeController::class);
+    Route::post('offering-types/{offering_type}/toggle', [App\Http\Controllers\OfferingTypeController::class, 'toggle'])->name('offering-types.toggle');
+    Route::get('offerings-bulk', [OfferingController::class, 'bulk'])->name('offerings.bulk');
+    Route::post('offerings-bulk', [OfferingController::class, 'bulkStore'])->name('offerings.bulk.store');
+    
+    Route::resource('donations', DonationController::class);
+    Route::resource('expenses', ExpenseController::class);
+    Route::resource('projects', ProjectController::class);
+    Route::resource('journal', JournalEntryController::class)->middleware('validate.image.upload');
+    Route::resource('administration', AdministrationController::class);
+    
+    Route::resource('administration-function-types', AdministrationFunctionTypeController::class);
+    Route::post('administration-function-types/{administrationFunctionType}/toggle', [AdministrationFunctionTypeController::class, 'toggle'])->name('administration-function-types.toggle');
 
-// Routes pour la gestion des documents
-Route::prefix('documents')->name('documents.')->group(function () {
-    Route::get('/', [DocumentController::class, 'index'])->name('index');
-    Route::get('/all', [DocumentController::class, 'all'])->name('all');
-    Route::get('/images', [DocumentController::class, 'images'])->name('images');
-    Route::get('/pdfs', [DocumentController::class, 'pdfs'])->name('pdfs');
-    Route::get('/create', [DocumentController::class, 'create'])->name('create');
-    Route::post('/', [DocumentController::class, 'store'])->name('store');
-    Route::get('/{document}', [DocumentController::class, 'show'])->name('show');
-    Route::get('/{document}/edit', [DocumentController::class, 'edit'])->name('edit');
-    Route::put('/{document}', [DocumentController::class, 'update'])->name('update');
-    Route::delete('/{document}', [DocumentController::class, 'destroy'])->name('destroy');
-    Route::get('/{document}/download', [DocumentController::class, 'download'])->name('download');
-});
+    // Routes pour la gestion des documents
+    Route::prefix('documents')->name('documents.')->group(function () {
+        Route::get('/', [DocumentController::class, 'index'])->name('index');
+        Route::get('/all', [DocumentController::class, 'all'])->name('all');
+        Route::get('/images', [DocumentController::class, 'images'])->name('images');
+        Route::get('/pdfs', [DocumentController::class, 'pdfs'])->name('pdfs');
+        Route::get('/create', [DocumentController::class, 'create'])->name('create');
+        Route::post('/', [DocumentController::class, 'store'])->name('store');
+        Route::get('/{document}', [DocumentController::class, 'show'])->name('show');
+        Route::get('/{document}/edit', [DocumentController::class, 'edit'])->name('edit');
+        Route::put('/{document}', [DocumentController::class, 'update'])->name('update');
+        Route::delete('/{document}', [DocumentController::class, 'destroy'])->name('destroy');
+        Route::get('/{document}/download', [DocumentController::class, 'download'])->name('download');
+    });
 
-// Routes pour la gestion des dossiers de documents
-Route::prefix('document-folders')->name('document-folders.')->group(function () {
-    Route::get('/', [DocumentFolderController::class, 'index'])->name('index');
-    Route::get('/create', [DocumentFolderController::class, 'create'])->name('create');
-    Route::post('/', [DocumentFolderController::class, 'store'])->name('store');
-    Route::get('/{documentFolder}', [DocumentFolderController::class, 'show'])->name('show');
-    Route::get('/{documentFolder}/edit', [DocumentFolderController::class, 'edit'])->name('edit');
-    Route::put('/{documentFolder}', [DocumentFolderController::class, 'update'])->name('update');
-    Route::delete('/{documentFolder}', [DocumentFolderController::class, 'destroy'])->name('destroy');
-});
+    // Routes pour la gestion des dossiers de documents
+    Route::prefix('document-folders')->name('document-folders.')->group(function () {
+        Route::get('/', [DocumentFolderController::class, 'index'])->name('index');
+        Route::get('/create', [DocumentFolderController::class, 'create'])->name('create');
+        Route::post('/', [DocumentFolderController::class, 'store'])->name('store');
+        Route::get('/{documentFolder}', [DocumentFolderController::class, 'show'])->name('show');
+        Route::get('/{documentFolder}/edit', [DocumentFolderController::class, 'edit'])->name('edit');
+        Route::put('/{documentFolder}', [DocumentFolderController::class, 'update'])->name('update');
+        Route::delete('/{documentFolder}', [DocumentFolderController::class, 'destroy'])->name('destroy');
+    });
 
-// Routes pour la programmation des cultes
-
-
-
+    // Routes pour la programmation des cultes
 
     // Routes pour la gestion des églises
     Route::resource('churches', ChurchController::class);
@@ -345,7 +313,7 @@ Route::prefix('document-folders')->name('document-folders.')->group(function () 
     Route::get('subscription/request', [App\Http\Controllers\SubscriptionRequestController::class, 'index'])->name('subscription.request');
     Route::post('subscription/request', [App\Http\Controllers\SubscriptionRequestController::class, 'sendRequest'])->name('subscription.request.send');
     
-    // Routes d'administration globale (accès direct)
+    // Routes d'administration globale (accès restreint à em.djatika@gmail.com)
     Route::get('admin-0202', [AdminController::class, 'index'])->name('admin.index');
     Route::get('admin/churches/{church}', [AdminController::class, 'showChurch'])->name('admin.church-details');
     Route::get('admin/churches/{church}/subscriptions/create', [AdminController::class, 'createSubscription'])->name('admin.create-subscription');

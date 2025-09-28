@@ -99,6 +99,7 @@
                 <div class="col-md-6">
                     <label class="form-label">Membre</label>
                     <select name="member_id" class="form-select select2-members @error('member_id') is-invalid @enderror" required>
+                        <option value="">Rechercher un membre...</option>
                         @foreach($members as $m)
                             <option value="{{ $m->id }}" @selected(old('member_id', $tithe->member_id)==$m->id)>
                                 {{ $m->last_name }} {{ $m->first_name }}
@@ -191,6 +192,37 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Listen for changes
     paymentMethodSelect.addEventListener('change', toggleReferenceField);
+    
+    // Initialisation explicite de Select2 pour les membres
+    $(document).ready(function() {
+        $('.select2-members').select2({
+            placeholder: "Rechercher un membre...",
+            allowClear: false,
+            width: '100%',
+            minimumInputLength: 0,
+            matcher: function(params, data) {
+                // Si aucun terme de recherche, afficher tous les résultats
+                if ($.trim(params.term) === '') {
+                    return data;
+                }
+                
+                // Recherche insensible à la casse
+                if (data.text.toLowerCase().indexOf(params.term.toLowerCase()) > -1) {
+                    return data;
+                }
+                
+                return null;
+            },
+            language: {
+                noResults: function() {
+                    return "Aucun membre trouvé";
+                },
+                searching: function() {
+                    return "Recherche en cours...";
+                }
+            }
+        });
+    });
 });
 </script>
 @endsection

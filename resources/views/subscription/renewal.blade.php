@@ -193,7 +193,7 @@
             </div>
             <div class="info-row">
                 <span class="info-label">Statut :</span>
-                <span class="info-value">{!! $church->getSubscriptionStatusBadge() !!}</span>
+                <span class="info-value">{{ $church->getSubscriptionStatusBadge() }}</span>
             </div>
         </div>
 

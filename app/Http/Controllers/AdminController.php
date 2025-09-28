@@ -11,10 +11,21 @@ use Carbon\Carbon;
 class AdminController extends Controller
 {
     /**
+     * Vérifier l'accès admin
+     */
+    private function checkAdminAccess()
+    {
+        if (!Auth::check() || Auth::user()->email !== 'em.djatika@gmail.com') {
+            abort(403, 'Accès non autorisé.');
+        }
+    }
+
+    /**
      * Afficher le tableau de bord d'administration
      */
     public function index(Request $request)
     {
+        $this->checkAdminAccess();
         $search = trim((string) $request->get('q'));
         $statusFilter = $request->get('status');
         $subscriptionFilter = $request->get('subscription');
@@ -93,6 +104,7 @@ class AdminController extends Controller
      */
     public function showChurch(Church $church)
     {
+        $this->checkAdminAccess();
         $church->load('users');
         return view('admin.church-details', compact('church'));
     }
@@ -102,6 +114,7 @@ class AdminController extends Controller
      */
     public function createSubscription(Church $church)
     {
+        $this->checkAdminAccess();
         return view('admin.create-subscription', compact('church'));
     }
 
@@ -110,6 +123,7 @@ class AdminController extends Controller
      */
     public function storeSubscription(Request $request, Church $church)
     {
+        $this->checkAdminAccess();
         $validated = $request->validate([
             'subscription_plan' => 'required|in:basic,premium,enterprise',
             'subscription_start_date' => 'required|date',
@@ -145,6 +159,7 @@ class AdminController extends Controller
      */
     public function markSubscriptionPaid(Request $request, Church $church)
     {
+        $this->checkAdminAccess();
         $validated = $request->validate([
             'payment_reference' => 'nullable|string|max:100',
             'subscription_notes' => 'nullable|string',
@@ -165,6 +180,7 @@ class AdminController extends Controller
      */
     public function suspendSubscription(Request $request, Church $church)
     {
+        $this->checkAdminAccess();
         $validated = $request->validate([
             'subscription_notes' => 'nullable|string',
         ]);
@@ -182,6 +198,7 @@ class AdminController extends Controller
      */
     public function renewSubscription(Request $request, Church $church)
     {
+        $this->checkAdminAccess();
         $validated = $request->validate([
             'subscription_end_date' => 'required|date|after:today',
             'subscription_amount' => 'required|numeric|min:0',
@@ -204,6 +221,7 @@ class AdminController extends Controller
      */
     public function exportChurches(Request $request)
     {
+        $this->checkAdminAccess();
         $churches = Church::with('users')->get();
 
         $data = [];

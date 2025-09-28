@@ -57,7 +57,7 @@
                             </div>
                         </div>
 
-                        <!-- Rôle et permissions -->
+                        <!-- Rôle et permissions - ACCÈS SIMPLIFIÉ POUR TOUS -->
                         <div class="section-header mb-4 mt-5">
                             <h5 class="section-title">
                                 <i class="bi bi-shield-check me-2"></i>
@@ -66,9 +66,9 @@
                         </div>
 
                         <div class="mb-4">
-                            <label for="role_id" class="form-label">Rôle <span class="text-danger">*</span></label>
+                            <label for="role_id" class="form-label">Rôle</label>
                             <select class="form-select @error('role_id') is-invalid @enderror" 
-                                    id="role_id" name="role_id" required>
+                                    id="role_id" name="role_id">
                                 <option value="">Sélectionner un rôle</option>
                                 @foreach($roles as $role)
                                     <option value="{{ $role->id }}" 
@@ -121,7 +121,7 @@
                             </div>
                         </div>
 
-                        <!-- Statut -->
+                        <!-- Statut - ACCÈS SIMPLIFIÉ POUR TOUS -->
                         <div class="section-header mb-4 mt-5">
                             <h5 class="section-title">
                                 <i class="bi bi-toggle-on me-2"></i>
@@ -137,8 +137,7 @@
                             </label>
                         </div>
 
-                        <!-- Réinitialisation du mot de passe -->
-                        @if(!$user->is_church_admin)
+                        <!-- Réinitialisation du mot de passe - ACCÈS SIMPLIFIÉ POUR TOUS -->
                         <div class="section-header mb-4 mt-5">
                             <h5 class="section-title">
                                 <i class="bi bi-key me-2"></i>
@@ -167,7 +166,6 @@
                                        id="password_confirmation" name="password_confirmation">
                             </div>
                         </div>
-                        @endif
 
                         <!-- Boutons d'action -->
                         <div class="d-flex gap-3 justify-content-end">

@@ -1,2 +1,29 @@
 User-agent: *
-Disallow:
+Allow: /
+
+# Sitemap
+Sitemap: https://eglix.lafia.tech/sitemap.xml
+
+# Crawl-delay
+Crawl-delay: 1
+
+# Disallow admin areas
+Disallow: /admin-0202
+Disallow: /admin/
+Disallow: /firebase-test
+Disallow: /users-list
+
+# Allow important pages
+Allow: /login
+Allow: /register
+Allow: /forgot-password
+Allow: /reset-password
+
+# Block sensitive areas
+Disallow: /storage/
+Disallow: /vendor/
+Disallow: /node_modules/
+Disallow: /config/
+Disallow: /database/
+Disallow: /tests/
+Disallow: /script/

@@ -479,7 +479,12 @@
                                     </div>
                                     <div class="col-md-6">
                                         <label class="form-label">Moyen de paiement</label>
-                                        <input type="text" name="payment_method" class="form-control" placeholder="Espèces, Mobile Money…">
+                                        <select name="payment_method" class="form-control">
+                                            <option value="">Sélectionner...</option>
+                                            <option value="Espèces">Espèces</option>
+                                            <option value="Mobile Money">Mobile Money</option>
+                                            <option value="Banque">Banque</option>
+                                        </select>
                                     </div>
                                     <div class="col-md-6">
                                         <label class="form-label">Référence</label>

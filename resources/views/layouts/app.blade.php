@@ -3,17 +3,28 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Eglix - Application de gestion d'église</title>
+    <title>{{ $pageTitle ?? 'Eglix - Application de gestion d\'église' }}</title>
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
     @include('partials.meta')
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@7.4.47/css/materialdesignicons.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <!-- CSS optimisé avec preload -->
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"></noscript>
+    
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"></noscript>
+    
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/@mdi/font@7.4.47/css/materialdesignicons.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@7.4.47/css/materialdesignicons.min.css"></noscript>
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"></noscript>
+    
+    <!-- Fonts optimisées -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&display=swap"></noscript>
     <link href="{{ asset('css/appbar.css') }}" rel="stylesheet">
     <style>
         /* Couleurs personnalisées - Toutes les couleurs primaires sont maintenant #FFCC00 */
@@ -2164,7 +2175,7 @@
         <div style="height: 4px; background: linear-gradient(90deg, #f59e0b, #fbbf24);"></div>
         
         <div class="sidebar-header" style="padding: 20px 16px; text-align: center; border-bottom: 1px solid #e2e8f0; margin-bottom: 16px;">
-            <img src="{{ asset('images/eglix-black.png') }}" alt="Eglix" style="height: 50px; margin-bottom: 15px;">
+            <img src="{{ asset('images/eglix-black.png') }}" alt="Eglix" style="height: 40px; margin-bottom: 15px;">
             
             @auth
             <div style="background-color: #000000; color: white; font-size: 0.9rem; padding: 12px; border-radius: 12px; display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 700;">
@@ -2194,9 +2205,6 @@
         @endif
         @if(Auth::user() && Auth::user()->hasPermission('projects.view'))
         <a href="{{ route('projects.index') }}" class="{{ request()->is('projects*') ? 'active' : '' }}" title="Projets"><i class="bi bi-kanban"></i><span class="sidebar-text">Projets</span></a>
-        @endif
-        @if(Auth::user() && Auth::user()->hasPermission('reports.view'))
-        <a href="{{ route('reports.index') }}" class="{{ request()->is('reports*') ? 'active' : '' }}" title="Rapports"><i class="bi bi-graph-up"></i><span class="sidebar-text">Rapports</span></a>
         @endif
         @if(Auth::user() && Auth::user()->hasPermission('journal.view'))
         <a href="{{ route('journal.index') }}" class="{{ request()->is('journal*') ? 'active' : '' }}" title="Journal"><i class="bi bi-journal-text"></i><span class="sidebar-text">Journal</span></a>
@@ -2278,11 +2286,11 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <!-- jQuery et Select2 pour les listes déroulantes avec recherche -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     
     <!-- Configuration AJAX pour inclure le token CSRF -->
     <script>
@@ -2941,12 +2949,34 @@
                 const firstOption = $(this).find('option:first');
                 const placeholder = firstOption.text() || "Rechercher...";
                 
-                // Créer une configuration spécifique pour ce select
-                const config = {
+                // Configuration spéciale pour les sélecteurs de membres
+                let config = {
                     ...select2Config,
                     placeholder: placeholder,
                     allowClear: false
                 };
+                
+                // Configuration spéciale pour les sélecteurs de membres
+                if ($(this).hasClass('select2-members')) {
+                    config = {
+                        ...config,
+                        placeholder: "Rechercher un membre...",
+                        minimumInputLength: 0,
+                        matcher: function(params, data) {
+                            // Si aucun terme de recherche, afficher tous les résultats
+                            if ($.trim(params.term) === '') {
+                                return data;
+                            }
+                            
+                            // Recherche insensible à la casse
+                            if (data.text.toLowerCase().indexOf(params.term.toLowerCase()) > -1) {
+                                return data;
+                            }
+                            
+                            return null;
+                        }
+                    };
+                }
                 
                 $(this).select2(config);
             }
@@ -2962,12 +2992,34 @@
                         const firstOption = $(this).find('option:first');
                         const placeholder = firstOption.text() || "Rechercher...";
                         
-                        // Créer une configuration spécifique pour ce select
-                        const config = {
+                        // Configuration spéciale pour les sélecteurs de membres
+                        let config = {
                             ...select2Config,
                             placeholder: placeholder,
                             allowClear: false
                         };
+                        
+                        // Configuration spéciale pour les sélecteurs de membres
+                        if ($(this).hasClass('select2-members')) {
+                            config = {
+                                ...config,
+                                placeholder: "Rechercher un membre...",
+                                minimumInputLength: 0,
+                                matcher: function(params, data) {
+                                    // Si aucun terme de recherche, afficher tous les résultats
+                                    if ($.trim(params.term) === '') {
+                                        return data;
+                                    }
+                                    
+                                    // Recherche insensible à la casse
+                                    if (data.text.toLowerCase().indexOf(params.term.toLowerCase()) > -1) {
+                                        return data;
+                                    }
+                                    
+                                    return null;
+                                }
+                            };
+                        }
                         
                         $(this).select2(config);
                     });

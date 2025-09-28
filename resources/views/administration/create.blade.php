@@ -114,8 +114,8 @@
                     <div class="row g-3">
                         <div class="col-12">
                             <label for="member_id" class="form-label">Membre</label>
-                            <select name="member_id" id="member_id" class="form-select @error('member_id') is-invalid @enderror" required>
-                                <option value="">Sélectionner un membre</option>
+                            <select name="member_id" id="member_id" class="form-select select2-members @error('member_id') is-invalid @enderror" required>
+                                <option value="">Rechercher un membre...</option>
                                 @foreach($members as $member)
                                     <option value="{{ $member->id }}" {{ old('member_id') == $member->id ? 'selected' : '' }}>
                                         {{ $member->last_name }} {{ $member->first_name }}
@@ -228,4 +228,37 @@
         </div>
     </div>
 </div>
+
+<script>
+// Initialisation explicite de Select2 pour les membres
+$(document).ready(function() {
+    $('.select2-members').select2({
+        placeholder: "Rechercher un membre...",
+        allowClear: false,
+        width: '100%',
+        minimumInputLength: 0,
+        matcher: function(params, data) {
+            // Si aucun terme de recherche, afficher tous les résultats
+            if ($.trim(params.term) === '') {
+                return data;
+            }
+            
+            // Recherche insensible à la casse
+            if (data.text.toLowerCase().indexOf(params.term.toLowerCase()) > -1) {
+                return data;
+            }
+            
+            return null;
+        },
+        language: {
+            noResults: function() {
+                return "Aucun membre trouvé";
+            },
+            searching: function() {
+                return "Recherche en cours...";
+            }
+        }
+    });
+});
+</script>
 @endsection

@@ -130,6 +130,8 @@ class UserManagementController extends Controller
             abort(403, 'Accès non autorisé.');
         }
 
+        // PERMISSIONS SIMPLIFIÉES : Autoriser l'accès à tous les utilisateurs authentifiés de la même église
+        
         $roles = Role::where('church_id', Auth::user()->church_id)
             ->where('is_active', true)
             ->orderBy('name')
@@ -148,15 +150,20 @@ class UserManagementController extends Controller
             abort(403, 'Accès non autorisé.');
         }
 
-        $validator = Validator::make($request->all(), [
+        // PERMISSIONS SIMPLIFIÉES : Autoriser la modification à tous les utilisateurs authentifiés de la même église
+
+        // VALIDATION SIMPLIFIÉE
+        $rules = [
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $user->id,
-            'role_id' => 'required|exists:roles,id',
-            'permissions' => 'array',
-            'permissions.*' => 'string|in:members,tithes,offerings,donations,expenses,reports,services,journal,administration',
-            'is_active' => 'boolean',
+            'role_id' => 'nullable|exists:roles,id',
             'password' => 'nullable|string|min:6|confirmed',
-        ], [
+            'permissions' => 'nullable|array',
+            'permissions.*' => 'string|in:members,tithes,offerings,donations,expenses,reports,services,journal,administration',
+            'is_active' => 'nullable|boolean',
+        ];
+
+        $validator = Validator::make($request->all(), $rules, [
             'name.required' => 'Le nom est requis.',
             'email.required' => 'L\'adresse email est requise.',
             'email.unique' => 'Cette adresse email est déjà utilisée.',
@@ -174,27 +181,29 @@ class UserManagementController extends Controller
                 ->withInput();
         }
 
-        // Vérifier que le rôle appartient à la même église
-        $role = Role::findOrFail($request->role_id);
-        if ($role->church_id !== Auth::user()->church_id) {
-            return redirect()->back()
-                ->withErrors(['role_id' => 'Le rôle sélectionné n\'appartient pas à votre église.'])
-                ->withInput();
-        }
-
-        // Mettre à jour les permissions du rôle si des permissions personnalisées sont fournies
-        if ($request->has('permissions')) {
-            $role->update([
-                'permissions' => $request->permissions
-            ]);
-        }
-
+        // MISE À JOUR SIMPLIFIÉE - Autoriser toutes les modifications
         $updateData = [
             'name' => $request->name,
             'email' => $request->email,
-            'role_id' => $request->role_id,
-            'is_active' => $request->has('is_active'),
         ];
+
+        // Ajouter le rôle si fourni, sinon conserver l'actuel
+        if ($request->has('role_id') && $request->role_id) {
+            $role = Role::find($request->role_id);
+            if ($role && $role->church_id === Auth::user()->church_id) {
+                $updateData['role_id'] = $request->role_id;
+                
+                // Mettre à jour les permissions du rôle si fournies
+                if ($request->has('permissions')) {
+                    $role->update([
+                        'permissions' => $request->permissions ?? []
+                    ]);
+                }
+            }
+        }
+
+        // Statut actif
+        $updateData['is_active'] = $request->has('is_active');
 
         // Mettre à jour le mot de passe seulement s'il est fourni
         if ($request->filled('password')) {
@@ -217,6 +226,8 @@ class UserManagementController extends Controller
             abort(403, 'Accès non autorisé.');
         }
 
+        // PERMISSIONS SIMPLIFIÉES : Autoriser la suppression à tous (sauf admin principal)
+        
         // Ne pas permettre de supprimer l'admin de l'église
         if ($user->is_church_admin) {
             return redirect()->back()
@@ -238,6 +249,8 @@ class UserManagementController extends Controller
         if ($user->church_id !== Auth::user()->church_id) {
             abort(403, 'Accès non autorisé.');
         }
+
+        // PERMISSIONS SIMPLIFIÉES : Autoriser la réinitialisation à tous les utilisateurs de la même église
 
         $validator = Validator::make($request->all(), [
             'password' => 'required|string|min:6|confirmed',

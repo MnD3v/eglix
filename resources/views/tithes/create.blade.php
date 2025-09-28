@@ -63,6 +63,7 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
+
 /* Responsive design */
 @media (max-width: 768px) {
     .form-section {
@@ -96,7 +97,7 @@
             <div class="row g-3">
                 <div class="col-md-6">
                     <label class="form-label">Membre</label>
-                    <select name="member_id" class="form-select select2-members @error('member_id') is-invalid @enderror" required>
+                    <select name="member_id" class="form-select @error('member_id') is-invalid @enderror" required>
                         <option value="">Rechercher un membre...</option>
                         @foreach($members as $m)
                             <option value="{{ $m->id }}" @selected(old('member_id', request('member_id'))==$m->id)>
@@ -178,7 +179,15 @@
             updateRef();
         }
         
-        // Ne pas initialiser Select2 ici car il est déjà initialisé globalement
+        // Configuration Select2 simple
+        $(document).ready(function() {
+            $('select[name="member_id"]').select2({
+                placeholder: "Rechercher un membre...",
+                allowClear: false,
+                width: '100%'
+            });
+        });
+        
     })();
     </script>
 </div>
