@@ -421,7 +421,7 @@
             }
         }
 
-        /* Icônes des boutons d'ajout en blanc */
+        /* Icônes des boutons d'ajout en noir */
         .btn i,
         .btn .bi-plus-lg,
         .btn .bi-plus-circle,
@@ -908,7 +908,7 @@
             padding: 12px 16px;
         }
         .sidebar a.active i {
-            color: #000000;
+            color: white;
         }
 
         main.dashboard-main { 
@@ -1002,7 +1002,7 @@
         /* Header hero band */
         .hero {
             background: linear-gradient(135deg, #FFCC00 0%, #e52200 100%);
-            color: #fff;
+            color: white;
             border-radius: 14px;
         }
         /* Responsive sidebar */
@@ -2251,7 +2251,7 @@
         <!-- Bouton de déconnexion -->
         <div style="padding: 0 16px;">
             <button type="button" class="btn btn-sm w-100" style="border-radius: 8px; font-size: 0.875rem; background-color: #000000 !important; border: 1px solid #000000 !important; color: #ffffff !important; font-weight: 700;" title="Se déconnecter" onclick="confirmLogout()">
-                <i class="bi bi-box-arrow-right me-2" style="color: #ffffff !important;"></i>
+                <i class="bi bi-box-arrow-right me-2" style="color: #000000 !important;"></i>
                 <span class="sidebar-text" style="color: #ffffff !important; font-weight: 700;">Déconnexion</span>
             </button>
         </div>

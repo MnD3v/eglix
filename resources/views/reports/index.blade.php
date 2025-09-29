@@ -100,7 +100,7 @@
     border-radius: 12px;
     padding: 12px 20px;
     font-weight: 600;
-    color: #000000;
+    color: white;
 }
 
 .quick-filter-btn {

@@ -107,6 +107,17 @@
     border-color: #e6b800 !important;
 }
 
+/* Style pour les items de membre */
+.member-item {
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.member-item:hover {
+    background-color: #f8fafc;
+    border-color: #FFCC00 !important;
+}
+
 /* Responsive design */
 @media (max-width: 768px) {
     .form-section {
@@ -114,6 +125,7 @@
     }
 }
 </style>
+
 <div class="container-fluid px-4 py-4">
     <!-- AppBar Nouveau Don -->
     <div class="appbar donations-appbar">
@@ -147,13 +159,11 @@
                     </div>
                     <div id="memberSelectWrap">
                         <label class="form-label">Membre</label>
-                        <select name="member_id" class="form-select select2-members @error('member_id') is-invalid @enderror">
-                            <option value="">Rechercher un membre...</option>
-                            @foreach($members as $m)
-                                <option value="{{ $m->id }}" @selected(old('member_id')==$m->id)>{{ $m->last_name }} {{ $m->first_name }}</option>
-                            @endforeach
-                        </select>
-                        @error('member_id')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                        <input type="text" id="selectedMemberName" class="form-control @error('member_id') is-invalid @enderror" 
+                               placeholder="Cliquez pour sélectionner un membre..." readonly
+                               data-bs-toggle="modal" data-bs-target="#memberSelectionModal" style="cursor: pointer;">
+                        <input type="hidden" name="member_id" id="selectedMemberId" value="{{ old('member_id') }}">
+                        @error('member_id')<div class="invalid-feedback d-block">{{ $message }}</div>@enderror
                     </div>
                     <div id="externalDonorWrap" style="display:none;">
                         <label class="form-label">Nom du Donateur Externe</label>
@@ -274,11 +284,73 @@
             </button>
         </div>
     </form>
-</div>
 
+    <!-- Modal de sélection de membre -->
+    <div class="modal fade" id="memberSelectionModal" tabindex="-1" aria-labelledby="memberSelectionModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: #FFCC00; color: #000000;">
+                    <h5 class="modal-title">
+                        <i class="bi bi-people me-2"></i>Choisir un membre
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Champ de recherche -->
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">Rechercher un membre :</label>
+                        <input type="text" id="searchInput" class="form-control form-control-lg" 
+                               placeholder="Tapez le nom du membre...">
+                    </div>
+                    
+                    <!-- Liste des membres -->
+                    <div id="memberList" style="max-height: 350px; overflow-y: auto;">
+                        @foreach($members as $member)
+                        <div class="member-card p-3 mb-2 border rounded-3" 
+                             data-id="{{ $member->id }}" 
+                             data-name="{{ $member->last_name }} {{ $member->first_name }}"
+                             style="cursor: pointer; transition: all 0.3s ease;">
+                            <div class="d-flex align-items-center">
+                                <div class="me-3">
+                                    <div class="rounded-circle d-flex align-items-center justify-content-center" 
+                                         style="width: 40px; height: 40px; font-weight: bold; background-color: #FFCC00; color: #000000;">
+                                        {{ strtoupper(substr($member->first_name, 0, 1) . substr($member->last_name, 0, 1)) }}
+                                    </div>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h6 class="mb-1 fw-bold text-dark">{{ $member->last_name }} {{ $member->first_name }}</h6>
+                                    <div class="text-muted small">
+                                        @if($member->phone)
+                                            <i class="bi bi-telephone me-1"></i>{{ $member->phone }}
+                                        @endif
+                                        @if($member->email)
+                                            <i class="bi bi-envelope me-1 ms-2"></i>{{ $member->email }}
+                                        @endif
+                                    </div>
+                                </div>
+                                <div class="text-end">
+                                    <i class="bi bi-chevron-right text-muted"></i>
+                                </div>
+                            </div>
+                        </div>
+                        @endforeach
+                    </div>
+                </div>
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                        <i class="bi bi-x-circle me-1"></i>Annuler
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // =========================
+    // Gestion du type de don
+    // =========================
     const moneyRadio = document.getElementById('donation_type_money');
     const physicalRadio = document.getElementById('donation_type_physical');
     const amountField = document.getElementById('amount-field');
@@ -287,7 +359,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const physicalDescriptionField = document.getElementById('physical-description-field');
     const referenceField = document.getElementById('reference-field');
 
-    function toggleFields() {
+    function toggleDonationTypeFields() {
         if (moneyRadio.checked) {
             amountField.style.display = 'block';
             paymentMethodField.style.display = 'block';
@@ -299,7 +371,6 @@ document.addEventListener('DOMContentLoaded', function() {
             paymentMethodField.style.display = 'none';
             physicalItemField.style.display = 'block';
             physicalDescriptionField.style.display = 'block';
-            // Pour les objets physiques, toujours masquer le champ référence
             referenceField.style.display = 'none';
         }
     }
@@ -307,59 +378,52 @@ document.addEventListener('DOMContentLoaded', function() {
     function updateReferenceField() {
         const paymentMethod = document.querySelector('select[name="payment_method"]');
         
-        if (paymentMethod) {
+        if (paymentMethod && moneyRadio.checked) {
             const showReference = paymentMethod.value === 'mobile' || paymentMethod.value === 'bank';
             
             if (showReference) {
                 referenceField.style.display = 'block';
             } else {
                 referenceField.style.display = 'none';
-                // Vider le champ quand il est masqué
                 const referenceInput = referenceField.querySelector('input[name="reference"]');
                 if (referenceInput) referenceInput.value = '';
             }
         } else {
-            // Par défaut, masquer le champ référence
             referenceField.style.display = 'none';
         }
     }
 
-    moneyRadio.addEventListener('change', toggleFields);
-    physicalRadio.addEventListener('change', toggleFields);
+    if (moneyRadio) moneyRadio.addEventListener('change', toggleDonationTypeFields);
+    if (physicalRadio) physicalRadio.addEventListener('change', toggleDonationTypeFields);
     
-    // Ajouter un event listener pour le changement de mode de paiement
     const paymentMethodSelect = document.querySelector('select[name="payment_method"]');
     if (paymentMethodSelect) {
         paymentMethodSelect.addEventListener('change', updateReferenceField);
     }
     
-    // Initialiser l'affichage
-    toggleFields();
-    
-    // Initialiser le champ référence selon l'état initial avec un délai
+    // Initialisation
+    toggleDonationTypeFields();
     setTimeout(function() {
         updateReferenceField();
-        // Déclencher l'événement change pour forcer la mise à jour (comme setState en Flutter)
-        const paymentMethodSelect = document.querySelector('select[name="payment_method"]');
-        if (paymentMethodSelect) {
-            paymentMethodSelect.dispatchEvent(new Event('change'));
-        }
     }, 100);
     
-    // Toggle external donor
+    // =========================
+    // Gestion du donateur externe
+    // =========================
     const externalDonorToggle = document.getElementById('externalDonorToggle');
     const memberSelectWrap = document.getElementById('memberSelectWrap');
     const externalDonorWrap = document.getElementById('externalDonorWrap');
     
     function updateExternalDonor() {
         if (!externalDonorToggle || !memberSelectWrap || !externalDonorWrap) return;
-        const isExternal = !!externalDonorToggle.checked;
-        memberSelectWrap.style.display = isExternal ? 'none' : '';
-        externalDonorWrap.style.display = isExternal ? '' : 'none';
+        const isExternal = externalDonorToggle.checked;
+        
+        memberSelectWrap.style.display = isExternal ? 'none' : 'block';
+        externalDonorWrap.style.display = isExternal ? 'block' : 'none';
         
         if (isExternal) {
-            const memberSelect = memberSelectWrap.querySelector('select[name="member_id"]');
-            if (memberSelect) memberSelect.value = '';
+            document.getElementById('selectedMemberId').value = '';
+            document.getElementById('selectedMemberName').value = '';
         } else {
             const donorInput = externalDonorWrap.querySelector('input[name="donor_name"]');
             if (donorInput) donorInput.value = '';
@@ -371,59 +435,100 @@ document.addEventListener('DOMContentLoaded', function() {
         updateExternalDonor();
     }
     
-    // Toggle project select
-    const toggle = document.getElementById('hasProjectToggle');
+    // =========================
+    // Gestion du projet
+    // =========================
+    const hasProjectToggle = document.getElementById('hasProjectToggle');
     const projectSelectWrap = document.getElementById('projectSelectWrap');
     const titleWrap = document.getElementById('titleWrap');
     
-    function updateProject() {
-        if (!toggle || !projectSelectWrap || !titleWrap) return;
-        const on = !!toggle.checked;
-        projectSelectWrap.style.display = on ? '' : 'none';
-        titleWrap.style.display = on ? 'none' : '';
-        if (!toggle.checked) {
-            const sel = projectSelectWrap.querySelector('select[name="project_id"]');
-            if (sel) sel.value = '';
+    function updateProjectFields() {
+        if (!hasProjectToggle || !projectSelectWrap || !titleWrap) return;
+        const hasProject = hasProjectToggle.checked;
+        
+        projectSelectWrap.style.display = hasProject ? 'block' : 'none';
+        titleWrap.style.display = hasProject ? 'none' : 'block';
+        
+        if (!hasProject) {
+            const projectSelect = projectSelectWrap.querySelector('select[name="project_id"]');
+            if (projectSelect) projectSelect.value = '';
         }
     }
     
-    if (toggle) {
-        toggle.addEventListener('change', updateProject);
-        updateProject();
+    if (hasProjectToggle) {
+        hasProjectToggle.addEventListener('change', updateProjectFields);
+        updateProjectFields();
     }
-    
-    // Initialisation explicite de Select2 pour les membres
-    $(document).ready(function() {
-        $('.select2-members').select2({
-            placeholder: "Rechercher un membre...",
-            allowClear: false,
-            width: '100%',
-            minimumInputLength: 0,
-            matcher: function(params, data) {
-                // Si aucun terme de recherche, afficher tous les résultats
-                if ($.trim(params.term) === '') {
-                    return data;
-                }
-                
-                // Recherche insensible à la casse
-                if (data.text.toLowerCase().indexOf(params.term.toLowerCase()) > -1) {
-                    return data;
-                }
-                
-                return null;
-            },
-            language: {
-                noResults: function() {
-                    return "Aucun membre trouvé";
-                },
-                searching: function() {
-                    return "Recherche en cours...";
-                }
+});
+
+// =========================
+// Fonctionnalité de sélection de membre avec jQuery
+// =========================
+$(document).ready(function() {
+    // Initialiser le nom du membre sélectionné si déjà défini
+    const selectedMemberId = $('#selectedMemberId').val();
+    if (selectedMemberId) {
+        const selectedMember = $('.member-item[data-member-id="' + selectedMemberId + '"]');
+        if (selectedMember.length) {
+            $('#selectedMemberName').val(selectedMember.data('member-name'));
+        }
+    }
+
+    // Fonction globale pour sélectionner un membre
+    window.selectMember = function(memberId, memberName) {
+        document.getElementById('selectedMemberId').value = memberId;
+        document.getElementById('selectedMemberName').value = memberName;
+        
+        // Fermer le modal avec Bootstrap
+        const modal = document.getElementById('memberSelectionModal');
+        const modalInstance = bootstrap.Modal.getInstance(modal);
+        modalInstance.hide();
+    };
+
+    // Fonction de recherche
+    function searchMembers() {
+        const searchInput = document.getElementById('searchInput');
+        const memberCards = document.querySelectorAll('.member-card');
+        const searchTerm = searchInput.value.toLowerCase().trim();
+        
+        memberCards.forEach(card => {
+            const memberName = card.getAttribute('data-name').toLowerCase();
+            if (memberName.includes(searchTerm)) {
+                card.style.display = 'block';
+            } else {
+                card.style.display = 'none';
             }
+        });
+    }
+
+    // Attacher les événements
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('searchInput');
+        const memberCards = document.querySelectorAll('.member-card');
+        
+        // Recherche en temps réel
+        searchInput.addEventListener('input', searchMembers);
+        
+        // Sélection de membre
+        memberCards.forEach(card => {
+            card.addEventListener('click', function() {
+                const memberId = this.getAttribute('data-id');
+                const memberName = this.getAttribute('data-name');
+                selectMember(memberId, memberName);
+            });
+            
+            // Effets hover
+            card.addEventListener('mouseenter', function() {
+                this.style.backgroundColor = '#FFF8DC';
+                this.style.borderColor = '#FFCC00';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.backgroundColor = '';
+                this.style.borderColor = '';
+            });
         });
     });
 });
 </script>
 @endsection
-
-

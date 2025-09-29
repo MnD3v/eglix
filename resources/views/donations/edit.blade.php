@@ -113,12 +113,15 @@
                     </div>
                     <div id="memberSelectWrap">
                         <label class="form-label">Membre</label>
-                        <select name="member_id" class="form-select select2-members @error('member_id') is-invalid @enderror">
-                            <option value="">Rechercher un membre...</option>
-                            @foreach($members as $m)
-                                <option value="{{ $m->id }}" @selected(old('member_id', $donation->member_id)==$m->id)>{{ $m->last_name }} {{ $m->first_name }}</option>
-                            @endforeach
-                        </select>
+                        <div class="input-group">
+                            <input type="text" id="selectedMemberName" class="form-control @error('member_id') is-invalid @enderror" 
+                                   placeholder="Cliquez pour sélectionner un membre..." readonly
+                                   data-bs-toggle="modal" data-bs-target="#memberSelectionModal" style="cursor: pointer;">
+                            <input type="hidden" name="member_id" id="selectedMemberId" value="{{ old('member_id', $donation->member_id) }}">
+                            <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#memberSelectionModal">
+                                <i class="bi bi-chevron-down"></i>
+                            </button>
+                        </div>
                         @error('member_id')<div class="invalid-feedback">{{ $message }}</div>@enderror
                     </div>
                     <div id="externalDonorWrap" style="display:none;">
@@ -236,6 +239,66 @@
             </div>
         </div>
     </form>
+
+    <!-- Modal de sélection de membre -->
+    <div class="modal fade" id="memberSelectionModal" tabindex="-1" aria-labelledby="memberSelectionModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="memberSelectionModalLabel">
+                        <i class="bi bi-people me-2"></i>Sélectionner un membre
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Champ de recherche -->
+                    <div class="mb-3">
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="bi bi-search"></i>
+                            </span>
+                            <input type="text" id="memberSearchInput" class="form-control" 
+                                   placeholder="Rechercher par nom, prénom ou numéro de téléphone...">
+                        </div>
+                    </div>
+                    
+                    <!-- Liste des membres -->
+                    <div class="members-list" style="max-height: 400px; overflow-y: auto;">
+                        @foreach($members as $member)
+                        <div class="member-item border rounded p-3 mb-2 cursor-pointer" 
+                             data-member-id="{{ $member->id }}" 
+                             data-member-name="{{ $member->last_name }} {{ $member->first_name }}"
+                             style="cursor: pointer; transition: all 0.2s ease;">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="mb-1 fw-bold">{{ $member->last_name }} {{ $member->first_name }}</h6>
+                                    <small class="text-muted">
+                                        @if($member->phone)
+                                            <i class="bi bi-telephone me-1"></i>{{ $member->phone }}
+                                        @endif
+                                        @if($member->email)
+                                            <i class="bi bi-envelope me-1 ms-2"></i>{{ $member->email }}
+                                        @endif
+                                    </small>
+                                </div>
+                                <div class="text-end">
+                                    <small class="text-muted">
+                                        @if($member->birth_date)
+                                            <i class="bi bi-calendar me-1"></i>{{ \Carbon\Carbon::parse($member->birth_date)->age }} ans
+                                        @endif
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                        @endforeach
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <style>
@@ -360,6 +423,62 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
         });
+    });
+});
+
+// Fonctionnalité de sélection de membre
+$(document).ready(function() {
+    // Initialiser le nom du membre sélectionné si déjà défini
+    const selectedMemberId = $('#selectedMemberId').val();
+    if (selectedMemberId) {
+        const selectedMember = $('.member-item[data-member-id="' + selectedMemberId + '"]');
+        if (selectedMember.length) {
+            $('#selectedMemberName').val(selectedMember.data('member-name'));
+        }
+    }
+
+    // Gestion de la sélection d'un membre
+    $(document).on('click', '.member-item', function() {
+        const memberId = $(this).data('member-id');
+        const memberName = $(this).data('member-name');
+        
+        $('#selectedMemberId').val(memberId);
+        $('#selectedMemberName').val(memberName);
+        
+        // Fermer le modal
+        $('#memberSelectionModal').modal('hide');
+    });
+
+    // Fonctionnalité de recherche
+    $(document).on('input', '#memberSearchInput', function() {
+        const searchTerm = $(this).val().toLowerCase().trim();
+        console.log('Recherche:', searchTerm); // Debug
+        
+        $('.member-item').each(function() {
+            const memberName = $(this).data('member-name').toLowerCase();
+            const memberPhone = $(this).find('.text-muted').text().toLowerCase();
+            const memberEmail = $(this).find('.text-muted').text().toLowerCase();
+            
+            console.log('Membre:', memberName, 'Phone:', memberPhone); // Debug
+            
+            if (searchTerm === '' || 
+                memberName.includes(searchTerm) || 
+                memberPhone.includes(searchTerm) ||
+                memberEmail.includes(searchTerm)) {
+                $(this).show();
+            } else {
+                $(this).hide();
+            }
+        });
+    });
+
+    // Effet hover sur les éléments de membre
+    $(document).on('mouseenter', '.member-item', function() {
+        $(this).addClass('bg-light border-primary');
+    });
+    
+    $(document).on('mouseleave', '.member-item', function() {
+        $(this).removeClass('bg-light border-primary');
     });
 });
 </script>
