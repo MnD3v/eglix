@@ -1,5 +1,37 @@
 @extends('layouts.app')
 @section('content')
+<style>
+/* Styles pour les boutons */
+.btn-primary,
+.btn-outline-secondary {
+    background: #ffffff;
+    color: #000000;
+    border: 1px solid #e2e8f0;
+    font-weight: 700 !important;
+    border-radius: 12px;
+    padding: 12px 24px;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover,
+.btn-outline-secondary:hover {
+    background: #f8f9fa;
+    color: #000000;
+    border: 1px solid #e2e8f0;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.btn-primary i,
+.btn-outline-secondary i {
+    color: #000000 !important;
+}
+
+.btn-primary:hover i,
+.btn-outline-secondary:hover i {
+    color: #000000 !important;
+}
+</style>
 <div class="container py-4">
     <h1 class="h3 mb-3">Modifier offrande</h1>
     <form method="POST" action="{{ route('offerings.update', $offering) }}" class="card p-3">

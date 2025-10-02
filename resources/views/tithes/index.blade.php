@@ -87,8 +87,47 @@
 .tithe-actions {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
     flex-shrink: 0;
+}
+
+/* Soft Elevated Buttons pour les dîmes */
+.tithe-actions .btn {
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 13px;
+    padding: 8px 16px;
+    transition: all 0.2s ease;
+    border-width: 1.5px;
+}
+
+.tithe-actions .btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.tithe-actions .btn-outline-secondary {
+    background: #ffffff;
+    color: #64748b;
+    border-color: #e2e8f0;
+}
+
+.tithe-actions .btn-outline-secondary:hover {
+    background: #f8fafc;
+    color: #1e293b;
+    border-color: #cbd5e1;
+}
+
+.tithe-actions .btn-outline-danger {
+    background: #ffffff;
+    color: #dc2626;
+    border-color: #fecaca;
+}
+
+.tithe-actions .btn-outline-danger:hover {
+    background: #dc2626;
+    color: #ffffff;
+    border-color: #dc2626;
 }
 
 .tithe-row-empty {
@@ -271,11 +310,15 @@
                     </div>
                 </div>
                 <div class="tithe-actions">
-                    <a class="btn btn-sm btn-outline-secondary" href="{{ route('tithes.edit', $tithe) }}">Modifier</a>
-                    <form action="{{ route('tithes.destroy', $tithe) }}" method="POST" data-confirm="Supprimer ?" data-confirm-ok="Supprimer" class="d-inline">
+                    <a class="btn btn-outline-secondary" href="{{ route('tithes.edit', $tithe) }}" title="Modifier la dîme">
+                        <i class="bi bi-pencil me-1"></i>Modifier
+                    </a>
+                    <form action="{{ route('tithes.destroy', $tithe) }}" method="POST" data-confirm="Supprimer cette dîme ?" data-confirm-ok="Supprimer" class="d-inline">
                         @csrf
                         @method('DELETE')
-                        <button class="btn btn-sm btn-outline-danger">Supprimer</button>
+                        <button class="btn btn-outline-danger" title="Supprimer la dîme">
+                            <i class="bi bi-trash me-1"></i>Supprimer
+                        </button>
                     </form>
                 </div>
             </div>

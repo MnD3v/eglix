@@ -15,9 +15,10 @@ class MemberRemarkController extends Controller
     {
         $request->validate([
             'remark' => 'required|string|max:500',
+            'type' => 'required|string|in:general,spiritual,positive,negative,disciplinary,pastoral',
         ]);
 
-        $member->addRemark($request->remark);
+        $member->addRemark($request->remark, $request->type);
 
         return response()->json([
             'success' => true,

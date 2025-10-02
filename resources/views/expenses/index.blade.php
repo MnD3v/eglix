@@ -82,8 +82,47 @@
 .expense-actions {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
     flex-shrink: 0;
+}
+
+/* Soft Elevated Buttons pour les dépenses */
+.expense-actions .btn {
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 13px;
+    padding: 8px 16px;
+    transition: all 0.2s ease;
+    border-width: 1.5px;
+}
+
+.expense-actions .btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.expense-actions .btn-outline-secondary {
+    background: #ffffff;
+    color: #64748b;
+    border-color: #e2e8f0;
+}
+
+.expense-actions .btn-outline-secondary:hover {
+    background: #f8fafc;
+    color: #1e293b;
+    border-color: #cbd5e1;
+}
+
+.expense-actions .btn-outline-danger {
+    background: #ffffff;
+    color: #dc2626;
+    border-color: #fecaca;
+}
+
+.expense-actions .btn-outline-danger:hover {
+    background: #dc2626;
+    color: #ffffff;
+    border-color: #dc2626;
 }
 
 .expense-row-empty {
@@ -204,10 +243,14 @@
                     </div>
                 </div>
                 <div class="expense-actions">
-                    <a class="btn btn-sm btn-outline-secondary" href="{{ route('expenses.edit', $e) }}">Modifier</a>
-                    <form action="{{ route('expenses.destroy', $e) }}" method="POST" data-confirm="Supprimer ?" data-confirm-ok="Supprimer" class="d-inline">
+                    <a class="btn btn-outline-secondary" href="{{ route('expenses.edit', $e) }}" title="Modifier la dépense">
+                        <i class="bi bi-pencil me-1"></i>Modifier
+                    </a>
+                    <form action="{{ route('expenses.destroy', $e) }}" method="POST" data-confirm="Supprimer cette dépense ?" data-confirm-ok="Supprimer" class="d-inline">
                         @csrf @method('DELETE')
-                        <button class="btn btn-sm btn-outline-danger">Supprimer</button>
+                        <button class="btn btn-outline-danger" title="Supprimer la dépense">
+                            <i class="bi bi-trash me-1"></i>Supprimer
+                        </button>
                     </form>
                 </div>
             </div>

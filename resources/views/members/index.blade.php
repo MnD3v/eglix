@@ -164,7 +164,16 @@
     border: 1px solid #e2e8f0;
     border-right: none;
     border-radius: 25px 0 0 25px;
-    color: #64748b;
+    color: #000000 !important;
+    font-size: 16px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.search-icon i {
+    color: #000000 !important;
 }
 
 .search-input {
@@ -184,19 +193,38 @@
 }
 
 .search-btn {
-    background-color: #f8fafc;
+    background-color: #ffffff;
     border: 1px solid #e2e8f0;
     border-left: none;
     border-radius: 0 25px 25px 0;
-    color: #64748b;
+    color: #000000;
     font-weight: 600;
     padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .search-btn:hover {
-    background-color: #f1f5f9;
+    background-color: #f8fafc;
     border-color: #cbd5e1;
-    color: #475569;
+    color: #000000;
+}
+
+.search-btn i {
+    color: #000000 !important;
+}
+
+.search-btn:hover i {
+    color: #000000 !important;
+}
+
+.btn-primary,
+.btn-outline-secondary,
+.search-btn,
+.appbar-btn-white,
+.appbar-btn-yellow {
+    font-weight: 700 !important;
 }
 
 .member-row-body {
@@ -416,7 +444,10 @@
         <div class="input-group search-group">
             <span class="input-group-text search-icon"><i class="bi bi-search"></i></span>
             <input type="text" class="form-control search-input" placeholder="Rechercher un membre (nom, email, téléphone)" name="q" value="{{ $search ?? '' }}">
-            <button class="btn btn search-btn" type="submit">Rechercher</button>
+            <button class="btn btn search-btn" type="submit">
+                <i class="bi bi-search"></i>
+                <span>Rechercher</span>
+            </button>
         </div>
     </form>
 

@@ -21,8 +21,8 @@ body {
 }
 
 .form-control:focus, .form-select:focus {
-    border-color: #e2e8f0;
-    box-shadow: 0 0 0 0.2rem rgba(0, 0, 0, 0.1);
+    border-color: #FFCC00 !important;
+    box-shadow: 0 0 0 0.2rem rgba(255, 204, 0, 0.25) !important;
     background: #ffffff !important;
     color: #000000;
 }
@@ -95,6 +95,64 @@ body {
     background: #f8f9fa;
     color: #000000;
     border: 1px solid #e2e8f0;
+}
+
+.btn-primary i {
+    color: #000000 !important;
+}
+
+.btn-primary:hover i {
+    color: #000000 !important;
+}
+
+.btn-outline-secondary i {
+    color: #000000 !important;
+}
+
+.btn-outline-secondary:hover i {
+    color: #000000 !important;
+}
+
+.btn-primary,
+.btn-outline-secondary {
+    font-weight: 700 !important;
+}
+
+/* Styles pour les select dropdowns */
+.form-select:focus {
+    border-color: #FFCC00 !important;
+    box-shadow: 0 0 0 0.25rem rgba(255, 204, 0, 0.25) !important;
+}
+
+.form-select option:checked,
+.form-select option:hover {
+    background-color: #FFCC00 !important;
+    color: #000000 !important;
+}
+
+/* Override Bootstrap select color */
+select.form-select:focus,
+select.form-select:active {
+    border-color: #FFCC00 !important;
+    box-shadow: 0 0 0 0.25rem rgba(255, 204, 0, 0.25) !important;
+}
+
+/* Styles pour les options des dropdowns */
+.form-select option:hover,
+.form-select option:focus,
+.form-select option:checked {
+    background-color: #FFCC00 !important;
+    color: #000000 !important;
+}
+
+/* Style global pour tous les select */
+select {
+    border-color: #e2e8f0 !important;
+}
+
+select:focus {
+    border-color: #FFCC00 !important;
+    box-shadow: 0 0 0 0.25rem rgba(255, 204, 0, 0.25) !important;
 }
 
 .btn-outline-secondary {

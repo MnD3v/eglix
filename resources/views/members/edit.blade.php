@@ -63,6 +63,89 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
+.btn-primary {
+    background: #ffffff;
+    color: #000000;
+    border: 1px solid #e2e8f0;
+}
+
+.btn-primary:hover {
+    background: #f8f9fa;
+    color: #000000;
+    border: 1px solid #e2e8f0;
+}
+
+.btn-primary i {
+    color: #000000 !important;
+}
+
+.btn-primary:hover i {
+    color: #000000 !important;
+}
+
+.btn-outline-secondary {
+    background: #ffffff;
+    color: #000000;
+    border: 1px solid #e2e8f0;
+}
+
+.btn-outline-secondary:hover {
+    background: #f8f9fa;
+    color: #000000;
+    border: 1px solid #e2e8f0;
+}
+
+.btn-outline-secondary i {
+    color: #000000 !important;
+}
+
+.btn-outline-secondary:hover i {
+    color: #000000 !important;
+}
+
+.btn-primary,
+.btn-outline-secondary,
+.upload-button {
+    font-weight: 700 !important;
+}
+
+/* Styles pour les select dropdowns */
+.form-select:focus {
+    border-color: #FFCC00 !important;
+    box-shadow: 0 0 0 0.25rem rgba(255, 204, 0, 0.25) !important;
+}
+
+.form-select option:checked,
+.form-select option:hover {
+    background-color: #FFCC00 !important;
+    color: #000000 !important;
+}
+
+/* Override Bootstrap select color */
+select.form-select:focus,
+select.form-select:active {
+    border-color: #FFCC00 !important;
+    box-shadow: 0 0 0 0.25rem rgba(255, 204, 0, 0.25) !important;
+}
+
+/* Styles pour les options des dropdowns */
+.form-select option:hover,
+.form-select option:focus,
+.form-select option:checked {
+    background-color: #FFCC00 !important;
+    color: #000000 !important;
+}
+
+/* Style global pour tous les select */
+select {
+    border-color: #e2e8f0 !important;
+}
+
+select:focus {
+    border-color: #FFCC00 !important;
+    box-shadow: 0 0 0 0.25rem rgba(255, 204, 0, 0.25) !important;
+}
+
 /* Responsive design */
 @media (max-width: 768px) {
     .form-section {
@@ -308,6 +391,10 @@
     transform: translateY(-1px);
 }
 
+.upload-button i {
+    color: #000000 !important;
+}
+
 .upload-text {
     text-align: center;
 }
@@ -368,6 +455,15 @@
 .current-photo img:hover {
     border-color: #FFCC00;
     transform: scale(1.02);
+}
+
+/* Forcer toutes les icônes à être noires */
+.btn-danger i {
+    color: #ffffff !important;
+}
+
+.upload-progress i {
+    color: #64748b !important;
 }
 </style>
 

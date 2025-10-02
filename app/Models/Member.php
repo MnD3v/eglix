@@ -60,11 +60,12 @@ class Member extends Model
     /**
      * Ajouter une remarque au membre
      */
-    public function addRemark(string $remark): void
+    public function addRemark(string $remark, string $type = 'general'): void
     {
         $remarks = $this->remarks ?? [];
         $remarks[] = [
             'remark' => $remark,
+            'type' => $type,
             'added_at' => now()->toISOString(),
             'added_by' => Auth::id(),
         ];
@@ -92,9 +93,59 @@ class Member extends Model
         return array_map(function ($remark) {
             return [
                 'remark' => $remark['remark'] ?? $remark,
+                'type' => $remark['type'] ?? 'general',
+                'type_label' => $this->getRemarkTypeLabel($remark['type'] ?? 'general'),
+                'type_color' => $this->getRemarkTypeColor($remark['type'] ?? 'general'),
                 'added_at' => isset($remark['added_at']) ? \Carbon\Carbon::parse($remark['added_at'])->format('d/m/Y H:i') : 'Date inconnue',
                 'added_by' => isset($remark['added_by']) ? User::find($remark['added_by'])?->name : 'Utilisateur inconnu',
             ];
         }, $remarks);
+    }
+
+    /**
+     * Obtenir le libellé du type de remarque
+     */
+    public function getRemarkTypeLabel(string $type): string
+    {
+        return match($type) {
+            'spiritual' => 'Spirituel',
+            'positive' => 'Bonne remarque',
+            'negative' => 'Mauvaise remarque',
+            'disciplinary' => 'Disciplinaire',
+            'pastoral' => 'Pastoral',
+            'general' => 'Général',
+            default => 'Général',
+        };
+    }
+
+    /**
+     * Obtenir la couleur du type de remarque
+     */
+    public function getRemarkTypeColor(string $type): string
+    {
+        return match($type) {
+            'spiritual' => '#8B5CF6', // Violet
+            'positive' => '#10B981', // Vert
+            'negative' => '#EF4444', // Rouge
+            'disciplinary' => '#F59E0B', // Orange
+            'pastoral' => '#3B82F6', // Bleu
+            'general' => '#6B7280', // Gris
+            default => '#6B7280',
+        };
+    }
+
+    /**
+     * Obtenir tous les types de remarques disponibles
+     */
+    public static function getRemarkTypes(): array
+    {
+        return [
+            'general' => 'Général',
+            'spiritual' => 'Spirituel',
+            'positive' => 'Bonne remarque',
+            'negative' => 'Mauvaise remarque',
+            'disciplinary' => 'Disciplinaire',
+            'pastoral' => 'Pastoral',
+        ];
     }
 }

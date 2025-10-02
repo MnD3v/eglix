@@ -1,6 +1,217 @@
 @extends('layouts.app')
 
 @section('content')
+<style>
+/* Design ultra-moderne pour les cartes de remarques */
+.remark-card-modern {
+    background: #ffffff;
+    border: 1px solid #f1f5f9;
+    border-radius: 20px;
+    margin-bottom: 20px;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    position: relative;
+    display: flex;
+    min-height: 120px;
+}
+
+.remark-card-modern:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+    border-color: #e2e8f0;
+}
+
+.remark-card-accent {
+    width: 6px;
+    flex-shrink: 0;
+    transition: width 0.3s ease;
+}
+
+.remark-card-modern:hover .remark-card-accent {
+    width: 8px;
+}
+
+.remark-card-content {
+    flex: 1;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.remark-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+}
+
+.remark-type-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    text-transform: capitalize;
+    letter-spacing: 0.02em;
+    transition: all 0.2s ease;
+    background: #FFCC00 !important;
+    color: #000000 !important;
+    border: 1px solid #FFD700 !important;
+}
+
+.remark-type-pill i {
+    font-size: 0.85rem;
+}
+
+.remark-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.remark-action-btn {
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: 12px;
+    background: #f8fafc;
+    color: #64748b;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 0.9rem;
+}
+
+.remark-action-btn:hover {
+    background: #fee2e2;
+    color: #dc2626;
+    transform: scale(1.1);
+}
+
+.remark-content-text {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: #1e293b;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 400;
+    margin: 0;
+    flex: 1;
+}
+
+.remark-footer-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.85rem;
+    color: #64748b;
+    margin-top: auto;
+}
+
+.remark-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 500;
+}
+
+.remark-meta-item i {
+    font-size: 0.8rem;
+    opacity: 0.8;
+}
+
+.remark-meta-separator {
+    color: #cbd5e1;
+    font-weight: 300;
+}
+
+/* Animation d'apparition améliorée */
+.remark-card-modern {
+    animation: remarkSlideIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes remarkSlideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px) translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0) translateY(0);
+    }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .remark-card-content {
+        padding: 20px;
+        gap: 14px;
+    }
+    
+    .remark-header-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+    
+    .remark-actions {
+        align-self: flex-end;
+    }
+    
+    .remark-footer-info {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+    
+    .remark-meta-separator {
+        display: none;
+    }
+    
+    .remark-type-pill {
+        font-size: 0.75rem;
+        padding: 6px 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .remark-card-content {
+        padding: 16px;
+    }
+    
+    .remark-content-text {
+        font-size: 0.95rem;
+    }
+    
+    .remark-card-accent {
+        width: 4px;
+    }
+    
+    .remark-card-modern:hover .remark-card-accent {
+        width: 6px;
+    }
+}
+
+/* États focus pour l'accessibilité */
+.remark-action-btn:focus {
+    outline: 2px solid #FFCC00;
+    outline-offset: 2px;
+}
+
+/* Micro-interactions */
+.remark-type-pill:hover {
+    transform: scale(1.02);
+}
+
+.remark-card-modern:hover .remark-type-pill {
+    transform: scale(1.05);
+}
+</style>
 <div class="container py-4">
 	@if(session('success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -21,6 +232,10 @@
                 </div>
             </div>
             <div class="appbar-right">
+                <a href="{{ route('members.pdf', $member) }}" class="appbar-btn-white me-2" title="Exporter le dossier en PDF">
+                    <i class="bi bi-file-earmark-pdf"></i>
+                    <span class="btn-text">Export PDF</span>
+                </a>
                 <a href="{{ route('members.edit', $member) }}" class="appbar-btn-white me-2">
                     <i class="bi bi-pencil"></i>
                     <span class="btn-text">Modifier</span>
@@ -201,21 +416,36 @@
         <div class="card-body">
             <div id="remarks-container">
 			@forelse($member->getFormattedRemarks() as $index => $remark)
-                <div class="remark-item border rounded p-3 mb-3" data-index="{{ $index }}">
-                    <div class="d-flex justify-content-between align-items-start">
-                        <div class="flex-grow-1">
-                            <p class="mb-2">{{ $remark['remark'] }}</p>
-                            <small class="text-muted">
-							<i class="bi bi-calendar3 me-1"></i>{{ $remark['added_at'] }}
-                                <span class="mx-2">•</span>
-							<i class="bi bi-person me-1"></i>{{ $remark['added_by'] }}
-                            </small>
-					</div>
-                        <button class="btn btn-sm btn-outline-danger ms-2" onclick="removeRemark({{ $index }})" title="Supprimer cette remarque">
-					<i class="bi bi-trash"></i>
-				</button>
+                <div class="remark-card-modern" data-index="{{ $index }}" data-type="{{ $remark['type'] }}">
+                    <div class="remark-card-accent" style="background: {{ $remark['type_color'] }};"></div>
+                    <div class="remark-card-content">
+                        <div class="remark-header-row">
+                            <div class="remark-type-pill" style="background: #FFCC00; color: #000000; border: 1px solid #FFD700;">
+                                <i class="bi bi-{{ match($remark['type']) { 'spiritual' => 'heart-fill', 'positive' => 'hand-thumbs-up-fill', 'negative' => 'hand-thumbs-down-fill', 'disciplinary' => 'exclamation-triangle-fill', 'pastoral' => 'person-heart', default => 'chat-square-text-fill' } }}"></i>
+                                <span>{{ $remark['type_label'] }}</span>
+                            </div>
+                            <div class="remark-actions">
+                                <button class="remark-action-btn" onclick="removeRemark({{ $index }})" title="Supprimer cette remarque">
+                                    <i class="bi bi-trash3"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="remark-content-text">
+                            {{ $remark['remark'] }}
+                        </div>
+                        <div class="remark-footer-info">
+                            <div class="remark-meta-item">
+                                <i class="bi bi-calendar-event"></i>
+                                <span>{{ $remark['added_at'] }}</span>
+                            </div>
+                            <div class="remark-meta-separator">•</div>
+                            <div class="remark-meta-item">
+                                <i class="bi bi-person-circle"></i>
+                                <span>{{ $remark['added_by'] }}</span>
+                            </div>
+                        </div>
                     </div>
-			</div>
+                </div>
 			@empty
                 <div class="text-center text-muted py-4">
                     <i class="bi bi-chat-square-text display-4 opacity-50"></i>
@@ -285,10 +515,6 @@
                 <i class="bi bi-cash-coin display-4 opacity-50"></i>
                 <h4 class="mt-3 mb-2">Aucune dîme</h4>
                 <p class="mb-3">Ce membre n'a pas encore enregistré de dîmes.</p>
-                <a class="appbar-btn-yellow" href="{{ route('tithes.create', ['member_id'=>$member->id]) }}">
-                    <i class="bi bi-plus-circle"></i>
-                    <span class="btn-text">Enregistrer la première dîme</span>
-                </a>
 			</div>
 					@endforelse
 		</div>
@@ -305,9 +531,18 @@
 			</div>
 			<form id="addRemarkForm">
                 <div class="modal-body" style="padding: 20px 24px;">
+                    <div class="mb-3">
+                        <label for="remarkType" class="form-label" style="font-weight: 600; color: #1e293b; text-transform: uppercase; letter-spacing: 0.5px; font-size: 0.8rem;">Type de remarque</label>
+                        <select class="form-select" id="remarkType" name="type" required style="border-radius: 12px; border: 1px solid #e2e8f0; padding: 12px 16px; font-size: 0.9rem;">
+                            <option value="">Sélectionner un type</option>
+                            @foreach(\App\Models\Member::getRemarkTypes() as $key => $label)
+                                <option value="{{ $key }}">{{ $label }}</option>
+                            @endforeach
+                        </select>
+                    </div>
 					<div class="mb-3">
                         <label for="remarkText" class="form-label" style="font-weight: 600; color: #1e293b; text-transform: uppercase; letter-spacing: 0.5px; font-size: 0.8rem;">Remarque</label>
-                        <textarea class="form-control" id="remarkText" name="remark" rows="4" placeholder="Décrivez la remarque disciplinaire ou l'observation..." required maxlength="500" style="border-radius: 12px; border: 1px solid #e2e8f0; padding: 12px 16px; font-size: 0.9rem;"></textarea>
+                        <textarea class="form-control" id="remarkText" name="remark" rows="4" placeholder="Décrivez la remarque ou l'observation..." required maxlength="500" style="border-radius: 12px; border: 1px solid #e2e8f0; padding: 12px 16px; font-size: 0.9rem;"></textarea>
                         <div class="form-text" style="color: #64748b; font-size: 0.8rem;">Maximum 500 caractères</div>
 					</div>
 				</div>
@@ -324,6 +559,7 @@
 
 @endsection
 
+
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <script>
@@ -336,9 +572,15 @@ document.addEventListener('DOMContentLoaded', function() {
 		
 		const formData = new FormData(this);
 		const remarkText = formData.get('remark');
+		const remarkType = formData.get('type');
 		
 		if (!remarkText.trim()) {
 			alert('Veuillez saisir une remarque');
+			return;
+		}
+		
+		if (!remarkType) {
+			alert('Veuillez sélectionner un type de remarque');
 			return;
 		}
 		
@@ -355,7 +597,8 @@ document.addEventListener('DOMContentLoaded', function() {
 				'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
 			},
 			body: JSON.stringify({
-				remark: remarkText
+				remark: remarkText,
+				type: remarkType
 			})
 		})
 		.then(response => response.json())
@@ -440,23 +683,51 @@ function updateRemarksDisplay(remarks) {
 		return;
 	}
 	
-	container.innerHTML = remarks.map((remark, index) => `
-		<div class="remark-item border rounded p-3 mb-2" data-index="${index}">
-			<div class="d-flex justify-content-between align-items-start">
-				<div class="flex-grow-1">
-					<p class="mb-1">${remark.remark}</p>
-					<small class="text-muted">
-						<i class="bi bi-calendar me-1"></i>${remark.added_at}
-						<span class="mx-2">•</span>
-						<i class="bi bi-person me-1"></i>${remark.added_by}
-					</small>
+	container.innerHTML = remarks.map((remark, index) => {
+		const getRemarkIcon = (type) => {
+			switch(type) {
+				case 'spiritual': return 'heart-fill';
+				case 'positive': return 'hand-thumbs-up-fill';
+				case 'negative': return 'hand-thumbs-down-fill';
+				case 'disciplinary': return 'exclamation-triangle-fill';
+				case 'pastoral': return 'person-heart';
+				default: return 'chat-square-text-fill';
+			}
+		};
+		
+		return `
+			<div class="remark-card-modern" data-index="${index}" data-type="${remark.type}">
+				<div class="remark-card-accent" style="background: ${remark.type_color};"></div>
+				<div class="remark-card-content">
+					<div class="remark-header-row">
+						<div class="remark-type-pill" style="background: #FFCC00; color: #000000; border: 1px solid #FFD700;">
+							<i class="bi bi-${getRemarkIcon(remark.type)}"></i>
+							<span>${remark.type_label}</span>
 				</div>
-				<button class="btn btn-sm btn-outline-danger ms-2" onclick="removeRemark(${index})">
-					<i class="bi bi-trash"></i>
+						<div class="remark-actions">
+							<button class="remark-action-btn" onclick="removeRemark(${index})" title="Supprimer cette remarque">
+								<i class="bi bi-trash3"></i>
 				</button>
 			</div>
 		</div>
-	`).join('');
+					<div class="remark-content-text">
+						${remark.remark}
+					</div>
+					<div class="remark-footer-info">
+						<div class="remark-meta-item">
+							<i class="bi bi-calendar-event"></i>
+							<span>${remark.added_at}</span>
+						</div>
+						<div class="remark-meta-separator">•</div>
+						<div class="remark-meta-item">
+							<i class="bi bi-person-circle"></i>
+							<span>${remark.added_by}</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		`;
+	}).join('');
 }
 
 function showAlert(type, message) {

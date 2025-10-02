@@ -702,7 +702,7 @@ document.addEventListener('DOMContentLoaded', function() {
             <div class="support-card">
                 <div class="support-card-body">
                     <div class="support-icon youtube-icon">
-                        <i class="bi bi-play-fill"></i>
+                        <i class="bi bi-youtube"></i>
                     </div>
                     <div class="support-content">
                         <h3 class="support-title">Rejoignez-nous sur Youtube</h3>
@@ -714,21 +714,6 @@ document.addEventListener('DOMContentLoaded', function() {
         </div>
 
 
-        <!-- Partagez vos suggestions -->
-        <div class="col-md-6">
-            <div class="support-card">
-                <div class="support-card-body">
-                    <div class="support-icon suggestions-icon">
-                        <i class="bi bi-chat-heart-fill"></i>
-                    </div>
-                    <div class="support-content">
-                        <h3 class="support-title">Partagez vos suggestions</h3>
-                        <p class="support-description">Vos suggestions nous aident à améliorer Eglix</p>
-                        <a href="#" class="btn btn-outline-primary support-btn">Partager</a>
-                    </div>
-                </div>
-            </div>
-        </div>
 
         <!-- Rejoignez-nous sur WhatsApp -->
         <div class="col-md-6">
@@ -768,9 +753,10 @@ document.addEventListener('DOMContentLoaded', function() {
 .support-card-body {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
     gap: 1rem;
     height: 100%;
+    text-align: center;
 }
 
 .support-icon {
@@ -791,49 +777,17 @@ document.addEventListener('DOMContentLoaded', function() {
     color: #333333;
 }
 
-/* Icône YouTube avec carré arrondi et étoile */
+/* Icône YouTube avec les couleurs officielles */
 .support-icon.youtube-icon {
     background: #f5f5f5;
 }
 
-.support-icon.youtube-icon::before {
-    content: '';
-    position: absolute;
-    width: 32px;
-    height: 32px;
-    background: #333333;
-    border-radius: 6px;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
-
-.support-icon.youtube-icon::after {
-    content: '★';
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    font-size: 12px;
-    color: #333333;
-}
-
 .support-icon.youtube-icon i {
-    position: relative;
-    z-index: 1;
-    color: #ffffff;
-    font-size: 1.2rem;
+    color: #FF0000;
+    font-size: 2rem;
 }
 
 
-/* Icône Suggestions avec bulle de chat et cœur */
-.support-icon.suggestions-icon {
-    background: #f5f5f5;
-}
-
-.support-icon.suggestions-icon i {
-    color: #FFD700;
-    font-size: 1.5rem;
-}
 
 /* Icône WhatsApp */
 .support-icon.whatsapp-icon {
@@ -876,7 +830,7 @@ document.addEventListener('DOMContentLoaded', function() {
     font-weight: 700;
     font-size: 0.875rem;
     padding: 10px 20px;
-    align-self: flex-start;
+    align-self: center;
     transition: all 0.3s ease;
     border: none;
     text-decoration: none;
@@ -909,17 +863,38 @@ document.addEventListener('DOMContentLoaded', function() {
 
 /* Responsive design */
 @media (max-width: 768px) {
-    .support-card-body {
-        align-items: center;
-        text-align: center;
-    }
-    
-    .support-icon {
-        align-self: center;
-    }
-    
     .support-btn {
-        align-self: center;
+        white-space: nowrap !important;
+        overflow: visible !important;
+        text-overflow: clip !important;
+        min-width: auto !important;
+        width: auto !important;
+        padding: 10px 20px !important;
+        font-size: 0.875rem !important;
+    }
+    
+    /* S'assurer que le texte des boutons reste visible */
+    .support-btn .btn-text,
+    .support-btn span {
+        display: inline !important;
+        visibility: visible !important;
+    }
+}
+
+/* Règles supplémentaires pour très petits écrans */
+@media (max-width: 480px) {
+    .support-btn {
+        white-space: nowrap !important;
+        overflow: visible !important;
+        text-overflow: clip !important;
+        padding: 8px 16px !important;
+        font-size: 0.8rem !important;
+        width: auto !important;
+        min-width: auto !important;
+    }
+    
+    .support-card {
+        padding: 1rem !important;
     }
 }
 </style>

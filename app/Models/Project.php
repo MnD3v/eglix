@@ -29,4 +29,25 @@ class Project extends Model
     {
         return $this->hasMany(Donation::class);
     }
+
+    public function activities(): HasMany
+    {
+        return $this->hasMany(ProjectActivity::class);
+    }
+
+    /**
+     * Obtenir le total des montants dépensés dans les activités
+     */
+    public function getTotalActivitiesSpentAttribute()
+    {
+        return $this->activities()->sum('amount_spent');
+    }
+
+    /**
+     * Obtenir le nombre d'activités réalisées
+     */
+    public function getActivitiesCountAttribute()
+    {
+        return $this->activities()->count();
+    }
 }

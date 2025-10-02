@@ -68,10 +68,7 @@
     gap: 6px;
 }
 
-.donation-amount {
-    flex-shrink: 0;
-    text-align: right;
-}
+/* Ancien style donation-amount supprimé car déplacé sous le titre */
 
 .amount-value {
     font-size: 16px;
@@ -83,8 +80,47 @@
 .donation-actions {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
     flex-shrink: 0;
+}
+
+/* Soft Elevated Buttons pour les dons */
+.donation-actions .btn {
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 13px;
+    padding: 8px 16px;
+    transition: all 0.2s ease;
+    border-width: 1.5px;
+}
+
+.donation-actions .btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.donation-actions .btn-outline-secondary {
+    background: #ffffff;
+    color: #64748b;
+    border-color: #e2e8f0;
+}
+
+.donation-actions .btn-outline-secondary:hover {
+    background: #f8fafc;
+    color: #1e293b;
+    border-color: #cbd5e1;
+}
+
+.donation-actions .btn-outline-danger {
+    background: #ffffff;
+    color: #dc2626;
+    border-color: #fecaca;
+}
+
+.donation-actions .btn-outline-danger:hover {
+    background: #dc2626;
+    color: #ffffff;
+    border-color: #dc2626;
 }
 
 .donation-row-empty {
@@ -248,6 +284,14 @@
                                 {{ $donation->donor_name ?? ($donation->member?->last_name.' '.$donation->member?->first_name) }}
                             </a>
                         </div>
+                        <!-- Prix déplacé sous le titre -->
+                        <div class="donation-amount" style="margin: 4px 0;">
+                            @if($donation->donation_type === 'money')
+                                <div class="amount-value" style="font-size: 14px; font-weight: 600; color: #000000;">{{ number_format(round($donation->amount), 0, ',', ' ') }} FCFA</div>
+                            @else
+                                <div class="amount-value" style="font-size: 14px; font-weight: 600; color: #000000;">Objet physique</div>
+                            @endif
+                        </div>
                         <div class="donation-details">
                             @if($donation->donation_type === 'money')
                                 <i class="bi bi-cash-coin me-1"></i>Argent
@@ -262,19 +306,16 @@
                             @endif
                         </div>
                     </div>
-                    <div class="donation-amount">
-                        @if($donation->donation_type === 'money')
-                            <div class="amount-value">{{ number_format(round($donation->amount), 0, ',', ' ') }} FCFA</div>
-                        @else
-                            <div class="amount-value">Objet physique</div>
-                        @endif
-                    </div>
                 </div>
                 <div class="donation-actions">
-                    <a class="btn btn-sm btn-outline-secondary" href="{{ route('donations.edit', $donation) }}">Modifier</a>
-                    <form action="{{ route('donations.destroy', $donation) }}" method="POST" data-confirm="Supprimer ?" data-confirm-ok="Supprimer" class="d-inline">
+                    <a class="btn btn-outline-secondary" href="{{ route('donations.edit', $donation) }}" title="Modifier le don">
+                        <i class="bi bi-pencil me-1"></i>Modifier
+                    </a>
+                    <form action="{{ route('donations.destroy', $donation) }}" method="POST" data-confirm="Supprimer ce don ?" data-confirm-ok="Supprimer" class="d-inline">
                         @csrf @method('DELETE')
-                        <button class="btn btn-sm btn-outline-danger">Supprimer</button>
+                        <button class="btn btn-outline-danger" title="Supprimer le don">
+                            <i class="bi bi-trash me-1"></i>Supprimer
+                        </button>
                     </form>
                 </div>
             </div>

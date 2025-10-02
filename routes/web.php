@@ -239,6 +239,9 @@ Route::middleware(['auth', 'auth.ensure'])->group(function () {
 
     Route::resource('members', MemberController::class)->middleware('validate.image.upload');
     
+    // Route pour l'export PDF du dossier membre
+    Route::get('members/{member}/pdf', [MemberController::class, 'exportPdf'])->name('members.pdf');
+    
     // Routes pour les remarques des membres
     Route::post('members/{member}/remarks', [App\Http\Controllers\MemberRemarkController::class, 'store'])->name('members.remarks.store');
     Route::delete('members/{member}/remarks/{index}', [App\Http\Controllers\MemberRemarkController::class, 'destroy'])->name('members.remarks.destroy');
@@ -261,6 +264,18 @@ Route::middleware(['auth', 'auth.ensure'])->group(function () {
     Route::resource('donations', DonationController::class);
     Route::resource('expenses', ExpenseController::class);
     Route::resource('projects', ProjectController::class);
+    
+    // Routes pour les activités de projets
+    Route::prefix('projects/{project}/activities')->name('projects.activities.')->group(function () {
+        Route::get('/', [App\Http\Controllers\ProjectActivityController::class, 'index'])->name('index');
+        Route::get('/create', [App\Http\Controllers\ProjectActivityController::class, 'create'])->name('create');
+        Route::post('/', [App\Http\Controllers\ProjectActivityController::class, 'store'])->name('store');
+        Route::get('/{activity}', [App\Http\Controllers\ProjectActivityController::class, 'show'])->name('show');
+        Route::get('/{activity}/edit', [App\Http\Controllers\ProjectActivityController::class, 'edit'])->name('edit');
+        Route::put('/{activity}', [App\Http\Controllers\ProjectActivityController::class, 'update'])->name('update');
+        Route::delete('/{activity}', [App\Http\Controllers\ProjectActivityController::class, 'destroy'])->name('destroy');
+    });
+    
     Route::resource('journal', JournalEntryController::class)->middleware('validate.image.upload');
     Route::resource('administration', AdministrationController::class);
     

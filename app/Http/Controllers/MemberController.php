@@ -376,6 +376,47 @@ class MemberController extends Controller
     }
     
     /**
+     * Exporte le dossier du membre en PDF
+     */
+    public function exportPdf(Member $member)
+    {
+        // Vérifier que le membre appartient à l'église de l'utilisateur
+        if ($member->church_id !== Auth::user()->church_id) {
+            abort(403, 'Accès non autorisé');
+        }
+        
+        // Charger les relations nécessaires
+        $member->load(['tithes' => function($query) {
+            $query->orderBy('paid_at', 'desc');
+        }, 'church']);
+        
+        // Calculer les statistiques
+        $stats = [
+            'total_tithes' => $member->tithes->sum('amount'),
+            'tithes_count' => $member->tithes->count(),
+            'last_tithe_date' => $member->tithes->first()?->paid_at?->format('d/m/Y'),
+            'this_month_tithes' => $member->tithes->where('paid_at', '>=', now()->startOfMonth())->sum('amount'),
+            'this_year_tithes' => $member->tithes->where('paid_at', '>=', now()->startOfYear())->sum('amount'),
+        ];
+        
+        // Données pour le PDF
+        $data = [
+            'member' => $member,
+            'stats' => $stats,
+            'church' => $member->church,
+            'generated_at' => now()->format('d/m/Y à H:i'),
+            'generated_by' => Auth::user()->name,
+        ];
+        
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('members.pdf', $data);
+        $pdf->setPaper('A4', 'portrait');
+        
+        $filename = 'Dossier_' . str_replace(' ', '_', $member->last_name . '_' . $member->first_name) . '_' . now()->format('Y-m-d') . '.pdf';
+        
+        return $pdf->download($filename);
+    }
+
+    /**
      * Génère un lien d'inscription sécurisé pour une église
      */
     public function generateSecureRegistrationLink(Church $church)

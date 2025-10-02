@@ -257,14 +257,14 @@
         }
         
         :root {
-            --bs-primary: #FFCC00; /* brand red */
-            --bs-primary-rgb: 255, 38, 0;
+            --bs-primary: #FFCC00; /* jaune */
+            --bs-primary-rgb: 255, 204, 0;
             --bs-secondary: #64748B; /* slate-500 */
             --bs-link-color: #FFCC00;
-            --bs-link-hover-color: #cc1e00;
-            --bs-primary-text-emphasis: #661000;
-            --bs-primary-bg-subtle: #FFE1DB;
-            --bs-primary-border-subtle: #FFC0B5;
+            --bs-link-hover-color: #e6b800;
+            --bs-primary-text-emphasis: #8B7D00;
+            --bs-primary-bg-subtle: #FFFEF0;
+            --bs-primary-border-subtle: #FFF3CC;
         }
         body { 
             font-family: 'DM Sans', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif; 
@@ -280,6 +280,42 @@
         h1, h2, h3, h4, h5, h6 { font-weight: 600; }
         .navbar-brand { font-weight: 700; }
         .nav-link.active { color: var(--bs-primary) !important; }
+
+        /* Styles pour forcer Bootstrap form elements à utiliser nos couleurs */
+        .form-select:focus,
+        .form-control:focus,
+        select:focus,
+        input:focus-within {
+            border-color: var(--bs-primary) !important;
+            box-shadow: 0 0 0 0.25rem rgba(255, 204, 0, 0.25) !important;
+        }
+
+        /* Styles pour les options des select */
+        option:checked,
+        option:hover,
+        option:focus {
+            background-color: var(--bs-primary) !important;
+            color: #000000 !important;
+        }
+
+        /* Override global pour tous les éléments focus */
+        *:focus {
+            outline-color: var(--bs-primary) !important;
+        }
+
+        /* Styles pour les boutons Bootstrap primary */
+        .btn-primary {
+            background-color: var(--bs-primary) !important;
+            border-color: var(--bs-primary) !important;
+            color: #000000 !important;
+        }
+
+        .btn-primary:hover,
+        .btn-primary:focus {
+            background-color: #e6b800 !important;
+            border-color: #e6b800 !important;
+            color: #000000 !important;
+        }
 
         /* Styles globaux pour les titres de page - Style élégant et minimaliste */
         .page-header {
@@ -890,6 +926,9 @@
             border-radius: 0;
             margin: 2px 12px;
             border-radius: 8px;
+        }
+        .sidebar a i {
+            color: #000000 !important; /* Icônes en noir */
         }
         .sidebar a .sidebar-text {
             display: inline;
