@@ -248,46 +248,12 @@ Route::middleware(['auth', 'auth.ensure'])->group(function () {
         'total_expenses' => Expense::where('church_id', $churchId)->sum('amount'),
     ];
     
-    // Force debug avec valeurs fixes pour test
-    if ($request->get('debug') === 'stats') {
-        return response()->json([
-            'kpis' => $kpis,
-            'stats' => $stats,
-            'monthOfferings' => DB::table('offerings')->where('church_id', $churchId)->where('received_at', '>=', now()->startOfYear())->sum('amount'),
-            'monthDonations' => DB::table('donations')->where('church_id', $churchId)->where('received_at', '>=', now()->startOfYear())->sum('amount'),
-            'monthTotal' => $monthTotal,
-            'churchId' => $churchId,
-            'yearStart' => now()->startOfYear(),
-            'test_offerings' => DB::table('offerings')->where('church_id', $churchId)->sum('amount'),
-            'test_donations' => DB::table('donations')->where('church_id', $churchId)->sum('amount'),
-        ]);
-    }
     
 
     
     return view('home', compact('stats','recentTithes','recentDonations','recentOfferings','chart','offeringsByType','from','to','kpis'));
 });
 
-// Route temporaire pour debug direct
-Route::get('/debug-stats', function() {
-    $user = Auth::user();
-    if (!$user) return 'No user logged in';
-    
-    $churchId = $user->church_id;
-    
-    $offeringsSum = \App\Models\Offering::where('church_id', $churchId)->where('received_at', '>=', now()->startOfYear())->sum('amount');
-    $donationsSum = \App\Models\Donation::where('church_id', $churchId)->where('received_at', '>=', now()->startOfYear())->sum('amount');
-    $tithesSum = \App\Models\Tithe::where('church_id', $churchId)->where('paid_at', '>=', now()->startOfYear())->sum('amount');
-    
-    return response()->json([
-        'user_id' => $user->id,
-        'church_id' => $churchId,
-        'offerings_sum' => $offeringsSum,
-        'donations_sum' => $donationsSum, 
-        'tithes_sum' => $tithesSum,
-        'year_start' => now()->startOfYear(),
-    ]);
-})->middleware(['auth', 'auth.ensure']);
 
     // Routes pour l'inscription individuelle via lien unique (AVANT la route resource)
     Route::get('members/share-link', [App\Http\Controllers\MemberController::class, 'generateRegistrationLink'])->name('members.generate-link');

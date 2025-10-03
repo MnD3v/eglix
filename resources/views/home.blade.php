@@ -86,13 +86,7 @@
                         </div>
                         <div class="kpi-meta">
                             <div class="kpi-value">
-                                @php
-                                    // Correction du problème de formatage
-                                    $rawValue = $k['label']==='Dépenses' ? ($k['current'] ?? 0) : ($k['value'] ?? 0);
-                                    $numericValue = is_numeric($rawValue) ? (float)$rawValue : 0;
-                                    $formattedValue = number_format($numericValue, 0, ',', ' ');
-                                @endphp
-                                {{ $formattedValue }}
+                                {{ number_format(round($k['label']==='Dépenses' ? ($k['current'] ?? 0) : $k['value']), 0, ',', ' ') }}
                                 <span class="kpi-currency">FCFA</span>
                             </div>
                             @if(!is_null($k['delta']))
