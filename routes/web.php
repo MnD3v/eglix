@@ -264,6 +264,19 @@ Route::middleware(['auth', 'auth.ensure'])->group(function () {
     Route::resource('donations', DonationController::class);
     Route::resource('expenses', ExpenseController::class);
     Route::resource('projects', ProjectController::class);
+
+// Routes pour les invités (intégrées dans la section membres)
+Route::prefix('guests')->name('guests.')->group(function () {
+    Route::get('/', [App\Http\Controllers\GuestController::class, 'index'])->name('index');
+    Route::get('/create', [App\Http\Controllers\GuestController::class, 'create'])->name('create');
+    Route::post('/', [App\Http\Controllers\GuestController::class, 'store'])->name('store');
+    Route::get('/{guest}', [App\Http\Controllers\GuestController::class, 'show'])->name('show');
+    Route::get('/{guest}/edit', [App\Http\Controllers\GuestController::class, 'edit'])->name('edit');
+    Route::put('/{guest}', [App\Http\Controllers\GuestController::class, 'update'])->name('update');
+    Route::delete('/{guest}', [App\Http\Controllers\GuestController::class, 'destroy'])->name('destroy');
+    Route::put('/{guest}/convert-to-member', [App\Http\Controllers\GuestController::class, 'convertToMember'])->name('convert.to.member');
+    Route::get('/api/chart-data', [App\Http\Controllers\GuestController::class, 'chartData'])->name('api.chart');
+});
     
     // Routes pour les activités de projets
     Route::prefix('projects/{project}/activities')->name('projects.activities.')->group(function () {
