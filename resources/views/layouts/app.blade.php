@@ -883,7 +883,7 @@
             bottom: 0;
             left: 0;
             width: 220px;
-            background-color: #F1F1F1; /* fond gris clair */
+            background-color: #000000; /* fond noir */
             padding-top: 0;
             z-index: 1030;
             overflow-y: auto; /* scrollable */
@@ -892,8 +892,8 @@
             /* hide scrollbar but keep scroll */
             -ms-overflow-style: none; /* IE/Edge */
             scrollbar-width: none; /* Firefox */
-            border-right: 1px solid #e2e8f0;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+            border-right: 1px solid #333333;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
         }
         .sidebar-header { overflow: visible; }
         .sidebar-header img { 
@@ -918,7 +918,7 @@
             width: 100%;
             height: 48px;
             padding: 0 20px;
-            color: #64748b; /* slate-500 */
+            color: #ffffff; /* texte blanc */
             text-decoration: none;
             font-weight: 500;
             font-size: 14px;
@@ -928,26 +928,26 @@
             border-radius: 8px;
         }
         .sidebar a i {
-            color: #000000 !important; /* Icônes en noir */
+            color: #ffffff !important; /* Icônes en blanc */
         }
         .sidebar a .sidebar-text {
             display: inline;
         }
         .sidebar a:hover { 
-            color: #1e293b; 
-            background-color: #f1f5f9; 
+            color: #ffffff; 
+            background-color: #333333; 
             transform: translateX(2px);
         }
         .sidebar a.active { 
-            color: #1e293b; 
-            background-color: #E0E0E0; 
+            color: #ffffff; 
+            background-color: #333333; 
             font-weight: 700;
             border-radius: 12px;
             margin: 4px 8px;
             padding: 12px 16px;
         }
         .sidebar a.active i {
-            color: white;
+            color: #ffffff !important;
         }
 
         main.dashboard-main { 
@@ -2213,11 +2213,11 @@
         <!-- Barre jaune en haut -->
         <div style="height: 4px; background: linear-gradient(90deg, #f59e0b, #fbbf24);"></div>
         
-        <div class="sidebar-header" style="padding: 20px 16px; text-align: center; border-bottom: 1px solid #e2e8f0; margin-bottom: 16px;">
-            <img src="{{ asset('images/eglix-black.png') }}" alt="Eglix" style="height: 40px; margin-bottom: 15px;">
+        <div class="sidebar-header" style="padding: 20px 16px; text-align: center; border-bottom: 1px solid #333333; margin-bottom: 16px;">
+            <img src="{{ asset('images/eglix.png') }}" alt="Eglix" style="height: 40px; margin-bottom: 15px;">
             
             @auth
-            <div style="background-color: #000000; color: white; font-size: 0.9rem; padding: 12px; border-radius: 12px; display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 700;">
+            <div style="background-color: #333333; color: white; font-size: 0.9rem; padding: 12px; border-radius: 12px; display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 700;">
                 <i class="bi bi-shop" style="color: #FFCC00; font-size: 16px;"></i>
                 <span>{{ Auth::user()->church->name ?? 'Église' }}</span>
             </div>
@@ -2260,20 +2260,20 @@
         
         <!-- Informations utilisateur -->
         <div style="margin-top: 20px; padding: 0 16px;">
-            <div class="user-info-card" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px; margin-bottom: 16px;">
+            <div class="user-info-card" style="background: #000000; border: 1px solid #333333; border-radius: 12px; padding: 16px; margin-bottom: 16px;">
                 <div class="d-flex flex-column align-items-center mb-3">
                     <div class="user-avatar" style="width: 40px; height: 40px; background: #FFD700; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 8px;">
                         <i class="bi bi-person-fill" style="color: #000000; font-size: 1.2rem;"></i>
                     </div>
                     <div class="user-details text-center">
-                        <h6 class="mb-1" style="font-weight: 600; color: #1e293b; font-size: 0.9rem;">{{ Auth::user()->name }}</h6>
-                        <small class="text-muted" style="font-size: 0.75rem;">{{ Auth::user()->email }}</small>
+                        <h6 class="mb-1" style="font-weight: 600; color: #ffffff; font-size: 0.9rem;">{{ Auth::user()->name }}</h6>
+                        <small class="text-muted" style="font-size: 0.75rem; color: #ffffff;">{{ Auth::user()->email }}</small>
                     </div>
                 </div>
-                <div class="user-role" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 8px 12px;">
+                <div class="user-role" style="background: #333333; border: 1px solid #333333; border-radius: 8px; padding: 8px 12px;">
                     <div class="d-flex align-items-center">
                         <i class="bi bi-shield-check me-2" style="color: #FFD700; font-size: 0.9rem;"></i>
-                        <span style="font-size: 0.8rem; font-weight: 500; color: #64748b;">
+                        <span style="font-size: 0.8rem; font-weight: 500; color: #ffffff;">
                             @if(Auth::user()->isChurchAdmin())
                                 Administrateur
                             @elseif(Auth::user()->hasPermission('users.view'))
@@ -2289,17 +2289,17 @@
         
         <!-- Bouton de déconnexion -->
         <div style="padding: 0 16px;">
-            <button type="button" class="btn btn-sm w-100" style="border-radius: 8px; font-size: 0.875rem; background-color: #000000 !important; border: 1px solid #000000 !important; color: #ffffff !important; font-weight: 700;" title="Se déconnecter" onclick="confirmLogout()">
-                <i class="bi bi-box-arrow-right me-2" style="color: #000000 !important;"></i>
+            <button type="button" class="btn btn-sm w-100" style="border-radius: 8px; font-size: 0.875rem; background-color: #333333 !important; border: 1px solid #333333 !important; color: #ffffff !important; font-weight: 700;" title="Se déconnecter" onclick="confirmLogout()">
+                <i class="bi bi-box-arrow-right me-2" style="color: #ffffff !important;"></i>
                 <span class="sidebar-text" style="color: #ffffff !important; font-weight: 700;">Déconnexion</span>
             </button>
         </div>
         
         <!-- Crédit développeur en bas de sidebar -->
-        <div class="sidebar-footer" style="margin-top: auto; padding: 16px; border-top: 1px solid #e2e8f0; text-align: center;">
+        <div class="sidebar-footer" style="margin-top: auto; padding: 16px; border-top: 1px solid #333333; text-align: center;">
             <p class="text-muted mb-2 small" style="font-size: 0.75rem; color: #94a3b8;">Développé par</p>
             <a href="https://lafia.tech" target="_blank" rel="noopener" style="display: inline-block;">
-                <img src="{{ asset('images/lafiatech.png') }}" alt="Lafiatech" style="height: 24px; opacity: 0.6; transition: opacity 0.2s;">
+                <img src="{{ asset('images/lafiatech.png') }}" alt="Lafiatech" style="height: 32px; opacity: 0.8; transition: opacity 0.2s; margin: 0 auto; display: block;">
             </a>
         </div>
     </div>

@@ -68,12 +68,6 @@
     gap: 6px;
 }
 
-.account-actions {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-shrink: 0;
-}
 
 .account-row-empty {
     text-align: center;
@@ -232,15 +226,6 @@
                             @endif
                         </div>
                     </div>
-                </div>
-                <div class="account-actions">
-                    <a href="{{ route('user-management.edit', $user) }}" class="btn btn-sm btn-outline-primary">Modifier</a>
-                    @if(!$user->is_church_admin)
-                        <form action="{{ route('user-management.destroy', $user) }}" method="POST" onsubmit="return confirmDelete()" class="d-inline">
-                            @csrf @method('DELETE')
-                            <button type="submit" class="btn btn-sm btn-outline-danger">Supprimer</button>
-                        </form>
-                    @endif
                 </div>
             </div>
         @empty
@@ -461,18 +446,6 @@
         gap: 4px;
     }
     
-    .account-actions {
-        flex-direction: row;
-        justify-content: center;
-        gap: 6px;
-        flex-wrap: wrap;
-    }
-    
-    .account-actions .btn {
-        font-size: 12px;
-        padding: 6px 12px;
-        min-width: 80px;
-    }
 }
 
 /* Amélioration de la marge et de l'espacement */
@@ -506,10 +479,6 @@ h6.text-muted {
 </style>
 
 <script>
-function confirmDelete() {
-    return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ? Cette action est irréversible.');
-}
-
 // Test du bouton Nouvel Utilisateur
 document.addEventListener('DOMContentLoaded', function() {
     const newUserBtn = document.querySelector('a[href*="user-management/create"]');
