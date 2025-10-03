@@ -67,11 +67,13 @@ Route::middleware(['auth', 'auth.ensure'])->group(function () {
     $monthStart = now()->copy()->startOfMonth();
     $prevStart = (clone $monthStart)->subMonth();
     $prevEnd = (clone $monthStart)->subDay()->endOfDay();
-    $monthTotal = Tithe::where('church_id', $churchId)->where('paid_at', '>=', $monthStart)->sum('amount');
+    $monthTotal = Tithe::where('church_id', $churchId)->where('paid_at', '>=', now()->startOfYear())->sum('amount');
     $recentTithes = Tithe::with('member')->where('church_id', $churchId)->latest('paid_at')->limit(5)->get();
-    $monthDonations = Donation::where('church_id', $churchId)->where('received_at', '>=', $monthStart)->sum('amount');
+    // Correction pour le problème des dons - utiliser DB direct
+    $monthDonations = DB::table('donations')->where('church_id', $churchId)->where('received_at', '>=', now()->startOfYear())->sum('amount');
     $recentDonations = Donation::with(['member','project'])->where('church_id', $churchId)->latest('received_at')->limit(5)->get();
-    $monthOfferings = Offering::where('church_id', $churchId)->where('received_at', '>=', $monthStart)->sum('amount');
+    // Correction pour le problème des offrandes - utiliser DB direct
+    $monthOfferings = DB::table('offerings')->where('church_id', $churchId)->where('received_at', '>=', now()->startOfYear())->sum('amount');
     $recentOfferings = Offering::with('member')->where('church_id', $churchId)->orderBy('received_at', 'desc')->limit(5)->get();
     // previous month totals
     $prev = [
@@ -215,24 +217,77 @@ Route::middleware(['auth', 'auth.ensure'])->group(function () {
         ],
         [
             'label' => 'Offrandes',
-            'value' => (float) $monthOfferings,
-            'delta' => $prev['offerings'] == 0 ? null : round((($monthOfferings - $prev['offerings']) / max($prev['offerings'], 0.0001)) * 100, 2),
+            'value' => (float) DB::table('offerings')->where('church_id', $churchId)->where('received_at', '>=', now()->startOfYear())->sum('amount'),
+            'delta' => $prev['offerings'] == 0 ? null : round(((DB::table('offerings')->where('church_id', $churchId)->where('received_at', '>=', now()->startOfYear())->sum('amount') - $prev['offerings']) / max($prev['offerings'], 0.0001)) * 100, 2),
         ],
         [
             'label' => 'Dons',
-            'value' => (float) $monthDonations,
-            'delta' => $prev['donations'] == 0 ? null : round((($monthDonations - $prev['donations']) / max($prev['donations'], 0.0001)) * 100, 2),
+            'value' => (float) DB::table('donations')->where('church_id', $churchId)->where('received_at', '>=', now()->startOfYear())->sum('amount'),
+            'delta' => $prev['donations'] == 0 ? null : round(((DB::table('donations')->where('church_id', $churchId)->where('received_at', '>=', now()->startOfYear())->sum('amount') - $prev['donations']) / max($prev['donations'], 0.0001)) * 100, 2),
         ],
         [
             'label' => 'Dépenses',
-            'value' => (float) DB::table('expenses')->where('church_id', $churchId)->where('paid_at','>=',$monthStart)->sum('amount'),
-            'delta' => $prev['expenses'] == 0 ? null : round(((DB::table('expenses')->where('church_id', $churchId)->where('paid_at','>=',$monthStart)->sum('amount') - $prev['expenses']) / max($prev['expenses'], 0.0001)) * 100, 2),
+            'value' => (float) DB::table('expenses')->where('church_id', $churchId)->where('paid_at','>=',now()->startOfYear())->sum('amount'),
+            'delta' => $prev['expenses'] == 0 ? null : round(((DB::table('expenses')->where('church_id', $churchId)->where('paid_at','>=',now()->startOfYear())->sum('amount') - $prev['expenses']) / max($prev['expenses'], 0.0001)) * 100, 2),
             'is_expense' => true,
-            'current' => (float) DB::table('expenses')->where('church_id', $churchId)->where('paid_at','>=',$monthStart)->sum('amount'),
+            'current' => (float) DB::table('expenses')->where('church_id', $churchId)->where('paid_at','>=',now()->startOfYear())->sum('amount'),
         ],
     ];
+    
+    // Calculer les statistiques pour le dashboard
+    $stats = [
+        'active_members' => $activeMembers,
+        'monthly_tithes' => $monthTotal,
+        'monthly_offerings' => $monthOfferings,
+        'monthly_donations' => $monthDonations,
+        'monthly_expenses' => DB::table('expenses')->where('church_id', $churchId)->where('paid_at','>=',now()->startOfYear())->sum('amount'),
+        'total_members' => Member::where('church_id', $churchId)->count(),
+        'total_tithes' => Tithe::where('church_id', $churchId)->sum('amount'),
+        'total_offerings' => Offering::where('church_id', $churchId)->sum('amount'),
+        'total_donations' => Donation::where('church_id', $churchId)->sum('amount'),
+        'total_expenses' => Expense::where('church_id', $churchId)->sum('amount'),
+    ];
+    
+    // Force debug avec valeurs fixes pour test
+    if ($request->get('debug') === 'stats') {
+        return response()->json([
+            'kpis' => $kpis,
+            'stats' => $stats,
+            'monthOfferings' => DB::table('offerings')->where('church_id', $churchId)->where('received_at', '>=', now()->startOfYear())->sum('amount'),
+            'monthDonations' => DB::table('donations')->where('church_id', $churchId)->where('received_at', '>=', now()->startOfYear())->sum('amount'),
+            'monthTotal' => $monthTotal,
+            'churchId' => $churchId,
+            'yearStart' => now()->startOfYear(),
+            'test_offerings' => DB::table('offerings')->where('church_id', $churchId)->sum('amount'),
+            'test_donations' => DB::table('donations')->where('church_id', $churchId)->sum('amount'),
+        ]);
+    }
+    
+
+    
     return view('home', compact('stats','recentTithes','recentDonations','recentOfferings','chart','offeringsByType','from','to','kpis'));
 });
+
+// Route temporaire pour debug direct
+Route::get('/debug-stats', function() {
+    $user = Auth::user();
+    if (!$user) return 'No user logged in';
+    
+    $churchId = $user->church_id;
+    
+    $offeringsSum = \App\Models\Offering::where('church_id', $churchId)->where('received_at', '>=', now()->startOfYear())->sum('amount');
+    $donationsSum = \App\Models\Donation::where('church_id', $churchId)->where('received_at', '>=', now()->startOfYear())->sum('amount');
+    $tithesSum = \App\Models\Tithe::where('church_id', $churchId)->where('paid_at', '>=', now()->startOfYear())->sum('amount');
+    
+    return response()->json([
+        'user_id' => $user->id,
+        'church_id' => $churchId,
+        'offerings_sum' => $offeringsSum,
+        'donations_sum' => $donationsSum, 
+        'tithes_sum' => $tithesSum,
+        'year_start' => now()->startOfYear(),
+    ]);
+})->middleware(['auth', 'auth.ensure']);
 
     // Routes pour l'inscription individuelle via lien unique (AVANT la route resource)
     Route::get('members/share-link', [App\Http\Controllers\MemberController::class, 'generateRegistrationLink'])->name('members.generate-link');
