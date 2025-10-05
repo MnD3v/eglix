@@ -389,7 +389,7 @@ Route::prefix('guests')->name('guests.')->group(function () {
     Route::get('church/current', [ChurchSwitchController::class, 'getCurrentChurch'])->name('church.current');
     Route::get('church/accessible', [ChurchSwitchController::class, 'getAccessibleChurches'])->name('church.accessible');
     
-    // Routes pour la gestion des églises utilisateur
+ // Routes pour la gestion des églises utilisateur
     Route::get('user/churches', [UserChurchesController::class, 'index'])->name('user.churches');
     Route::post('user/churches/add', [UserChurchesController::class, 'addChurch'])->name('user.churches.add');
     Route::post('user/churches/set-primary', [UserChurchesController::class, 'setPrimary'])->name('user.churches.set-primary');

@@ -111,6 +111,13 @@
     font-size: 0.9rem;
     color: #5f6368;
     font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+.plan-duration {
+    font-size: 0.8rem;
+    color: #9aa0a6;
+    font-weight: 400;
     margin-bottom: 1rem;
 }
 
@@ -207,43 +214,18 @@
                 Choisir un plan
             </h3>
             
-            <div class="row">
-                <div class="col-md-4">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
                     <div class="plan-card" onclick="selectPlan('basic')">
                         <div class="plan-name">Plan Basique</div>
-                        <div class="plan-price">39 000 XOF</div>
-                        <div class="plan-period">/semestre (6 mois)</div>
+                        <div class="plan-price">6 500 XOF</div>
+                        <div class="plan-period">/mois</div>
+                        <div class="plan-duration">6 mois • 39 000 XOF</div>
                         <ul class="plan-features">
                             <li><i class="bi bi-check"></i>Jusqu'à 50 membres</li>
                             <li><i class="bi bi-check"></i>Gestion des dîmes et offrandes</li>
                             <li><i class="bi bi-check"></i>Rapports de base</li>
                             <li><i class="bi bi-check"></i>Support email</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="plan-card" onclick="selectPlan('premium')">
-                        <div class="plan-name">Plan Premium</div>
-                        <div class="plan-price">39 000 XOF</div>
-                        <div class="plan-period">/semestre (6 mois)</div>
-                        <ul class="plan-features">
-                            <li><i class="bi bi-check"></i>Jusqu'à 200 membres</li>
-                            <li><i class="bi bi-check"></i>Toutes les fonctionnalités</li>
-                            <li><i class="bi bi-check"></i>Rapports avancés</li>
-                            <li><i class="bi bi-check"></i>Support prioritaire</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="plan-card" onclick="selectPlan('enterprise')">
-                        <div class="plan-name">Plan Entreprise</div>
-                        <div class="plan-price">39 000 XOF</div>
-                        <div class="plan-period">/semestre (6 mois)</div>
-                        <ul class="plan-features">
-                            <li><i class="bi bi-check"></i>Membres illimités</li>
-                            <li><i class="bi bi-check"></i>Toutes les fonctionnalités</li>
-                            <li><i class="bi bi-check"></i>API d'accès</li>
-                            <li><i class="bi bi-check"></i>Support dédié</li>
                         </ul>
                     </div>
                 </div>

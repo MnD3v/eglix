@@ -909,6 +909,8 @@
                 margin-top: 70px; /* Margin de 70px sur mobile */
             }
         }
+     
+
         .sidebar::-webkit-scrollbar { display: none; width: 0; height: 0; }
         .sidebar a {
             display: flex;
@@ -2198,6 +2200,15 @@
                 font-size: 1.1rem;
             }
         }
+        .logo {
+            margin-top: 0;
+        }
+        
+        @media (max-width: 991.98px) {
+            .logo {
+                margin-top: 70px !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -2214,7 +2225,7 @@
         <div style="height: 4px; background: linear-gradient(90deg, #f59e0b, #fbbf24);"></div>
         
         <div class="sidebar-header" style="padding: 20px 16px; text-align: center; border-bottom: 1px solid #333333; margin-bottom: 16px;">
-            <img src="{{ asset('images/eglix.png') }}" alt="Eglix" style="width: 90px; margin-top: 12px; margin-bottom: 15px; margin-top: 55px;">
+            <img src="{{ asset('images/eglix.png') }}" alt="Eglix" class="logo" style="width: 90px; margin-top: 12px; margin-bottom: 15px; ">
             
             @auth
             <div id="church-button" style="background-color: #333333; color: white; font-size: 0.9rem; padding: 12px; border-radius: 12px; display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 700; cursor: pointer; transition: all 0.3s ease; border: 2px solid transparent;" 
@@ -2294,6 +2305,14 @@
             </div>
         </div>
         
+        <!-- Bouton Centre d'appel -->
+        <div style="padding: 0 16px; margin-bottom: 12px;">
+            <button type="button" class="btn btn-sm w-100" style="border-radius: 8px; font-size: 0.875rem; background-color: #FFCC00 !important; border: 1px solid #FFCC00 !important; color: #000000 !important; font-weight: 700;" title="Centre d'appel" onclick="openCallCenterModal()">
+                <i class="bi bi-telephone me-2" style="color: #000000 !important;"></i>
+                <span class="sidebar-text" style="color: #000000 !important; font-weight: 700;">Centre d'appel</span>
+            </button>
+        </div>
+        
         <!-- Bouton de déconnexion -->
         <div style="padding: 0 16px;">
             <button type="button" class="btn btn-sm w-100" style="border-radius: 8px; font-size: 0.875rem; background-color: #333333 !important; border: 1px solid #333333 !important; color: #ffffff !important; font-weight: 700;" title="Se déconnecter" onclick="confirmLogout()">
@@ -2314,6 +2333,85 @@
     <main class="dashboard-main">
         @yield('content')
     </main>
+
+    <!-- Centre d'appel Modal -->
+    <div class="modal fade" id="callCenterModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="border-radius: 16px; border: none; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);">
+                <div class="modal-header" style="border-bottom: 1px solid #e2e8f0; padding: 20px 24px 16px;">
+                    <h5 class="modal-title" style="font-weight: 600; color: #1e293b; font-family: 'Plus Jakarta Sans', sans-serif;">
+                        <i class="bi bi-telephone me-2" style="color: #FFCC00;"></i>
+                        Centre d'appel
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="background: none; border: none; font-size: 1.2rem; color: #64748b;"></button>
+                </div>
+                <div class="modal-body" style="padding: 20px 24px;">
+                    <p class="text-muted mb-4" style="text-align: center; font-size: 0.95rem;">
+                        Contactez-nous via nos différents canaux de communication
+                    </p>
+                    
+                    <div class="row g-3">
+                        <!-- WhatsApp -->
+                        <div class="col-12">
+                            <a href="https://wa.me/22898784589" target="_blank" class="btn w-100 d-flex align-items-center justify-content-center" style="background: #25D366; color: white; border: none; border-radius: 12px; padding: 12px; font-weight: 600; text-decoration: none; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(37, 211, 102, 0.3)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+                                <i class="bi bi-whatsapp me-3" style="font-size: 1.5rem;"></i>
+                                <div class="text-start">
+                                    <div style="font-size: 1rem; font-weight: 700;">WhatsApp</div>
+                                    <div style="font-size: 0.85rem; opacity: 0.9;">+228 98 78 45 89</div>
+                                </div>
+                            </a>
+                        </div>
+                        
+                        <!-- Email -->
+                        <div class="col-12">
+                            <a href="mailto:support@eglix.com" class="btn w-100 d-flex align-items-center justify-content-center" style="background: #4285F4; color: white; border: none; border-radius: 12px; padding: 12px; font-weight: 600; text-decoration: none; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(66, 133, 244, 0.3)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+                                <i class="bi bi-envelope me-3" style="font-size: 1.5rem;"></i>
+                                <div class="text-start">
+                                    <div style="font-size: 1rem; font-weight: 700;">Email</div>
+                                    <div style="font-size: 0.85rem; opacity: 0.9;">support@eglix.com</div>
+                                </div>
+                            </a>
+                        </div>
+                        
+                        <!-- Facebook -->
+                        <div class="col-6">
+                            <a href="https://facebook.com/eglix" target="_blank" class="btn w-100 d-flex align-items-center justify-content-center" style="background: #1877F2; color: white; border: none; border-radius: 12px; padding: 12px; font-weight: 600; text-decoration: none; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(24, 119, 242, 0.3)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+                                <i class="bi bi-facebook me-2" style="font-size: 1.2rem;"></i>
+                                <span style="font-size: 0.9rem;">Facebook</span>
+                            </a>
+                        </div>
+                        
+                        <!-- Instagram -->
+                        <div class="col-6">
+                            <a href="https://instagram.com/eglix" target="_blank" class="btn w-100 d-flex align-items-center justify-content-center" style="background: linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%); color: white; border: none; border-radius: 12px; padding: 12px; font-weight: 600; text-decoration: none; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(188, 24, 136, 0.3)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+                                <i class="bi bi-instagram me-2" style="font-size: 1.2rem;"></i>
+                                <span style="font-size: 0.9rem;">Instagram</span>
+                            </a>
+                        </div>
+                        
+                        <!-- LinkedIn -->
+                        <div class="col-6">
+                            <a href="https://linkedin.com/company/eglix" target="_blank" class="btn w-100 d-flex align-items-center justify-content-center" style="background: #0077B5; color: white; border: none; border-radius: 12px; padding: 12px; font-weight: 600; text-decoration: none; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0, 119, 181, 0.3)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+                                <i class="bi bi-linkedin me-2" style="font-size: 1.2rem;"></i>
+                                <span style="font-size: 0.9rem;">LinkedIn</span>
+                            </a>
+                        </div>
+                        
+                        <!-- Twitter -->
+                        <div class="col-6">
+                            <a href="https://twitter.com/eglix" target="_blank" class="btn w-100 d-flex align-items-center justify-content-center" style="background: #1DA1F2; color: white; border: none; border-radius: 12px; padding: 12px; font-weight: 600; text-decoration: none; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(29, 161, 242, 0.3)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+                                <i class="bi bi-twitter me-2" style="font-size: 1.2rem;"></i>
+                                <span style="font-size: 0.9rem;">Twitter</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="border-top: 1px solid #e2e8f0; padding: 16px 24px 20px;">
+                    <button type="button" class="btn btn-outline-secondary w-100" data-bs-dismiss="modal" style="border-radius: 8px; font-weight: 500; padding: 8px 16px; border: 1px solid #e2e8f0; color: #64748b; background: transparent;">Fermer</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Global Confirm Modal -->
     <div class="modal fade" id="confirmModal" tabindex="-1" aria-hidden="true">
@@ -3135,13 +3233,14 @@
                     // Afficher le modal de succès
                     $('#successModal').modal('show');
                     
-                    // Fermer le modal de succès et recharger la page après 2 secondes
+                    // Fermer le modal de succès et rediriger vers le dashboard après 1.5 secondes
                     setTimeout(function() {
                         $('#successModal').modal('hide');
                         setTimeout(function() {
-                            window.location.reload();
+                            // Rediriger vers le dashboard au lieu de recharger
+                            window.location.href = '{{ url("/") }}';
                         }, 300);
-                    }, 2000);
+                    }, 1500);
                 },
                 error: function(xhr) {
                     // Restaurer le texte original en cas d'erreur
@@ -3184,6 +3283,20 @@
             } catch (error) {
                 // Fallback avec jQuery si Bootstrap échoue
                 $('#churchModal').modal('show');
+            }
+        }
+    }
+    
+    // Fonction pour ouvrir le modal Centre d'appel
+    function openCallCenterModal() {
+        var modal = document.getElementById('callCenterModal');
+        if (modal) {
+            try {
+                var bsModal = new bootstrap.Modal(modal);
+                bsModal.show();
+            } catch (error) {
+                // Fallback avec jQuery si Bootstrap échoue
+                $('#callCenterModal').modal('show');
             }
         }
     }

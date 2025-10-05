@@ -125,7 +125,7 @@ class AdminController extends Controller
     {
         $this->checkAdminAccess();
         $validated = $request->validate([
-            'subscription_plan' => 'required|in:basic,premium,enterprise',
+            'subscription_plan' => 'required|in:basic',
             'subscription_start_date' => 'required|date',
             'subscription_end_date' => 'required|date|after:subscription_start_date',
             'payment_reference' => 'nullable|string|max:100',

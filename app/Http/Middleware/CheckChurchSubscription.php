@@ -29,7 +29,10 @@ class CheckChurchSubscription
             'subscription.process-renewal',
             'logout',
             'admin.index',
-            'admin.*'
+            'admin.*',
+            'church.switch',  // Exclure le changement d'église
+            'church.current',
+            'church.accessible'
         ];
 
         foreach ($excludedRoutes as $route) {

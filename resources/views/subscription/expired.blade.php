@@ -193,10 +193,6 @@
                 <i class="bi bi-credit-card"></i>
                 Renouveler l'abonnement
             </a>
-            <a href="{{ route('logout') }}" class="btn-secondary" onclick="addLogoutLoader(this)">
-                <i class="bi bi-box-arrow-right"></i>
-                Se déconnecter
-            </a>
         </div>
         
         <div class="contact-info">

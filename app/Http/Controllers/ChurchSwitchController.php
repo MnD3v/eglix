@@ -30,6 +30,9 @@ class ChurchSwitchController extends Controller
 
         // Changer l'église active
         if ($user->setCurrentChurch($churchId)) {
+            // Forcer la sauvegarde de la session
+            Session::save();
+            
             if ($request->ajax()) {
                 return response()->json(['success' => true, 'message' => 'Église changée avec succès.']);
             }

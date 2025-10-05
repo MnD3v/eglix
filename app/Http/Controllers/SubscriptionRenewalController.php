@@ -36,7 +36,7 @@ class SubscriptionRenewalController extends Controller
         }
 
         $validated = $request->validate([
-            'subscription_plan' => 'required|in:basic,premium,enterprise',
+            'subscription_plan' => 'required|in:basic',
             'subscription_amount' => 'required|numeric|min:0',
             'payment_reference' => 'nullable|string|max:100',
             'subscription_notes' => 'nullable|string',

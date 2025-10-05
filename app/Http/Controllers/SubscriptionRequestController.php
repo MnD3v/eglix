@@ -36,7 +36,7 @@ class SubscriptionRequestController extends Controller
         }
 
         $validated = $request->validate([
-            'subscription_plan' => 'required|in:basic,premium,enterprise',
+            'subscription_plan' => 'required|in:basic',
             'message' => 'nullable|string|max:500',
             'contact_phone' => 'nullable|string|max:20',
             'contact_email' => 'nullable|email|max:100',

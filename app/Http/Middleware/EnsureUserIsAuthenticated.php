@@ -33,7 +33,8 @@ class EnsureUserIsAuthenticated
         }
 
         // Définir l'église courante si aucune n'est définie
-        if (!$user->getCurrentChurch()) {
+        // Mais seulement si ce n'est pas une requête AJAX de changement d'église
+        if (!$user->getCurrentChurch() && !$request->routeIs('church.switch')) {
             $primaryChurch = $user->primaryChurch()->first();
             if ($primaryChurch) {
                 $user->setCurrentChurch($primaryChurch->id);
