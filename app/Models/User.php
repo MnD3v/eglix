@@ -118,14 +118,6 @@ class User extends Authenticatable
             ->exists();
     }
 
-    /**
-     * Get the church that the user belongs to (for backward compatibility)
-     * @deprecated Use getCurrentChurch() instead
-     */
-    public function church(): BelongsTo
-    {
-        return $this->belongsTo(Church::class);
-    }
 
     /**
      * Get the role that the user has

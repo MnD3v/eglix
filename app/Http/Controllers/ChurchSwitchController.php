@@ -22,14 +22,23 @@ class ChurchSwitchController extends Controller
 
         // Vérifier que l'utilisateur a accès à cette église
         if (!$user->hasAccessToChurch($churchId)) {
+            if ($request->ajax()) {
+                return response()->json(['error' => 'Vous n\'avez pas accès à cette église.'], 403);
+            }
             return redirect()->back()->withErrors(['error' => 'Vous n\'avez pas accès à cette église.']);
         }
 
         // Changer l'église active
         if ($user->setCurrentChurch($churchId)) {
+            if ($request->ajax()) {
+                return response()->json(['success' => true, 'message' => 'Église changée avec succès.']);
+            }
             return redirect()->back()->with('success', 'Église changée avec succès.');
         }
 
+        if ($request->ajax()) {
+            return response()->json(['error' => 'Erreur lors du changement d\'église.'], 500);
+        }
         return redirect()->back()->withErrors(['error' => 'Erreur lors du changement d\'église.']);
     }
 

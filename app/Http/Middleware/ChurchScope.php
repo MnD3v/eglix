@@ -17,13 +17,14 @@ class ChurchScope
     public function handle(Request $request, Closure $next): Response
     {
         $user = Auth::user();
+        $currentChurch = $user->getCurrentChurch();
         
-        if (!$user || !$user->church_id) {
+        if (!$user || !$currentChurch) {
             return redirect()->route('login')->with('error', 'Vous devez être associé à une église pour accéder à cette page.');
         }
 
         // Ajouter l'ID de l'église à la requête pour faciliter l'accès dans les contrôleurs
-        $request->merge(['church_id' => $user->church_id]);
+        $request->merge(['church_id' => $currentChurch->id]);
         
         return $next($request);
     }

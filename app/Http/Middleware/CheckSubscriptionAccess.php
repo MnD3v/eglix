@@ -23,14 +23,15 @@ class CheckSubscriptionAccess
         }
 
         $user = Auth::user();
+        $currentChurch = $user->getCurrentChurch();
         
-        // Si l'utilisateur n'a pas d'église, laisser passer (gestion des erreurs)
-        if (!$user->church_id) {
+        // Si l'utilisateur n'a pas d'église courante, laisser passer (gestion des erreurs)
+        if (!$currentChurch) {
             return $next($request);
         }
 
         // Vérifier si l'église a un abonnement valide
-        $hasAccess = Subscription::checkChurchAccess($user->church_id);
+        $hasAccess = Subscription::checkChurchAccess($currentChurch->id);
 
         if (!$hasAccess) {
             // Rediriger vers la page de paiement/expiration
