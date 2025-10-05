@@ -26,11 +26,23 @@ return new class extends Migration
             ]);
         }
         
-        // Supprimer la colonne church_id de la table users
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropForeign(['church_id']);
-            $table->dropColumn('church_id');
-        });
+        // Supprimer la colonne church_id de manière sécurisée
+        if (Schema::hasColumn('users', 'church_id')) {
+            // Supprimer la contrainte de clé étrangère si elle existe
+            try {
+                Schema::table('users', function (Blueprint $table) {
+                    $table->dropForeign(['church_id']);
+                });
+            } catch (\Exception $e) {
+                // La contrainte n'existe pas, continuer
+                \Log::info('Contrainte users_church_id_foreign n\'existe pas, ignorée');
+            }
+            
+            // Supprimer la colonne
+            Schema::table('users', function (Blueprint $table) {
+                $table->dropColumn('church_id');
+            });
+        }
     }
 
     /**
