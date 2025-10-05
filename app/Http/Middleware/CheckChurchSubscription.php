@@ -40,17 +40,15 @@ class CheckChurchSubscription
 
         $user = Auth::user();
         
-        // Vérifier si l'utilisateur a une église
-        if (!$user->church_id) {
+        // Vérifier si l'utilisateur a une église courante
+        $currentChurch = $user->getCurrentChurch();
+        
+        if (!$currentChurch) {
             return $next($request);
         }
 
         // Charger l'église avec les informations d'abonnement
-        $church = $user->church;
-        
-        if (!$church) {
-            return $next($request);
-        }
+        $church = $currentChurch;
 
         // Vérifier si l'église a un abonnement
         if (!$church->subscription_end_date) {
