@@ -80,11 +80,13 @@ class Church extends Model
     }
 
     /**
-     * Get the users for the church
+     * Get the users for the church through pivot table
      */
-    public function users(): HasMany
+    public function users()
     {
-        return $this->hasMany(User::class);
+        return $this->belongsToMany(User::class, 'user_churches')
+                    ->wherePivot('is_active', true)
+                    ->withPivot(['is_primary', 'is_active', 'created_at', 'updated_at']);
     }
 
     /**

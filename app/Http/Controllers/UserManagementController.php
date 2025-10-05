@@ -27,17 +27,14 @@ class UserManagementController extends Controller
             abort(403, 'Accès non autorisé.');
         }
 
-        $church = Auth::user()->church;
+        $church = Auth::user()->getCurrentChurch();
         
         if (!$church) {
             abort(404, 'Église non trouvée.');
         }
 
-        // Récupérer les utilisateurs de l'église
-        $users = User::where('church_id', get_current_church_id())
-            ->with('role')
-            ->orderBy('name')
-            ->get();
+        // Récupérer les utilisateurs de l'église via la relation pivot
+        $users = $church->users()->with('role')->orderBy('name')->get();
 
         return view('user-management.index', compact('church', 'users'));
     }
@@ -100,14 +97,22 @@ class UserManagementController extends Controller
             'permissions' => $request->permissions ?? [],
         ]);
 
-        User::create([
+        // Créer l'utilisateur
+        $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'church_id' => get_current_church_id(),
             'role_id' => $role->id,
             'is_church_admin' => false,
             'is_active' => $request->has('is_active') || $request->input('is_active') === 'on',
+        ]);
+
+        // Associer l'utilisateur à l'église via la table pivot
+        $user->churches()->attach(get_current_church_id(), [
+            'is_primary' => false,
+            'is_active' => true,
+            'created_at' => now(),
+            'updated_at' => now(),
         ]);
 
         return redirect()->route('user-management.index')
@@ -120,7 +125,7 @@ class UserManagementController extends Controller
     public function show(User $user)
     {
         // Vérifier que l'utilisateur appartient à la même église
-        if ($user->church_id !== get_current_church_id()) {
+        if (!$user->hasAccessToChurch(get_current_church_id())) {
             abort(403, 'Accès non autorisé.');
         }
 
@@ -133,7 +138,7 @@ class UserManagementController extends Controller
     public function edit(User $user)
     {
         // Vérifier que l'utilisateur appartient à la même église
-        if ($user->church_id !== get_current_church_id()) {
+        if (!$user->hasAccessToChurch(get_current_church_id())) {
             abort(403, 'Accès non autorisé.');
         }
 
@@ -153,7 +158,7 @@ class UserManagementController extends Controller
     public function update(Request $request, User $user)
     {
         // Vérifier que l'utilisateur appartient à la même église
-        if ($user->church_id !== get_current_church_id()) {
+        if (!$user->hasAccessToChurch(get_current_church_id())) {
             abort(403, 'Accès non autorisé.');
         }
 
@@ -229,7 +234,7 @@ class UserManagementController extends Controller
     public function destroy(User $user)
     {
         // Vérifier que l'utilisateur appartient à la même église
-        if ($user->church_id !== get_current_church_id()) {
+        if (!$user->hasAccessToChurch(get_current_church_id())) {
             abort(403, 'Accès non autorisé.');
         }
 
@@ -253,7 +258,7 @@ class UserManagementController extends Controller
     public function resetPassword(Request $request, User $user)
     {
         // Vérifier que l'utilisateur appartient à la même église
-        if ($user->church_id !== get_current_church_id()) {
+        if (!$user->hasAccessToChurch(get_current_church_id())) {
             abort(403, 'Accès non autorisé.');
         }
 
