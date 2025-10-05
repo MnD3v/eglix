@@ -44,9 +44,9 @@ class SubscriptionRequestController extends Controller
 
         // Déterminer le montant selon le plan
         $amounts = [
-            'basic' => 50000,
-            'premium' => 100000,
-            'enterprise' => 200000
+            'basic' => 39000,
+            'premium' => 39000,
+            'enterprise' => 39000
         ];
 
         $planNames = [

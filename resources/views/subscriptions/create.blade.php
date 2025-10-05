@@ -104,6 +104,13 @@
     font-size: 1.5rem;
     font-weight: 700;
     color: #1a73e8;
+    margin-bottom: 0.5rem;
+}
+
+.plan-period {
+    font-size: 0.9rem;
+    color: #5f6368;
+    font-weight: 500;
     margin-bottom: 1rem;
 }
 
@@ -204,7 +211,8 @@
                 <div class="col-md-4">
                     <div class="plan-card" onclick="selectPlan('basic')">
                         <div class="plan-name">Plan Basique</div>
-                        <div class="plan-price">50 000 XOF</div>
+                        <div class="plan-price">39 000 XOF</div>
+                        <div class="plan-period">/semestre (6 mois)</div>
                         <ul class="plan-features">
                             <li><i class="bi bi-check"></i>Jusqu'à 50 membres</li>
                             <li><i class="bi bi-check"></i>Gestion des dîmes et offrandes</li>
@@ -216,7 +224,8 @@
                 <div class="col-md-4">
                     <div class="plan-card" onclick="selectPlan('premium')">
                         <div class="plan-name">Plan Premium</div>
-                        <div class="plan-price">100 000 XOF</div>
+                        <div class="plan-price">39 000 XOF</div>
+                        <div class="plan-period">/semestre (6 mois)</div>
                         <ul class="plan-features">
                             <li><i class="bi bi-check"></i>Jusqu'à 200 membres</li>
                             <li><i class="bi bi-check"></i>Toutes les fonctionnalités</li>
@@ -228,7 +237,8 @@
                 <div class="col-md-4">
                     <div class="plan-card" onclick="selectPlan('enterprise')">
                         <div class="plan-name">Plan Entreprise</div>
-                        <div class="plan-price">200 000 XOF</div>
+                        <div class="plan-price">39 000 XOF</div>
+                        <div class="plan-period">/semestre (6 mois)</div>
                         <ul class="plan-features">
                             <li><i class="bi bi-check"></i>Membres illimités</li>
                             <li><i class="bi bi-check"></i>Toutes les fonctionnalités</li>

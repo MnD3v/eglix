@@ -95,6 +95,13 @@
     font-size: 1.5rem;
     font-weight: 700;
     color: #FFCC00;
+    margin-bottom: 0.25rem;
+}
+
+.plan-period {
+    font-size: 0.9rem;
+    color: #6b7280;
+    font-weight: 500;
     margin-bottom: 0.5rem;
 }
 
@@ -238,19 +245,22 @@
             <div class="plans-grid">
                 <div class="plan-card" data-plan="basic">
                     <div class="plan-name">Plan Basique</div>
-                    <div class="plan-price">50,000 XOF</div>
+                    <div class="plan-price">39,000 XOF</div>
+                    <div class="plan-period">/semestre (6 mois)</div>
                     <p class="plan-features">Accès complet à la plateforme<br>Gestion des membres<br>Rapports financiers</p>
                 </div>
                 
                 <div class="plan-card" data-plan="premium">
                     <div class="plan-name">Plan Premium</div>
-                    <div class="plan-price">100,000 XOF</div>
+                    <div class="plan-price">39,000 XOF</div>
+                    <div class="plan-period">/semestre (6 mois)</div>
                     <p class="plan-features">Tout du plan Basique<br>Rapports avancés<br>Support prioritaire</p>
                 </div>
                 
                 <div class="plan-card" data-plan="enterprise">
                     <div class="plan-name">Plan Entreprise</div>
-                    <div class="plan-price">200,000 XOF</div>
+                    <div class="plan-price">39,000 XOF</div>
+                    <div class="plan-period">/semestre (6 mois)</div>
                     <p class="plan-features">Tout du plan Premium<br>API personnalisée<br>Formation dédiée</p>
                 </div>
             </div>
