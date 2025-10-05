@@ -23,3 +23,38 @@ if (!function_exists('get_image_url')) {
         return null;
     }
 }
+
+if (!function_exists('get_current_church_id')) {
+    /**
+     * Get the current church ID for the authenticated user
+     *
+     * @return int|null
+     */
+    function get_current_church_id(): ?int
+    {
+        if (!auth()->check()) {
+            return null;
+        }
+        
+        $user = auth()->user();
+        $currentChurch = $user->getCurrentChurch();
+        
+        return $currentChurch ? $currentChurch->id : null;
+    }
+}
+
+if (!function_exists('get_current_church')) {
+    /**
+     * Get the current church object for the authenticated user
+     *
+     * @return \App\Models\Church|null
+     */
+    function get_current_church()
+    {
+        if (!auth()->check()) {
+            return null;
+        }
+        
+        return auth()->user()->getCurrentChurch();
+    }
+}

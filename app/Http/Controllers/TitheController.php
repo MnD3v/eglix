@@ -17,7 +17,7 @@ class TitheController extends Controller
     public function index(Request $request)
     {
         $search = trim((string) $request->get('q'));
-        $query = Tithe::with('member')->where('church_id', Auth::user()->church_id);
+        $query = Tithe::with('member')->where('church_id', get_current_church_id());
 
         // Date range filters
         $fromInput = $request->query('from');
@@ -53,7 +53,7 @@ class TitheController extends Controller
                 default => "strftime('%m', paid_at)",
             };
             $rows = DB::table('tithes')
-                ->where('church_id', Auth::user()->church_id)
+                ->where('church_id', get_current_church_id())
                 ->selectRaw("{$monthExpr} as m, SUM(amount) as total")
                 ->groupBy('m')
                 ->pluck('total', 'm');
@@ -79,21 +79,21 @@ class TitheController extends Controller
                 default => "strftime('%Y-%m', paid_at)", // sqlite & others
             };
             $rows = DB::table('tithes')
-                ->where('church_id', Auth::user()->church_id)
+                ->where('church_id', get_current_church_id())
                 ->selectRaw("{$monthExpr} as m, sum(amount) as total")
                 ->whereBetween('paid_at', [$from, $to])
                 ->groupBy('m')
                 ->pluck('total','m');
             $hasAnyThisYear = collect($rows)->filter(fn($v) => (float)$v > 0)->isNotEmpty();
             if (!$hasAnyThisYear) {
-                $latest = DB::table('tithes')->where('church_id', Auth::user()->church_id)->orderByDesc('paid_at')->value('paid_at');
+                $latest = DB::table('tithes')->where('church_id', get_current_church_id())->orderByDesc('paid_at')->value('paid_at');
                 if ($latest) {
                     $year = (int) substr($latest, 0, 4);
                     $from = now()->setYear($year)->copy()->startOfYear();
                     $to = now()->setYear($year)->copy()->endOfYear();
                     $months = collect(range(1,12))->map(fn($m) => sprintf('%04d-%02d', $year, $m));
                     $rows = DB::table('tithes')
-                        ->where('church_id', Auth::user()->church_id)
+                        ->where('church_id', get_current_church_id())
                         ->selectRaw("{$monthExpr} as m, sum(amount) as total")
                         ->whereBetween('paid_at', [$from, $to])
                         ->groupBy('m')
@@ -109,7 +109,7 @@ class TitheController extends Controller
         }
 
         // Calculer le total des dîmes selon les filtres
-        $totalTithes = Tithe::where('church_id', Auth::user()->church_id);
+        $totalTithes = Tithe::where('church_id', get_current_church_id());
         if ($fromFilter) { $totalTithes->where('paid_at', '>=', $fromFilter); }
         if ($toFilter) { $totalTithes->where('paid_at', '<=', $toFilter); }
         $totalAmount = $totalTithes->sum('amount');
@@ -123,7 +123,7 @@ class TitheController extends Controller
      */
     public function create()
     {
-        $members = Member::where('church_id', Auth::user()->church_id)
+        $members = Member::where('church_id', get_current_church_id())
             ->orderBy('last_name')->orderBy('first_name')->get();
         return view('tithes.create', compact('members'));
     }
@@ -143,7 +143,7 @@ class TitheController extends Controller
         ]);
 
         // Ajouter l'ID de l'église
-        $validated['church_id'] = Auth::user()->church_id;
+        $validated['church_id'] = get_current_church_id();
         $validated['created_by'] = Auth::id();
 
         $tithe = Tithe::create($validated);
@@ -160,7 +160,7 @@ class TitheController extends Controller
     public function show(Tithe $tithe)
     {
         // Vérifier que la dîme appartient à l'église de l'utilisateur
-        if ($tithe->church_id !== Auth::user()->church_id) {
+        if ($tithe->church_id !== get_current_church_id()) {
             abort(403, 'Accès non autorisé');
         }
         
@@ -174,11 +174,11 @@ class TitheController extends Controller
     public function edit(Tithe $tithe)
     {
         // Vérifier que la dîme appartient à l'église de l'utilisateur
-        if ($tithe->church_id !== Auth::user()->church_id) {
+        if ($tithe->church_id !== get_current_church_id()) {
             abort(403, 'Accès non autorisé');
         }
         
-        $members = Member::where('church_id', Auth::user()->church_id)
+        $members = Member::where('church_id', get_current_church_id())
             ->orderBy('last_name')->orderBy('first_name')->get();
         return view('tithes.edit', compact('tithe','members'));
     }
@@ -189,7 +189,7 @@ class TitheController extends Controller
     public function update(Request $request, Tithe $tithe)
     {
         // Vérifier que la dîme appartient à l'église de l'utilisateur
-        if ($tithe->church_id !== Auth::user()->church_id) {
+        if ($tithe->church_id !== get_current_church_id()) {
             abort(403, 'Accès non autorisé');
         }
         
@@ -212,7 +212,7 @@ class TitheController extends Controller
     public function destroy(Tithe $tithe)
     {
         // Vérifier que la dîme appartient à l'église de l'utilisateur
-        if ($tithe->church_id !== Auth::user()->church_id) {
+        if ($tithe->church_id !== get_current_church_id()) {
             abort(403, 'Accès non autorisé');
         }
         
@@ -230,7 +230,7 @@ class TitheController extends Controller
         $fromFilter = $fromInput ? Carbon::parse($fromInput)->startOfDay() : null;
         $toFilter = $toInput ? Carbon::parse($toInput)->endOfDay() : null;
 
-        $query = Tithe::where('church_id', Auth::user()->church_id);
+        $query = Tithe::where('church_id', get_current_church_id());
         if ($fromFilter) { $query->where('paid_at', '>=', $fromFilter); }
         if ($toFilter) { $query->where('paid_at', '<=', $toFilter); }
         

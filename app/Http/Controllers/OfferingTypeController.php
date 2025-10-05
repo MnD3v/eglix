@@ -12,7 +12,7 @@ class OfferingTypeController extends Controller
     public function index()
     {
         $types = OfferingType::where(function($q){
-                $q->whereNull('church_id')->orWhere('church_id', Auth::user()->church_id);
+                $q->whereNull('church_id')->orWhere('church_id', get_current_church_id());
             })
             ->orderBy('is_active','desc')
             ->orderBy('name')
@@ -35,7 +35,7 @@ class OfferingTypeController extends Controller
         ]);
         $validated['slug'] = $validated['slug'] ?? Str::slug($validated['name'], '_');
         $validated['is_active'] = (bool)($validated['is_active'] ?? true);
-        $validated['church_id'] = Auth::user()->church_id;
+        $validated['church_id'] = get_current_church_id();
         OfferingType::create($validated);
         return redirect()->route('offering-types.index')->with('success','Type créé.');
     }

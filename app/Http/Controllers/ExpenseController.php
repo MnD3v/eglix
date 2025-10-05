@@ -16,7 +16,7 @@ class ExpenseController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Expense::with('project')->where('church_id', Auth::user()->church_id);
+        $query = Expense::with('project')->where('church_id', get_current_church_id());
 
         $fromInput = $request->query('from');
         $toInput = $request->query('to');
@@ -51,14 +51,14 @@ class ExpenseController extends Controller
             default => "strftime('%Y-%m', paid_at)",
         };
         $rows = DB::table('expenses')
-            ->where('church_id', Auth::user()->church_id)
+            ->where('church_id', get_current_church_id())
             ->selectRaw("{$monthExpr} as m, sum(amount) as total")
             ->whereBetween('paid_at', [$rangeStart, $rangeEnd])
             ->groupBy('m')
             ->pluck('total','m');
         $hasAnyForYear = collect($rows)->filter(fn($v) => (float)$v > 0)->isNotEmpty();
         if (!$hasAnyForYear) {
-            $latest = DB::table('expenses')->where('church_id', Auth::user()->church_id)->orderByDesc('paid_at')->value('paid_at');
+            $latest = DB::table('expenses')->where('church_id', get_current_church_id())->orderByDesc('paid_at')->value('paid_at');
             if ($latest) {
                 $year = (int) substr($latest, 0, 4);
                 $yearStart = Carbon::create($year, 1, 1, 0, 0, 0);
@@ -67,7 +67,7 @@ class ExpenseController extends Controller
                 $rangeEnd = $yearEnd;
                 $months = collect(range(1,12))->map(fn($m) => sprintf('%04d-%02d', $year, $m));
                 $rows = DB::table('expenses')
-                    ->where('church_id', Auth::user()->church_id)
+                    ->where('church_id', get_current_church_id())
                     ->selectRaw("{$monthExpr} as m, sum(amount) as total")
                     ->whereBetween('paid_at', [$rangeStart, $rangeEnd])
                     ->groupBy('m')
@@ -93,7 +93,7 @@ class ExpenseController extends Controller
      */
     public function create()
     {
-        $projects = Project::where('church_id', Auth::user()->church_id)
+        $projects = Project::where('church_id', get_current_church_id())
             ->orderBy('name')->get();
         return view('expenses.create', compact('projects'));
     }
@@ -123,7 +123,7 @@ class ExpenseController extends Controller
         }
         unset($validated['title']);
         // Ajouter l'ID de l'église et l'auteur
-        $validated['church_id'] = Auth::user()->church_id;
+        $validated['church_id'] = get_current_church_id();
         $validated['created_by'] = Auth::id();
         
         $e = Expense::create($validated);
@@ -136,7 +136,7 @@ class ExpenseController extends Controller
     public function show(Expense $expense)
     {
         // Vérifier que la dépense appartient à l'église de l'utilisateur
-        if ($expense->church_id !== Auth::user()->church_id) {
+        if ($expense->church_id !== get_current_church_id()) {
             abort(403, 'Accès non autorisé');
         }
         
@@ -150,11 +150,11 @@ class ExpenseController extends Controller
     public function edit(Expense $expense)
     {
         // Vérifier que la dépense appartient à l'église de l'utilisateur
-        if ($expense->church_id !== Auth::user()->church_id) {
+        if ($expense->church_id !== get_current_church_id()) {
             abort(403, 'Accès non autorisé');
         }
         
-        $projects = Project::where('church_id', Auth::user()->church_id)
+        $projects = Project::where('church_id', get_current_church_id())
             ->orderBy('name')->get();
         return view('expenses.edit', compact('expense','projects'));
     }
@@ -165,7 +165,7 @@ class ExpenseController extends Controller
     public function update(Request $request, Expense $expense)
     {
         // Vérifier que la dépense appartient à l'église de l'utilisateur
-        if ($expense->church_id !== Auth::user()->church_id) {
+        if ($expense->church_id !== get_current_church_id()) {
             abort(403, 'Accès non autorisé');
         }
         
@@ -197,7 +197,7 @@ class ExpenseController extends Controller
     public function destroy(Expense $expense)
     {
         // Vérifier que la dépense appartient à l'église de l'utilisateur
-        if ($expense->church_id !== Auth::user()->church_id) {
+        if ($expense->church_id !== get_current_church_id()) {
             abort(403, 'Accès non autorisé');
         }
         

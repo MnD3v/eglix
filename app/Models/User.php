@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -24,7 +25,6 @@ class User extends Authenticatable
         'church_name',
         'email',
         'password',
-        'church_id',
         'role_id',
         'is_church_admin',
         'is_active'
@@ -56,7 +56,71 @@ class User extends Authenticatable
     }
 
     /**
-     * Get the church that the user belongs to
+     * Get the churches that the user belongs to
+     */
+    public function churches(): BelongsToMany
+    {
+        return $this->belongsToMany(Church::class, 'user_churches')
+            ->withPivot(['is_primary', 'is_active'])
+            ->withTimestamps();
+    }
+
+    /**
+     * Get the primary church of the user
+     */
+    public function primaryChurch(): BelongsToMany
+    {
+        return $this->churches()->wherePivot('is_primary', true);
+    }
+
+    /**
+     * Get the active churches of the user
+     */
+    public function activeChurches(): BelongsToMany
+    {
+        return $this->churches()->wherePivot('is_active', true);
+    }
+
+    /**
+     * Get the current active church (from session)
+     */
+    public function getCurrentChurch()
+    {
+        $currentChurchId = session('current_church_id');
+        if ($currentChurchId) {
+            return $this->churches()->where('churches.id', $currentChurchId)->first();
+        }
+        
+        // Fallback to primary church
+        return $this->primaryChurch()->first();
+    }
+
+    /**
+     * Set the current active church
+     */
+    public function setCurrentChurch($churchId)
+    {
+        // Vérifier que l'utilisateur a accès à cette église
+        if ($this->hasAccessToChurch($churchId)) {
+            session(['current_church_id' => $churchId]);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Check if user has access to a specific church
+     */
+    public function hasAccessToChurch($churchId): bool
+    {
+        return $this->churches()->where('churches.id', $churchId)
+            ->wherePivot('is_active', true)
+            ->exists();
+    }
+
+    /**
+     * Get the church that the user belongs to (for backward compatibility)
+     * @deprecated Use getCurrentChurch() instead
      */
     public function church(): BelongsTo
     {
@@ -131,7 +195,9 @@ class User extends Authenticatable
      */
     public function scopeForChurch($query, $churchId)
     {
-        return $query->where('church_id', $churchId);
+        return $query->whereHas('churches', function ($q) use ($churchId) {
+            $q->where('church_id', $churchId)->where('is_active', true);
+        });
     }
 
     /**

@@ -905,7 +905,7 @@
         @media (max-width: 991.98px) {
             .sidebar-header { padding-top: 24px; }
             .sidebar-header img { 
-                max-width: 100px; 
+                max-width: 60px; 
                 margin-top: 70px; /* Margin de 70px sur mobile */
             }
         }
@@ -2214,13 +2214,18 @@
         <div style="height: 4px; background: linear-gradient(90deg, #f59e0b, #fbbf24);"></div>
         
         <div class="sidebar-header" style="padding: 20px 16px; text-align: center; border-bottom: 1px solid #333333; margin-bottom: 16px;">
-            <img src="{{ asset('images/eglix.png') }}" alt="Eglix" style="height: 40px; margin-bottom: 15px;">
+            <img src="{{ asset('images/eglix.png') }}" alt="Eglix" style="width: 90px; margin-top: 12px; margin-bottom: 15px; margin-top: 55px;">
             
             @auth
-            <div style="background-color: #333333; color: white; font-size: 0.9rem; padding: 12px; border-radius: 12px; display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 700;">
+            <div id="church-button" style="background-color: #333333; color: white; font-size: 0.9rem; padding: 12px; border-radius: 12px; display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 700; cursor: pointer; transition: all 0.3s ease; border: 2px solid transparent;" 
+                 onmouseover="this.style.backgroundColor='#444444'; this.style.borderColor='#FFCC00';" 
+                 onmouseout="this.style.backgroundColor='#333333'; this.style.borderColor='transparent';"
+                 onclick="openChurchModal()">
                 <i class="bi bi-shop" style="color: #FFCC00; font-size: 16px;"></i>
-                <span>{{ Auth::user()->church->name ?? 'Église' }}</span>
+                <span id="current-church-name">{{ Auth::user()->getCurrentChurch()->name ?? 'Église' }}</span>
+                <i class="bi bi-chevron-down" style="color: #FFCC00; font-size: 12px;"></i>
             </div>
+            
             @endauth
         </div>
         <a href="{{ url('/') }}" class="{{ request()->is('/') ? 'active' : '' }}" title="Accueil"><i class="bi bi-speedometer2"></i><span class="sidebar-text">Accueil</span></a>
@@ -2255,8 +2260,10 @@
         <a href="{{ route('administration.index') }}" class="{{ request()->is('administration*') ? 'active' : '' }}" title="Administration"><i class="bi bi-person-badge"></i><span class="sidebar-text">Administration</span></a>
         @endif
         @if(Auth::user() && (Auth::user()->isChurchAdmin() || Auth::user()->hasPermission('users.view')))
-        <a href="{{ route('user-management.index') }}" class="{{ request()->is('user-management*') ? 'active' : '' }}" title="Comptes"><i class="bi bi-people-fill"></i><span class="sidebar-text">Comptes</span></a>
+        <a href="{{ route('user-management.index') }}" class="{{ request()->is('user-management*') ? 'active' : '' }}" title="Réglages"><i class="bi bi-gear"></i><span class="sidebar-text">Réglages</span></a>
         @endif
+        
+        <!-- Lien vers la gestion des églises (visible si l'utilisateur a plusieurs églises ou est admin) -->
         
         <!-- Informations utilisateur -->
         <div style="margin-top: 20px; padding: 0 16px;">
@@ -3067,10 +3074,205 @@
         });
     });
 
-    
+    // Gestion du changement d'église
+    $(document).ready(function() {
+        console.log('Document ready - jQuery fonctionne'); // Debug
+        
+        // Attendre un peu pour s'assurer que tout est chargé
+        setTimeout(function() {
+            // Vérifier si l'élément existe
+            if ($('#church-button').length === 0) {
+                console.error('Élément #church-button non trouvé');
+                return;
+            }
+            
+            console.log('Élément #church-button trouvé'); // Debug
+            
+            // Gestion du bouton d'église pour ouvrir le modal
+            $('#church-button').on('click', function(e) {
+                e.preventDefault();
+                console.log('Bouton église cliqué'); // Debug
+                @if(Auth::user()->activeChurches()->count() > 1)
+                console.log('Ouverture du modal'); // Debug
+                console.log('Modal existe:', $('#churchModal').length > 0); // Debug
+                $('#churchModal').modal('show');
+                @else
+                console.log('Une seule église, pas de modal'); // Debug
+                @endif
+            });
+        }, 500);
+
+        // Gestion de la sélection d'église dans le modal
+        $('.church-option').on('click', function() {
+            const churchId = $(this).data('church-id');
+            const churchName = $(this).data('church-name');
+            
+            // Vérifier si c'est déjà l'église courante
+            if ($(this).find('.bi-check-circle-fill').length > 0) {
+                $('#churchModal').modal('hide');
+                return;
+            }
+            
+            // Afficher un indicateur de chargement
+            const originalText = $('#current-church-name').text();
+            $('#current-church-name').text('Chargement...');
+            
+            // Fermer le modal
+            $('#churchModal').modal('hide');
+            
+            // Envoyer la requête de changement d'église
+            $.ajax({
+                url: '{{ route("church.switch") }}',
+                method: 'POST',
+                data: {
+                    church_id: churchId,
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(response) {
+                    // Mettre à jour le nom de l'église affiché
+                    $('#current-church-name').text(churchName);
+                    
+                    // Afficher le modal de succès
+                    $('#successModal').modal('show');
+                    
+                    // Fermer le modal de succès et recharger la page après 2 secondes
+                    setTimeout(function() {
+                        $('#successModal').modal('hide');
+                        setTimeout(function() {
+                            window.location.reload();
+                        }, 300);
+                    }, 2000);
+                },
+                error: function(xhr) {
+                    // Restaurer le texte original en cas d'erreur
+                    $('#current-church-name').text(originalText);
+                    
+                    // Afficher un message d'erreur
+                    let errorMessage = 'Erreur lors du changement d\'église';
+                    if (xhr.responseJSON && xhr.responseJSON.message) {
+                        errorMessage = xhr.responseJSON.message;
+                    }
+                    
+                    if (typeof showNotification === 'function') {
+                        showNotification(errorMessage, 'error');
+                    } else {
+                        alert(errorMessage);
+                    }
+                }
+            });
+        });
+
+        // Effet hover pour les options d'église
+        $('.church-option').on('mouseenter', function() {
+            if ($(this).find('.bi-check-circle-fill').length === 0) {
+                $(this).css('background-color', '#444');
+            }
+        }).on('mouseleave', function() {
+            if ($(this).find('.bi-check-circle-fill').length === 0) {
+                $(this).css('background-color', '#333');
+            }
+        });
     });
-    </script>
     
+    // Fonction simple pour ouvrir le modal
+    function openChurchModal() {
+        var modal = document.getElementById('churchModal');
+        if (modal) {
+            try {
+                var bsModal = new bootstrap.Modal(modal);
+                bsModal.show();
+            } catch (error) {
+                // Fallback avec jQuery si Bootstrap échoue
+                $('#churchModal').modal('show');
+            }
+        }
+    }
+    </script>
+
+    <!-- Modal de sélection d'église -->
+    @auth
+    <div class="modal fade" id="churchModal" tabindex="-1" aria-labelledby="churchModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="background-color: #2a2a2a; border: 1px solid #444; border-radius: 12px;">
+                <div class="modal-header" style="border-bottom: 1px solid #444; padding: 20px;">
+                    <h5 class="modal-title" id="churchModalLabel" style="color: #FFCC00; font-weight: 700;">
+                        <i class="bi bi-shop me-2"></i>
+                        Sélectionner une église
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="filter: invert(1);"></button>
+                </div>
+                <div class="modal-body" style="padding: 20px;">
+                    <div class="text-center mb-3">
+                        <small style="color: white;">
+                            <i class="bi bi-info-circle me-1"></i>
+                            Choisissez l'église pour laquelle vous souhaitez voir les données
+                        </small>
+                    </div>
+                    <div class="list-group" style="border-radius: 8px; overflow: hidden;">
+                        @foreach(Auth::user()->activeChurches()->get() as $church)
+                        <div class="church-option list-group-item" 
+                             data-church-id="{{ $church->id }}" 
+                             data-church-name="{{ $church->name }}"
+                             style="background-color: {{ Auth::user()->getCurrentChurch() && Auth::user()->getCurrentChurch()->id == $church->id ? '#FFCC00' : '#333' }}; 
+                                    color: {{ Auth::user()->getCurrentChurch() && Auth::user()->getCurrentChurch()->id == $church->id ? '#000' : '#fff' }}; 
+                                    border: 1px solid #444; 
+                                    cursor: pointer; 
+                                    transition: all 0.3s ease;
+                                    padding: 15px;">
+                            <div class="d-flex align-items-center justify-content-between">
+                                    <div class="d-flex align-items-center">
+                                        <i class="bi bi-shop me-3" style="font-size: 18px;"></i>
+                                        <div>
+                                            <div class="fw-bold">{{ $church->name }}</div>
+                                        </div>
+                                    </div>
+                                <div class="d-flex align-items-center">
+                                    @if($church->pivot->is_primary)
+                                    <span class="badge bg-warning text-dark me-2" style="font-size: 0.7rem;">Principal</span>
+                                    @endif
+                                    @if(Auth::user()->getCurrentChurch() && Auth::user()->getCurrentChurch()->id == $church->id)
+                                    <i class="bi bi-check-circle-fill" style="color: #28a745; font-size: 18px;"></i>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                        @endforeach
+                    </div>
+                </div>
+                    <div class="modal-footer" style="border-top: 1px solid #444; padding: 15px 20px;">
+                        <div class="d-flex justify-content-between w-100">
+                            <a href="{{ route('churches.create') }}" class="btn btn-primary" style="background-color: #3b82f6; border-color: #3b82f6; color: white; font-weight: 500;">
+                                <i class="bi bi-plus-circle me-1" style="color: #000000 !important;"></i>Créer église
+                            </a>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="background-color: #666; border-color: #666;">
+                                Fermer
+                            </button>
+                        </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal de succès pour le changement d'église -->
+    <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="background-color: #2a2a2a; border: 1px solid #444; border-radius: 12px;">
+                <div class="modal-body text-center" style="padding: 30px;">
+                    <div class="mb-3">
+                        <i class="bi bi-check-circle-fill" style="font-size: 48px; color: #28a745;"></i>
+                    </div>
+                    <h5 class="modal-title mb-2" style="color: #28a745; font-weight: 600;">
+                        Succès !
+                    </h5>
+                    <p class="mb-0" style="color: white; font-size: 1rem;">
+                        Église changée avec succès
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endauth
+
     <!-- Section pour les scripts spécifiques aux pages -->
     @yield('script')
 </body>

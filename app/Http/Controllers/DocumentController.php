@@ -27,7 +27,7 @@ class DocumentController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Document::where('church_id', Auth::user()->church_id)
+        $query = Document::where('church_id', get_current_church_id())
             ->with('folder');
 
         // Filtrage par dossier
@@ -45,7 +45,7 @@ class DocumentController extends Controller
         }
 
         $documents = $query->orderBy('created_at', 'desc')->paginate(20);
-        $folders = DocumentFolder::where('church_id', Auth::user()->church_id)
+        $folders = DocumentFolder::where('church_id', get_current_church_id())
             ->active()
             ->ordered()
             ->get();
@@ -58,11 +58,11 @@ class DocumentController extends Controller
      */
     public function all(Request $request)
     {
-        $query = Document::where('church_id', Auth::user()->church_id)
+        $query = Document::where('church_id', get_current_church_id())
             ->with('folder');
 
         $documents = $query->orderBy('created_at', 'desc')->paginate(20);
-        $folders = DocumentFolder::where('church_id', Auth::user()->church_id)
+        $folders = DocumentFolder::where('church_id', get_current_church_id())
             ->active()
             ->ordered()
             ->get();
@@ -75,12 +75,12 @@ class DocumentController extends Controller
      */
     public function images(Request $request)
     {
-        $query = Document::where('church_id', Auth::user()->church_id)
+        $query = Document::where('church_id', get_current_church_id())
             ->where('file_type', 'image')
             ->with('folder');
 
         $documents = $query->orderBy('created_at', 'desc')->paginate(20);
-        $folders = DocumentFolder::where('church_id', Auth::user()->church_id)
+        $folders = DocumentFolder::where('church_id', get_current_church_id())
             ->active()
             ->ordered()
             ->get();
@@ -93,12 +93,12 @@ class DocumentController extends Controller
      */
     public function pdfs(Request $request)
     {
-        $query = Document::where('church_id', Auth::user()->church_id)
+        $query = Document::where('church_id', get_current_church_id())
             ->where('file_type', 'pdf')
             ->with('folder');
 
         $documents = $query->orderBy('created_at', 'desc')->paginate(20);
-        $folders = DocumentFolder::where('church_id', Auth::user()->church_id)
+        $folders = DocumentFolder::where('church_id', get_current_church_id())
             ->active()
             ->ordered()
             ->get();
@@ -111,7 +111,7 @@ class DocumentController extends Controller
      */
     public function create(Request $request)
     {
-        $folders = DocumentFolder::where('church_id', Auth::user()->church_id)
+        $folders = DocumentFolder::where('church_id', get_current_church_id())
             ->active()
             ->ordered()
             ->get();
@@ -138,7 +138,7 @@ class DocumentController extends Controller
         $folder = DocumentFolder::findOrFail($validated['folder_id']);
 
         // Vérifier que le dossier appartient à l'église de l'utilisateur
-        if ($folder->church_id !== Auth::user()->church_id) {
+        if ($folder->church_id !== get_current_church_id()) {
             return redirect()->back()->withErrors(['error' => 'Dossier non autorisé.']);
         }
 
@@ -146,7 +146,7 @@ class DocumentController extends Controller
             // Générer un nom de fichier unique
             $extension = $file->getClientOriginalExtension();
             $fileName = Str::uuid() . '.' . $extension;
-            $folderPath = 'documents/' . Auth::user()->church_id . '/' . $folder->slug;
+            $folderPath = 'documents/' . get_current_church_id() . '/' . $folder->slug;
             $filePath = $folderPath . '/' . $fileName;
 
             // Upload vers Firebase Storage
@@ -167,7 +167,7 @@ class DocumentController extends Controller
                 'description' => $validated['description'],
                 'folder_id' => $validated['folder_id'],
                 'is_public' => $validated['is_public'] ?? false,
-                'church_id' => Auth::user()->church_id
+                'church_id' => get_current_church_id()
             ]);
 
             return redirect()->route('documents.index')->with('success', 'Document uploadé avec succès.');
@@ -194,7 +194,7 @@ class DocumentController extends Controller
     {
         $this->authorize('update', $document);
         
-        $folders = DocumentFolder::where('church_id', Auth::user()->church_id)
+        $folders = DocumentFolder::where('church_id', get_current_church_id())
             ->active()
             ->ordered()
             ->get();
@@ -218,7 +218,7 @@ class DocumentController extends Controller
 
         // Vérifier que le nouveau dossier appartient à l'église
         $folder = DocumentFolder::findOrFail($validated['folder_id']);
-        if ($folder->church_id !== Auth::user()->church_id) {
+        if ($folder->church_id !== get_current_church_id()) {
             return redirect()->back()->withErrors(['error' => 'Dossier non autorisé.']);
         }
 

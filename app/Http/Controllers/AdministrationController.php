@@ -70,7 +70,7 @@ class AdministrationController extends Controller
      */
     public function create()
     {
-        $members = Member::where('church_id', Auth::user()->church_id)
+        $members = Member::where('church_id', get_current_church_id())
             ->where('status', 'active')
             ->orderBy('last_name')
             ->orderBy('first_name')
@@ -124,7 +124,7 @@ class AdministrationController extends Controller
      */
     public function edit(AdministrationFunction $administration)
     {
-        $members = Member::where('church_id', Auth::user()->church_id)
+        $members = Member::where('church_id', get_current_church_id())
             ->where('status', 'active')
             ->orderBy('last_name')
             ->orderBy('first_name')

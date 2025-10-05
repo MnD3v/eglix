@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test de Connexion</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 50px; }
+        .form-group { margin: 15px 0; }
+        label { display: block; margin-bottom: 5px; }
+        input { padding: 8px; width: 300px; }
+        button { padding: 10px 20px; background: #007bff; color: white; border: none; cursor: pointer; }
+        .result { margin-top: 20px; padding: 15px; border: 1px solid #ccc; }
+    </style>
+</head>
+<body>
+    <h1>Test de Connexion Eglix</h1>
+    
+    <form id="loginForm">
+        <div class="form-group">
+            <label>Email:</label>
+            <input type="email" id="email" value="test@example.com" required>
+        </div>
+        
+        <div class="form-group">
+            <label>Mot de passe:</label>
+            <input type="password" id="password" value="password" required>
+        </div>
+        
+        <button type="submit">Se connecter</button>
+    </form>
+    
+    <div id="result" class="result" style="display: none;"></div>
+    
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const resultDiv = document.getElementById('result');
+            
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = 'Connexion en cours...';
+            
+            try {
+                // Récupérer le token CSRF
+                const csrfResponse = await fetch('/login');
+                const csrfText = await csrfResponse.text();
+                const csrfMatch = csrfText.match(/name="_token" value="([^"]+)"/);
+                const csrfToken = csrfMatch ? csrfMatch[1] : '';
+                
+                // Tenter la connexion
+                const response = await fetch('/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'X-CSRF-TOKEN': csrfToken
+                    },
+                    body: `email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}&_token=${csrfToken}`,
+                    redirect: 'manual'
+                });
+                
+                if (response.status === 302) {
+                    const location = response.headers.get('Location');
+                    resultDiv.innerHTML = `✅ Connexion réussie!<br>Redirection vers: ${location}`;
+                    
+                    // Suivre la redirection
+                    setTimeout(() => {
+                        window.location.href = location;
+                    }, 1000);
+                } else {
+                    const responseText = await response.text();
+                    resultDiv.innerHTML = `❌ Erreur de connexion (${response.status})<br>${responseText}`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `❌ Erreur: ${error.message}`;
+            }
+        });
+    </script>
+</body>
+</html>

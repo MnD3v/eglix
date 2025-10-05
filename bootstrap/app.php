@@ -32,6 +32,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'validate.image.upload' => \App\Http\Middleware\ValidateImageUpload::class,
             'auth.ensure' => \App\Http\Middleware\EnsureUserIsAuthenticated::class,
+            'ensure.active.church' => \App\Http\Middleware\EnsureActiveChurch::class,
         ]);
         
     })

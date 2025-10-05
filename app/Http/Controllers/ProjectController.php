@@ -13,7 +13,7 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        $projects = Project::where('church_id', Auth::user()->church_id)
+        $projects = Project::where('church_id', get_current_church_id())
             ->orderBy('name')
             ->paginate(12);
         return view('projects.index', compact('projects'));
@@ -41,7 +41,7 @@ class ProjectController extends Controller
             'status' => ['required','in:planned,in_progress,completed,cancelled'],
         ]);
         // church_id will be set by BelongsToChurch trait if not provided
-        $validated['church_id'] = Auth::user()->church_id;
+        $validated['church_id'] = get_current_church_id();
         $p = Project::create($validated);
         return redirect()->route('projects.index')->with('success','Projet créé.');
     }

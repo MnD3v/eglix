@@ -443,23 +443,29 @@
     <!-- Section Gestion des Invités -->
     <div class="row mb-4">
         <div class="col-12">
-            <div class="kpi-card stat-card" style="border-left: 4px solid #FFCC00;">
-                <div class="kpi-header">
-                </div>
-                <div class="kpi-meta">
-                    <div class="kpi-value" style="color: #FFCC00;">👥</div>
-                </div>
-                <div class="kpi-info">
-                    <h3 class="kpi-title">Gestion des Invités</h3>
-                    <p class="kpi-description" style="color: #64748b !important;">Visiteurs et nouvelles conversions</p>
-                </div>
-                <div class="kpi-actions" style="margin-left: auto;">
-                    <a href="{{ route('guests.index') }}" class="btn btn-outline-secondary" style="background: #ffffff; color: #000000 !important; border: 1px solid #e2e8f0; font-weight: 700 !important;">
-                        <i class="bi bi-eye me-1" style="color: #000000 !important;"></i>Voir les Invités
-                    </a>
-                    <a href="{{ route('guests.create') }}" class="btn btn-primary ms-2">
-                        <i class="bi bi-person-plus me-1" style="color: #000000 !important;"></i>Nouvel Invité
-                    </a>
+            <div class="card border-0 shadow-sm" style="border-radius: 12px; background: #ffffff;">
+                <div class="card-body p-4">
+                    <div class="row align-items-center">
+                        <div class="col-12 col-md-auto mb-3 mb-md-0">
+                            <div class="d-flex align-items-center justify-content-center mx-auto" style="width: 200px; height: 200px; border-radius: 16px; overflow: hidden;">
+                                <img src="{{ asset('images/invite.png') }}" alt="Invitation" style="width: 100%; height: 100%; object-fit: contain;">
+                            </div>
+                        </div>
+                        <div class="col-12 col-md">
+                            <div class="text-center text-md-start">
+                                <h3 class="mb-1" style="color: #1e293b; font-weight: 600; font-size: 1.25rem;">Gestion des Invités</h3>
+                                <p class="mb-3" style="color: #64748b; font-size: 0.9rem;">Visiteurs et nouvelles conversions</p>
+                                <div class="d-flex gap-2 justify-content-center justify-content-md-start">
+                                    <a href="{{ route('guests.index') }}" class="btn btn-outline-secondary btn-sm" style="border-radius: 8px; font-weight: 500; padding: 8px 16px; border-color: #e2e8f0; color: #64748b !important; white-space: nowrap;">
+                                        <i class="bi bi-eye me-1" style="color: #000000 !important;"></i><span class="d-inline">Voir les Invités</span>
+                                    </a>
+                                    <a href="{{ route('guests.create') }}" class="btn btn-primary btn-sm" style="border-radius: 8px; font-weight: 500; padding: 8px 16px; background: #3b82f6; border-color: #3b82f6; color: #000000 !important; white-space: nowrap;">
+                                        <i class="bi bi-person-plus me-1" style="color: #000000 !important;"></i><span class="d-inline">Nouvel Invité</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

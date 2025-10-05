@@ -18,21 +18,28 @@ class UserManagementController extends Controller
     }
 
     /**
-     * Display a listing of users for the church
+     * Display church settings/information
      */
     public function index()
     {
-        // Vérifier que l'utilisateur est authentifié et est admin de l'église
-        if (!Auth::check() || !Auth::user()->is_church_admin) {
-            abort(403, 'Accès non autorisé. Seuls les administrateurs peuvent gérer les utilisateurs.');
+        // Vérifier que l'utilisateur est authentifié
+        if (!Auth::check()) {
+            abort(403, 'Accès non autorisé.');
         }
 
-        $users = User::where('church_id', Auth::user()->church_id)
+        $church = Auth::user()->church;
+        
+        if (!$church) {
+            abort(404, 'Église non trouvée.');
+        }
+
+        // Récupérer les utilisateurs de l'église
+        $users = User::where('church_id', get_current_church_id())
             ->with('role')
             ->orderBy('name')
             ->get();
 
-        return view('user-management.index', compact('users'));
+        return view('user-management.index', compact('church', 'users'));
     }
 
     /**
@@ -86,7 +93,7 @@ class UserManagementController extends Controller
 
         // Créer un nouveau rôle pour cet utilisateur
         $role = Role::create([
-            'church_id' => Auth::user()->church_id,
+            'church_id' => get_current_church_id(),
             'name' => $request->role_name,
             'slug' => Str::slug($request->role_name),
             'description' => 'Rôle personnalisé pour ' . $request->name,
@@ -97,7 +104,7 @@ class UserManagementController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'church_id' => Auth::user()->church_id,
+            'church_id' => get_current_church_id(),
             'role_id' => $role->id,
             'is_church_admin' => false,
             'is_active' => $request->has('is_active') || $request->input('is_active') === 'on',
@@ -113,7 +120,7 @@ class UserManagementController extends Controller
     public function show(User $user)
     {
         // Vérifier que l'utilisateur appartient à la même église
-        if ($user->church_id !== Auth::user()->church_id) {
+        if ($user->church_id !== get_current_church_id()) {
             abort(403, 'Accès non autorisé.');
         }
 
@@ -126,13 +133,13 @@ class UserManagementController extends Controller
     public function edit(User $user)
     {
         // Vérifier que l'utilisateur appartient à la même église
-        if ($user->church_id !== Auth::user()->church_id) {
+        if ($user->church_id !== get_current_church_id()) {
             abort(403, 'Accès non autorisé.');
         }
 
         // PERMISSIONS SIMPLIFIÉES : Autoriser l'accès à tous les utilisateurs authentifiés de la même église
         
-        $roles = Role::where('church_id', Auth::user()->church_id)
+        $roles = Role::where('church_id', get_current_church_id())
             ->where('is_active', true)
             ->orderBy('name')
             ->get();
@@ -146,7 +153,7 @@ class UserManagementController extends Controller
     public function update(Request $request, User $user)
     {
         // Vérifier que l'utilisateur appartient à la même église
-        if ($user->church_id !== Auth::user()->church_id) {
+        if ($user->church_id !== get_current_church_id()) {
             abort(403, 'Accès non autorisé.');
         }
 
@@ -190,7 +197,7 @@ class UserManagementController extends Controller
         // Ajouter le rôle si fourni, sinon conserver l'actuel
         if ($request->has('role_id') && $request->role_id) {
             $role = Role::find($request->role_id);
-            if ($role && $role->church_id === Auth::user()->church_id) {
+            if ($role && $role->church_id === get_current_church_id()) {
                 $updateData['role_id'] = $request->role_id;
                 
                 // Mettre à jour les permissions du rôle si fournies
@@ -222,7 +229,7 @@ class UserManagementController extends Controller
     public function destroy(User $user)
     {
         // Vérifier que l'utilisateur appartient à la même église
-        if ($user->church_id !== Auth::user()->church_id) {
+        if ($user->church_id !== get_current_church_id()) {
             abort(403, 'Accès non autorisé.');
         }
 
@@ -246,7 +253,7 @@ class UserManagementController extends Controller
     public function resetPassword(Request $request, User $user)
     {
         // Vérifier que l'utilisateur appartient à la même église
-        if ($user->church_id !== Auth::user()->church_id) {
+        if ($user->church_id !== get_current_church_id()) {
             abort(403, 'Accès non autorisé.');
         }
 

@@ -24,15 +24,32 @@ class EnsureUserIsAuthenticated
             return redirect()->route('login')->with('error', 'Veuillez vous connecter pour accéder à cette page.');
         }
 
-        // Vérifier si l'utilisateur a un church_id (nécessaire pour le dashboard)
+        // Vérifier si l'utilisateur a des églises associées
         $user = Auth::user();
-        if (!$user->church_id) {
-            Log::warning('Utilisateur sans church_id: ' . $user->email);
+        if ($user->activeChurches()->count() === 0) {
+            Log::warning('Utilisateur sans églises associées: ' . $user->email);
             Auth::logout();
             return redirect()->route('login')->with('error', 'Votre compte n\'est pas correctement configuré. Veuillez contacter l\'administrateur.');
         }
 
-        Log::info('Utilisateur authentifié: ' . $user->email . ' (Church ID: ' . $user->church_id . ')');
+        // Définir l'église courante si aucune n'est définie
+        if (!$user->getCurrentChurch()) {
+            $primaryChurch = $user->primaryChurch()->first();
+            if ($primaryChurch) {
+                $user->setCurrentChurch($primaryChurch->id);
+                Log::info('Église principale définie pour ' . $user->email . ': ' . $primaryChurch->name);
+            } else {
+                // Prendre la première église active
+                $firstChurch = $user->activeChurches()->first();
+                if ($firstChurch) {
+                    $user->setCurrentChurch($firstChurch->id);
+                    Log::info('Première église définie pour ' . $user->email . ': ' . $firstChurch->name);
+                }
+            }
+        }
+
+        $currentChurch = $user->getCurrentChurch();
+        Log::info('Utilisateur authentifié: ' . $user->email . ' (Église courante: ' . ($currentChurch ? $currentChurch->name : 'Aucune') . ')');
         
         return $next($request);
     }

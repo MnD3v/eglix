@@ -16,7 +16,7 @@ class GuestController extends Controller
     public function index(Request $request)
     {
         // Vérification des permissions
-        if (!Auth::user()->hasPermission('members.read', Auth::user()->church_id)) {
+        if (!Auth::user()->hasPermission('members.read', get_current_church_id())) {
             abort(403, 'Accès non autorisé');
         }
 
@@ -35,18 +35,18 @@ class GuestController extends Controller
         }
 
         // Requête de base
-        $query = Guest::where('church_id', Auth::user()->church_id);
+        $query = Guest::where('church_id', get_current_church_id());
 
         // Statistiques globales
         $stats = [
-            'total' => Guest::where('church_id', Auth::user()->church_id)->count(),
-            'this_month' => Guest::where('church_id', Auth::user()->church_id)
+            'total' => Guest::where('church_id', get_current_church_id())->count(),
+            'this_month' => Guest::where('church_id', get_current_church_id())
                 ->whereBetween('visit_date', [$startDate, $endDate])->count(),
-            'first_time' => Guest::where('church_id', Auth::user()->church_id)
+            'first_time' => Guest::where('church_id', get_current_church_id())
                 ->firstTime()->whereBetween('visit_date', [$startDate, $endDate])->count(),
-            'conversions' => Guest::where('church_id', Auth::user()->church_id)
+            'conversions' => Guest::where('church_id', get_current_church_id())
                 ->converted()->whereBetween('visit_date', [$startDate, $endDate])->count(),
-            'returning' => Guest::where('church_id', Auth::user()->church_id)
+            'returning' => Guest::where('church_id', get_current_church_id())
                 ->returning()->whereBetween('visit_date', [$startDate, $endDate])->count(),
         ];
 
@@ -99,7 +99,7 @@ class GuestController extends Controller
      */
     public function create()
     {
-        if (!Auth::user()->hasPermission('members.create', Auth::user()->church_id)) {
+        if (!Auth::user()->hasPermission('members.create', get_current_church_id())) {
             abort(403, 'Accès non autorisé');
         }
 
@@ -111,7 +111,7 @@ class GuestController extends Controller
      */
     public function store(Request $request)
     {
-        if (!Auth::user()->hasPermission('members.create', Auth::user()->church_id)) {
+        if (!Auth::user()->hasPermission('members.create', get_current_church_id())) {
             abort(403, 'Accès non autorisé');
         }
 
@@ -138,11 +138,11 @@ class GuestController extends Controller
      */
     public function show(Guest $guest)
     {
-        if ($guest->church_id !== Auth::user()->church_id) {
+        if ($guest->church_id !== get_current_church_id()) {
             abort(403, 'Accès non autorisé');
         }
 
-        if (!Auth::user()->hasPermission('members.read', Auth::user()->church_id)) {
+        if (!Auth::user()->hasPermission('members.read', get_current_church_id())) {
             abort(403, 'Accès non autorisé');
         }
 
@@ -154,11 +154,11 @@ class GuestController extends Controller
      */
     public function edit(Guest $guest)
     {
-        if ($guest->church_id !== Auth::user()->church_id) {
+        if ($guest->church_id !== get_current_church_id()) {
             abort(403, 'Accès non autorisé');
         }
 
-        if (!Auth::user()->hasPermission('members.update', Auth::user()->church_id)) {
+        if (!Auth::user()->hasPermission('members.update', get_current_church_id())) {
             abort(403, 'Accès non autorisé');
         }
 
@@ -170,11 +170,11 @@ class GuestController extends Controller
      */
     public function update(Request $request, Guest $guest)
     {
-        if ($guest->church_id !== Auth::user()->church_id) {
+        if ($guest->church_id !== get_current_church_id()) {
             abort(403, 'Accès non autorisé');
         }
 
-        if (!Auth::user()->hasPermission('members.update', Auth::user()->church_id)) {
+        if (!Auth::user()->hasPermission('members.update', get_current_church_id())) {
             abort(403, 'Accès non autorisé');
         }
 
@@ -202,11 +202,11 @@ class GuestController extends Controller
      */
     public function destroy(Guest $guest)
     {
-        if ($guest->church_id !== Auth::user()->church_id) {
+        if ($guest->church_id !== get_current_church_id()) {
             abort(403, 'Accès non autorisé');
         }
 
-        if (!Auth::user()->hasPermission('members.delete', Auth::user()->church_id)) {
+        if (!Auth::user()->hasPermission('members.delete', get_current_church_id())) {
             abort(403, 'Accès non autorisé');
         }
 
@@ -247,11 +247,11 @@ class GuestController extends Controller
      */
     public function convertToMember(Guest $guest)
     {
-        if ($guest->church_id !== Auth::user()->church_id) {
+        if ($guest->church_id !== get_current_church_id()) {
             abort(403, 'Accès non autorisé');
         }
 
-        if (!Auth::user()->hasPermission('members.update', Auth::user()->church_id)) {
+        if (!Auth::user()->hasPermission('members.update', get_current_church_id())) {
             abort(403, 'Accès non autorisé');
         }
 

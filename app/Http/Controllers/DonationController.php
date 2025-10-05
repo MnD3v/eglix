@@ -15,7 +15,7 @@ class DonationController extends Controller
      */
     public function index()
     {
-        $donations = Donation::where('church_id', Auth::user()->church_id)
+        $donations = Donation::where('church_id', get_current_church_id())
             ->with(['member','project'])->latest('received_at')->paginate(12);
         return view('donations.index', compact('donations'));
     }
@@ -25,9 +25,9 @@ class DonationController extends Controller
      */
     public function create()
     {
-        $members = Member::where('church_id', Auth::user()->church_id)
+        $members = Member::where('church_id', get_current_church_id())
             ->orderBy('last_name')->orderBy('first_name')->get();
-        $projects = Project::where('church_id', Auth::user()->church_id)
+        $projects = Project::where('church_id', get_current_church_id())
             ->orderBy('name')->get();
         return view('donations.create', compact('members','projects'));
     }
@@ -73,7 +73,7 @@ class DonationController extends Controller
         }
         
         // Ajouter l'ID de l'église et l'auteur
-        $validated['church_id'] = Auth::user()->church_id;
+        $validated['church_id'] = get_current_church_id();
         $validated['created_by'] = Auth::id();
         
         $d = Donation::create($validated);
@@ -86,7 +86,7 @@ class DonationController extends Controller
     public function show(Donation $donation)
     {
         // Vérifier que le don appartient à l'église de l'utilisateur
-        if ($donation->church_id !== Auth::user()->church_id) {
+        if ($donation->church_id !== get_current_church_id()) {
             abort(403, 'Accès non autorisé');
         }
         
@@ -100,13 +100,13 @@ class DonationController extends Controller
     public function edit(Donation $donation)
     {
         // Vérifier que le don appartient à l'église de l'utilisateur
-        if ($donation->church_id !== Auth::user()->church_id) {
+        if ($donation->church_id !== get_current_church_id()) {
             abort(403, 'Accès non autorisé');
         }
         
-        $members = Member::where('church_id', Auth::user()->church_id)
+        $members = Member::where('church_id', get_current_church_id())
             ->orderBy('last_name')->orderBy('first_name')->get();
-        $projects = Project::where('church_id', Auth::user()->church_id)
+        $projects = Project::where('church_id', get_current_church_id())
             ->orderBy('name')->get();
         return view('donations.edit', compact('donation','members','projects'));
     }
@@ -117,7 +117,7 @@ class DonationController extends Controller
     public function update(Request $request, Donation $donation)
     {
         // Vérifier que le don appartient à l'église de l'utilisateur
-        if ($donation->church_id !== Auth::user()->church_id) {
+        if ($donation->church_id !== get_current_church_id()) {
             abort(403, 'Accès non autorisé');
         }
         
@@ -163,7 +163,7 @@ class DonationController extends Controller
     public function destroy(Donation $donation)
     {
         // Vérifier que le don appartient à l'église de l'utilisateur
-        if ($donation->church_id !== Auth::user()->church_id) {
+        if ($donation->church_id !== get_current_church_id()) {
             abort(403, 'Accès non autorisé');
         }
         

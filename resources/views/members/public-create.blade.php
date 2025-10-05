@@ -433,6 +433,25 @@
                 <form method="POST" action="{{ route('members.public.store', $church_id) }}" enctype="multipart/form-data">
                     @csrf
                     
+                    <!-- Champ caché pour l'église -->
+                    <input type="hidden" name="church_id" value="{{ $church->id }}">
+                    
+                    <!-- Informations de l'église -->
+                    <div class="row g-3 mb-4">
+                        <div class="col-12">
+                            <div class="alert alert-info d-flex align-items-center">
+                                <i class="fas fa-church me-3" style="font-size: 1.5rem; color: #FFCC00;"></i>
+                                <div>
+                                    <strong>Inscription pour l'église :</strong><br>
+                                    <span class="h5 mb-0">{{ $church->name }}</span>
+                                    @if($church->address)
+                                        <br><small class="text-muted">{{ $church->address }}</small>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
                     <!-- Informations personnelles -->
                     <div class="row g-3 mb-4">
                         <div class="col-md-6">

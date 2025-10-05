@@ -2,6 +2,133 @@
 
 @section('content')
 <style>
+/* Styles pour les informations de l'église */
+.church-info-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    margin-bottom: 2rem;
+}
+
+.church-content {
+    padding: 2rem;
+}
+
+.info-section {
+    margin-bottom: 2rem;
+}
+
+.info-section:last-child {
+    margin-bottom: 0;
+}
+
+.section-title {
+    color: #1e293b;
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.info-item {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 1.5rem;
+}
+
+.info-label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.info-value {
+    font-size: 1rem;
+    color: #1e293b;
+    font-weight: 500;
+}
+
+.info-value.empty {
+    color: #94a3b8;
+    font-style: italic;
+}
+
+.subscription-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.subscription-active {
+    background: rgba(34, 197, 94, 0.1);
+    color: #16a34a;
+    border: 1px solid rgba(34, 197, 94, 0.2);
+}
+
+.subscription-expired {
+    background: rgba(239, 68, 68, 0.1);
+    color: #dc2626;
+    border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.subscription-pending {
+    background: rgba(245, 158, 11, 0.1);
+    color: #d97706;
+    border: 1px solid rgba(245, 158, 11, 0.2);
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.stat-item {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 1.5rem;
+    text-align: center;
+}
+
+.stat-number {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+}
+
+.stat-label {
+    font-size: 0.875rem;
+    color: #64748b;
+    font-weight: 500;
+}
+
 /* Styles pour la liste des comptes */
 .accounts-list {
     display: flex;
@@ -68,7 +195,6 @@
     gap: 6px;
 }
 
-
 .account-row-empty {
     text-align: center;
     padding: 3rem 1rem;
@@ -81,341 +207,20 @@
     opacity: 0.5;
 }
 
-/* Styles pour les champs de recherche arrondis */
-.search-group {
-    border-radius: 25px;
-    overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.search-icon {
-    background-color: #f8fafc;
-    border: 1px solid #e2e8f0;
-    border-right: none;
-    border-radius: 25px 0 0 25px;
-    color: #000000;
-}
-
-.search-input {
-    border: 1px solid #e2e8f0;
-    border-left: none;
-    border-right: none;
-    background-color: #ffffff;
-    border-radius: 0;
-    padding: 12px 16px;
-    font-size: 14px;
-}
-
-.search-input:focus {
-    border-color: #e2e8f0;
-    box-shadow: none;
-    background-color: #ffffff;
-}
-
-.search-btn {
-    background-color: #f8fafc;
-    border: 1px solid #e2e8f0;
-    border-left: none;
-    border-radius: 0 25px 25px 0;
-    color: #000000;
-    font-weight: 600;
-    padding: 12px 20px;
-}
-
-.search-btn:hover {
-    background-color: #f1f5f9;
-    border-color: #cbd5e1;
-    color: #000000;
-}
-
-.filter-select {
-    border-radius: 12px;
-    border: 1px solid #e2e8f0;
-    padding: 12px 16px;
-    font-size: 14px;
-}
-
-.filter-select:focus {
-    border-color: #e2e8f0;
-    box-shadow: none;
-}
-
-.filter-btn {
-    border-radius: 12px;
-    padding: 12px 20px;
-    font-weight: 600;
-    color: #000000;
-}
-
-/* Icônes noires dans toute la section comptes */
-.accounts-list .bi,
-.accounts-appbar .bi,
-.account-details .bi,
-.account-row-empty .bi,
-.search-icon .bi,
-.search-btn .bi,
-.filter-btn .bi {
-    color: #000000 !important;
-}
-
-/* Texte de date noir */
-.account-date .badge {
-    color: #000000 !important;
-    background-color: #f8fafc !important;
-    border: 1px solid #e2e8f0 !important;
-}
-</style>
-<div class="container-fluid px-4 py-4" >
-    <!-- AppBar Gestion des Comptes -->
-    <div class="appbar accounts-appbar">
-        <div class="appbar-content">
-            <div class="appbar-left">
-                <a href="{{ url('/') }}" class="appbar-back-btn">
-                    <i class="bi bi-arrow-left"></i>
-                </a>
-                <div class="appbar-title-section">
-                    <h1 class="appbar-title">Gestion des Comptes</h1>
-                </div>
-            </div>
-            <div class="appbar-right">
-                <a href="{{ route('user-management.create') }}" class="appbar-btn-yellow">
-                    <i class="bi bi-person-plus"></i>
-                    <span class="btn-text">Nouvel utilisateur</span>
-                </a>
-            </div>
-        </div>
-    </div>
-
-    <!-- Champ de recherche -->
-    <form method="GET" class="mb-4">
-        <div class="row g-3 align-items-end">
-            <div class="col-12 col-md-6">
-                <div class="input-group search-group">
-                    <span class="input-group-text search-icon"><i class="bi bi-search"></i></span>
-                    <input type="text" class="form-control search-input" placeholder="Rechercher par nom, email..." name="q" value="{{ request('q') }}">
-                    <button class="btn btn search-btn" type="submit"><i class="bi bi-search"></i> <span class="btn-label d-none d-lg-inline">Rechercher</span></button>
-                </div>
-            </div>
-        </div>
-    </form>
-
-    <!-- Liste des utilisateurs -->
-    <div class="accounts-list">
-        @forelse($users as $index => $user)
-            <div class="account-row {{ $index > 0 ? 'account-row-separated' : '' }}">
-                <div class="account-row-body">
-                    <div class="account-info">
-                        <div class="account-date">
-                            <span class="badge bg-custom">{{ $user->created_at->format('d/m/Y') }}</span>
-                        </div>
-                        <div class="account-name">
-                            {{ $user->name }}
-                        </div>
-                        <div class="account-details">
-                            <i class="bi bi-envelope me-1"></i>{{ $user->email }}
-                            <span class="ms-2"><i class="bi bi-person-badge me-1"></i>{{ $user->role->name ?? 'Aucun rôle' }}</span>
-                            @if($user->is_church_admin)
-                                <span class="ms-2"><i class="bi bi-shield-check me-1"></i>Administrateur</span>
-                            @else
-                                <span class="ms-2"><i class="bi bi-person me-1"></i>Utilisateur</span>
-                            @endif
-                            @if($user->is_active)
-                                <span class="ms-2"><i class="bi bi-check-circle me-1"></i>Actif</span>
-                            @else
-                                <span class="ms-2"><i class="bi bi-x-circle me-1"></i>Inactif</span>
-                            @endif
-                        </div>
-                    </div>
-                </div>
-            </div>
-        @empty
-            <div class="account-row-empty">
-                <i class="bi bi-people"></i>
-                <div>Aucun utilisateur trouvé</div>
-                <small class="text-muted mt-2">Commencez par créer le premier utilisateur de votre église</small>
-            </div>
-        @endforelse
-    </div>
-</div>
-
-<style>
-.accounts-header {
-    padding: 1.5rem 0;
-}
-
-.accounts-title {
-    font-size: 1.8rem;
-    font-weight: 600;
-    color: #2d3748;
-    margin-bottom: 0.5rem;
-}
-
-.accounts-subtitle {
-    font-size: 1rem;
-    color: #718096;
-    margin-bottom: 0;
-}
-
-.btn-new-user {
-    background-color: #4c51bf;
-    color: white;
-    border: none;
-    padding: 0.75rem 1.5rem;
-    border-radius: 8px;
-    font-weight: 500;
-    transition: all 0.2s ease;
-}
-
-.btn-new-user:hover {
-    background-color: #434190;
-    color: white;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.user-card {
-    border: 1px solid #e2e8f0;
-    border-radius: 12px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
-    transition: all 0.2s ease;
-    background-color: #ffffff;
-}
-
-.user-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-}
-
-.user-avatar {
-    width: 46px;
-    height: 46px;
-    background-color: #ede9fe;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #6d28d9;
-    font-size: 1.4rem;
-}
-
-.user-info {
-    background-color: #f8fafc;
-    border-radius: 8px;
-    padding: 0.875rem;
-    margin-bottom: 1rem;
-}
-
-.permissions-section {
-    background-color: #f8fafc;
-    border-radius: 8px;
-    padding: 0.875rem;
-}
-
-.permissions-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
-    gap: 0.5rem;
-}
-
-.permission-item {
-    display: flex;
-    align-items: center;
-    font-size: 0.75rem;
-    color: #475569;
-}
-
-.permission-item i {
-    color: #10b981;
-    font-size: 0.875rem;
-}
-
-.user-status .badge {
-    font-size: 0.7rem;
-    padding: 0.35rem 0.7rem;
-    border-radius: 20px;
-    font-weight: 500;
-    letter-spacing: 0.3px;
-}
-
-.badge.bg-success {
-    background-color: #c6f6d5 !important;
-    color: #047857 !important;
-}
-
-.badge.bg-secondary {
-    background-color: #e2e8f0 !important;
-    color: #475569 !important;
-}
-
 .badge.bg-custom {
-    background-color: #ddd6fe !important;
-    color: #5b21b6 !important;
-}
-
-.badge.bg-info {
-    background-color: #bfdbfe !important;
-    color: #1d4ed8 !important;
-}
-
-.card-footer {
-    border-top: 1px solid #f1f5f9;
-    padding: 1rem;
-    background-color: #ffffff;
-}
-
-.btn-outline-primary {
-    border-color: #cbd5e1;
-    color: #4c51bf;
-}
-
-.btn-outline-primary:hover {
-    background-color: #eff6ff;
-    color: #4c51bf;
-    border-color: #4c51bf;
-}
-
-.btn-outline-danger {
-    border-color: #cbd5e1;
-    color: #64748b;
-}
-
-.btn-outline-danger:hover {
-    background-color: #fef2f2;
-    color: #dc2626;
-    border-color: #fca5a5;
-}
-
-.btn {
-    border-radius: 8px;
-    font-weight: 500;
-    transition: all 0.2s ease;
-    font-size: 0.875rem;
-    padding: 0.5rem 1rem;
-}
-
-.btn:hover {
-    transform: translateY(-1px);
+    background-color: #667eea;
+    color: white;
 }
 
 @media (max-width: 768px) {
-    .permissions-grid {
-        grid-template-columns: repeat(2, 1fr);
+    .church-content {
+        padding: 1.5rem;
     }
     
-    .user-card .card-body {
-        padding: 1rem;
+    .info-grid {
+        grid-template-columns: 1fr;
     }
     
-    .container-fluid {
-        padding-left: 1rem;
-        padding-right: 1rem;
-    }
-    
-    .user-management-title {
-        font-size: 1.5rem;
-    }
-    
-    /* Responsive pour les cartes de comptes */
     .account-row {
         flex-direction: column;
         align-items: stretch;
@@ -445,52 +250,198 @@
         flex-wrap: wrap;
         gap: 4px;
     }
-    
-}
-
-/* Amélioration de la marge et de l'espacement */
-.container-fluid {
-    max-width: 1400px;
-    margin: 0 auto;
-}
-
-.user-card {
-    margin-bottom: 1rem;
-}
-
-/* Styles pour les textes */
-.card-title {
-    color: #334155;
-    font-weight: 600;
-    font-size: 1.1rem;
-}
-
-.text-muted {
-    color: #64748b !important;
-}
-
-/* Styles pour les éléments spécifiques */
-h6.text-muted {
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    font-weight: 600;
 }
 </style>
 
-<script>
-// Test du bouton Nouvel Utilisateur
-document.addEventListener('DOMContentLoaded', function() {
-    const newUserBtn = document.querySelector('a[href*="user-management/create"]');
-    if (newUserBtn) {
-        console.log('Bouton Nouvel Utilisateur trouvé:', newUserBtn);
-        newUserBtn.addEventListener('click', function(e) {
-            console.log('Clic sur le bouton Nouvel Utilisateur détecté');
-            // Ne pas empêcher le comportement par défaut
-        });
-    } else {
-        console.log('Bouton Nouvel Utilisateur non trouvé');
-    }
-});
-</script>
+<div class="container-fluid">
+    <!-- AppBar -->
+    @include('components.appbar', [
+        'title' => $church->name,
+        'subtitle' => $church->description ?? 'Informations de l\'église',
+        'icon' => 'bi-building',
+        'color' => 'primary',
+        'actions' => [
+            [
+                'type' => 'primary',
+                'url' => route('churches.edit', $church),
+                'label' => 'Modifier',
+                'icon' => 'bi-pencil-square'
+            ]
+        ]
+    ])
+
+    <!-- Informations générales -->
+    <div class="church-info-card">
+        <div class="church-content">
+            <div class="info-section">
+                <h3 class="section-title">
+                    <i class="bi bi-info-circle"></i>
+                    Informations générales
+                </h3>
+                
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-label">
+                            <i class="bi bi-geo-alt"></i>
+                            Adresse
+                        </div>
+                        <div class="info-value {{ empty($church->address) ? 'empty' : '' }}">
+                            {{ $church->address ?? 'Non renseignée' }}
+                        </div>
+                    </div>
+                    
+                    <div class="info-item">
+                        <div class="info-label">
+                            <i class="bi bi-telephone"></i>
+                            Téléphone
+                        </div>
+                        <div class="info-value {{ empty($church->phone) ? 'empty' : '' }}">
+                            {{ $church->phone ?? 'Non renseigné' }}
+                        </div>
+                    </div>
+                    
+                    <div class="info-item">
+                        <div class="info-label">
+                            <i class="bi bi-envelope"></i>
+                            Email
+                        </div>
+                        <div class="info-value {{ empty($church->email) ? 'empty' : '' }}">
+                            {{ $church->email ?? 'Non renseigné' }}
+                        </div>
+                    </div>
+                    
+                    <div class="info-item">
+                        <div class="info-label">
+                            <i class="bi bi-globe"></i>
+                            Site web
+                        </div>
+                        <div class="info-value {{ empty($church->website) ? 'empty' : '' }}">
+                            @if($church->website)
+                                <a href="{{ $church->website }}" target="_blank" rel="noopener">{{ $church->website }}</a>
+                            @else
+                                Non renseigné
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Statut d'abonnement -->
+            <div class="info-section">
+                <h3 class="section-title">
+                    <i class="bi bi-credit-card"></i>
+                    Abonnement
+                </h3>
+                
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-label">
+                            <i class="bi bi-shield-check"></i>
+                            Statut
+                        </div>
+                        <div class="info-value">
+                            @if($church->hasActiveSubscription())
+                                <span class="subscription-status subscription-active">
+                                    <i class="bi bi-check-circle"></i>
+                                    Actif
+                                </span>
+                            @elseif($church->isSubscriptionExpired())
+                                <span class="subscription-status subscription-expired">
+                                    <i class="bi bi-x-circle"></i>
+                                    Expiré
+                                </span>
+                            @else
+                                <span class="subscription-status subscription-pending">
+                                    <i class="bi bi-clock"></i>
+                                    En attente
+                                </span>
+                            @endif
+                        </div>
+                    </div>
+                    
+                    @if($church->subscription_end_date)
+                    <div class="info-item">
+                        <div class="info-label">
+                            <i class="bi bi-calendar-event"></i>
+                            Date d'expiration
+                        </div>
+                        <div class="info-value">
+                            {{ $church->subscription_end_date->format('d/m/Y') }}
+                        </div>
+                    </div>
+                    @endif
+                    
+                    @if($church->subscription_amount)
+                    <div class="info-item">
+                        <div class="info-label">
+                            <i class="bi bi-currency-dollar"></i>
+                            Montant
+                        </div>
+                        <div class="info-value">
+                            {{ number_format($church->subscription_amount, 2) }} {{ $church->subscription_currency ?? 'EUR' }}
+                        </div>
+                    </div>
+                    @endif
+                    
+                    @if($church->subscription_plan)
+                    <div class="info-item">
+                        <div class="info-label">
+                            <i class="bi bi-box"></i>
+                            Plan
+                        </div>
+                        <div class="info-value">
+                            {{ ucfirst($church->subscription_plan) }}
+                        </div>
+                    </div>
+                    @endif
+                </div>
+            </div>
+
+            <!-- Comptes de l'église -->
+            <div class="info-section">
+                <h3 class="section-title">
+                    <i class="bi bi-people"></i>
+                    Comptes de l'église
+                </h3>
+                
+                <div class="accounts-list">
+                    @forelse($users as $index => $user)
+                        <div class="account-row {{ $index > 0 ? 'account-row-separated' : '' }}">
+                            <div class="account-row-body">
+                                <div class="account-info">
+                                    <div class="account-date">
+                                        <span class="badge bg-custom">{{ $user->created_at->format('d/m/Y') }}</span>
+                                    </div>
+                                    <div class="account-name">
+                                        {{ $user->name }}
+                                    </div>
+                                    <div class="account-details">
+                                        <i class="bi bi-envelope me-1"></i>{{ $user->email }}
+                                        <span class="ms-2"><i class="bi bi-person-badge me-1"></i>{{ $user->role->name ?? 'Aucun rôle' }}</span>
+                                        @if($user->is_church_admin)
+                                            <span class="ms-2"><i class="bi bi-shield-check me-1"></i>Administrateur</span>
+                                        @else
+                                            <span class="ms-2"><i class="bi bi-person me-1"></i>Utilisateur</span>
+                                        @endif
+                                        @if($user->is_active)
+                                            <span class="ms-2"><i class="bi bi-check-circle me-1"></i>Actif</span>
+                                        @else
+                                            <span class="ms-2"><i class="bi bi-x-circle me-1"></i>Inactif</span>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @empty
+                        <div class="account-row-empty">
+                            <i class="bi bi-people"></i>
+                            <div>Aucun utilisateur trouvé</div>
+                            <small class="text-muted mt-2">Commencez par créer le premier utilisateur de votre église</small>
+                        </div>
+                    @endforelse
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection

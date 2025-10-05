@@ -16,7 +16,7 @@ class DocumentFolderController extends Controller
      */
     public function index()
     {
-        $folders = DocumentFolder::where('church_id', Auth::user()->church_id)
+        $folders = DocumentFolder::where('church_id', get_current_church_id())
             ->ordered()
             ->withCount('documents')
             ->get();
@@ -45,7 +45,7 @@ class DocumentFolderController extends Controller
             'sort_order' => 'integer|min:0'
         ]);
 
-        $validated['church_id'] = Auth::user()->church_id;
+        $validated['church_id'] = get_current_church_id();
         $validated['is_active'] = $validated['is_active'] ?? true;
         $validated['sort_order'] = $validated['sort_order'] ?? 0;
 

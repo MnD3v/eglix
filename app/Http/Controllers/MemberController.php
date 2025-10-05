@@ -23,7 +23,7 @@ class MemberController extends Controller
         $gender = $request->get('gender');
         $age = $request->get('age');
         
-        $query = Member::where('church_id', Auth::user()->church_id);
+        $query = Member::where('church_id', get_current_church_id());
 
         // Filtre par statut
         if ($status) {
@@ -56,7 +56,7 @@ class MemberController extends Controller
 
         // Stats - filtrées par église
         $now = now();
-        $churchId = Auth::user()->church_id;
+        $churchId = get_current_church_id();
         $stats = [
             'total' => Member::where('church_id', $churchId)->count(),
             'active' => Member::where('church_id', $churchId)->where('status','active')->count(),
@@ -117,7 +117,7 @@ class MemberController extends Controller
         }
 
         // Ajouter l'ID de l'église
-        $validated['church_id'] = Auth::user()->church_id;
+        $validated['church_id'] = get_current_church_id();
         $validated['created_by'] = Auth::id();
         
         $member = Member::create($validated);
@@ -130,7 +130,7 @@ class MemberController extends Controller
     public function show(Member $member)
     {
         // Vérifier que le membre appartient à l'église de l'utilisateur
-        if ($member->church_id !== Auth::user()->church_id) {
+        if ($member->church_id !== get_current_church_id()) {
             abort(403, 'Accès non autorisé');
         }
         
@@ -180,7 +180,7 @@ class MemberController extends Controller
     public function edit(Member $member)
     {
         // Vérifier que le membre appartient à l'église de l'utilisateur
-        if ($member->church_id !== Auth::user()->church_id) {
+        if ($member->church_id !== get_current_church_id()) {
             abort(403, 'Accès non autorisé');
         }
         
@@ -193,7 +193,7 @@ class MemberController extends Controller
     public function update(Request $request, Member $member)
     {
         // Vérifier que le membre appartient à l'église de l'utilisateur
-        if ($member->church_id !== Auth::user()->church_id) {
+        if ($member->church_id !== get_current_church_id()) {
             abort(403, 'Accès non autorisé');
         }
         
@@ -241,7 +241,7 @@ class MemberController extends Controller
     public function destroy(Member $member)
     {
         // Vérifier que le membre appartient à l'église de l'utilisateur
-        if ($member->church_id !== Auth::user()->church_id) {
+        if ($member->church_id !== get_current_church_id()) {
             abort(403, 'Accès non autorisé');
         }
         
@@ -254,7 +254,7 @@ class MemberController extends Controller
      */
     public function generateRegistrationLink(Request $request)
     {
-        $church = Church::find(Auth::user()->church_id);
+        $church = Church::find(get_current_church_id());
         
         if (!$church) {
             if ($request->ajax()) {
@@ -381,7 +381,7 @@ class MemberController extends Controller
     public function exportPdf(Member $member)
     {
         // Vérifier que le membre appartient à l'église de l'utilisateur
-        if ($member->church_id !== Auth::user()->church_id) {
+        if ($member->church_id !== get_current_church_id()) {
             abort(403, 'Accès non autorisé');
         }
         
@@ -464,6 +464,7 @@ class MemberController extends Controller
         }
         
         $validated = $request->validate([
+            'church_id' => ['required','integer','exists:churches,id'],
             'first_name' => ['required','string','max:100'],
             'last_name' => ['required','string','max:100'],
             'email' => ['nullable','email','max:150','unique:members,email'],

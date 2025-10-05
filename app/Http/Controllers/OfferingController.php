@@ -20,7 +20,7 @@ class OfferingController extends Controller
         $query = OfferingType::query()
             ->where('is_active', true)
             ->orderBy('name');
-        $churchId = Auth::user()->church_id;
+        $churchId = get_current_church_id();
         // Prefer church-specific types, plus global (null) types
         $query->where(function ($q) use ($churchId) {
             $q->where('church_id', $churchId)
@@ -33,7 +33,7 @@ class OfferingController extends Controller
      */
     public function index(\Illuminate\Http\Request $request)
     {
-        $query = Offering::where('church_id', Auth::user()->church_id);
+        $query = Offering::where('church_id', get_current_church_id());
         $fromInput = $request->query('from');
         $toInput = $request->query('to');
         $fromFilter = $fromInput ? Carbon::parse($fromInput)->startOfDay() : null;
@@ -55,21 +55,21 @@ class OfferingController extends Controller
             default => "strftime('%Y-%m', received_at)",
         };
         $rows = DB::table('offerings')
-            ->where('church_id', Auth::user()->church_id)
+            ->where('church_id', get_current_church_id())
             ->selectRaw("{$monthExpr} as m, sum(amount) as total")
             ->whereBetween('received_at', [$from, $to])
             ->groupBy('m')
             ->pluck('total','m');
         $hasAnyThisYear = collect($rows)->filter(fn($v) => (float)$v > 0)->isNotEmpty();
         if (!$hasAnyThisYear) {
-            $latest = DB::table('offerings')->where('church_id', Auth::user()->church_id)->orderByDesc('received_at')->value('received_at');
+            $latest = DB::table('offerings')->where('church_id', get_current_church_id())->orderByDesc('received_at')->value('received_at');
             if ($latest) {
                 $year = (int) substr($latest, 0, 4);
                 $from = now()->setYear($year)->copy()->startOfYear();
                 $to = now()->setYear($year)->copy()->endOfYear();
                 $months = collect(range(1,12))->map(fn($m) => sprintf('%04d-%02d', $year, $m));
                 $rows = DB::table('offerings')
-                    ->where('church_id', Auth::user()->church_id)
+                    ->where('church_id', get_current_church_id())
                     ->selectRaw("{$monthExpr} as m, sum(amount) as total")
                     ->whereBetween('received_at', [$from, $to])
                     ->groupBy('m')
@@ -111,7 +111,7 @@ class OfferingController extends Controller
             'notes' => ['nullable','string'],
         ]);
         // Ajouter l'ID de l'église et l'auteur
-        $validated['church_id'] = Auth::user()->church_id;
+        $validated['church_id'] = get_current_church_id();
         $validated['created_by'] = Auth::id();
         
         $o = Offering::create($validated);
@@ -124,7 +124,7 @@ class OfferingController extends Controller
     public function show(Offering $offering)
     {
         // Vérifier que l'offrande appartient à l'église de l'utilisateur
-        if ($offering->church_id !== Auth::user()->church_id) {
+        if ($offering->church_id !== get_current_church_id()) {
             abort(403, 'Accès non autorisé');
         }
         
@@ -137,7 +137,7 @@ class OfferingController extends Controller
     public function edit(Offering $offering)
     {
         // Vérifier que l'offrande appartient à l'église de l'utilisateur
-        if ($offering->church_id !== Auth::user()->church_id) {
+        if ($offering->church_id !== get_current_church_id()) {
             abort(403, 'Accès non autorisé');
         }
         
@@ -151,7 +151,7 @@ class OfferingController extends Controller
     public function update(Request $request, Offering $offering)
     {
         // Vérifier que l'offrande appartient à l'église de l'utilisateur
-        if ($offering->church_id !== Auth::user()->church_id) {
+        if ($offering->church_id !== get_current_church_id()) {
             abort(403, 'Accès non autorisé');
         }
         
@@ -175,7 +175,7 @@ class OfferingController extends Controller
     public function destroy(Offering $offering)
     {
         // Vérifier que l'offrande appartient à l'église de l'utilisateur
-        if ($offering->church_id !== Auth::user()->church_id) {
+        if ($offering->church_id !== get_current_church_id()) {
             abort(403, 'Accès non autorisé');
         }
         

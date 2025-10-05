@@ -57,15 +57,37 @@ class AuthController extends Controller
                 \Log::info('Session ID après connexion: ' . $request->session()->getId());
                 \Log::info('User ID connecté: ' . Auth::id());
                 
-                // Vérifier si l'utilisateur a un church_id
+                // Vérifier si l'utilisateur a des églises associées
                 $user = Auth::user();
-                if (!$user->church_id) {
-                    \Log::warning('Utilisateur sans church_id: ' . $user->email);
+                if ($user->activeChurches()->count() === 0) {
+                    \Log::warning('Utilisateur sans églises associées: ' . $user->email);
                     Auth::logout();
                     return redirect()->back()
                         ->withErrors(['email' => 'Votre compte n\'est pas correctement configuré. Veuillez contacter l\'administrateur.'])
                         ->withInput($request->except('password'));
                 }
+
+                // Définir l'église courante si aucune n'est définie
+                if (!$user->getCurrentChurch()) {
+                    $primaryChurch = $user->primaryChurch()->first();
+                    if ($primaryChurch) {
+                        $user->setCurrentChurch($primaryChurch->id);
+                        \Log::info('Église principale définie pour ' . $user->email . ': ' . $primaryChurch->name);
+                    } else {
+                        // Prendre la première église active
+                        $firstChurch = $user->activeChurches()->first();
+                        if ($firstChurch) {
+                            $user->setCurrentChurch($firstChurch->id);
+                            \Log::info('Première église définie pour ' . $user->email . ': ' . $firstChurch->name);
+                        }
+                    }
+                } else {
+                    \Log::info('Église courante déjà définie pour ' . $user->email . ': ' . $user->getCurrentChurch()->name);
+                }
+                
+                // Vérifier que l'église courante est bien définie dans la session
+                $currentChurchId = session('current_church_id');
+                \Log::info('Session current_church_id après connexion: ' . ($currentChurchId ?: 'null'));
                 
                 return redirect()->intended('/')->with('success', 'Connexion réussie !');
             }
@@ -166,11 +188,19 @@ class AuthController extends Controller
                 'name' => $request->name,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
-                'church_id' => $church->id,
-                'role_id' => $adminRole->id,
                 'is_church_admin' => true,
                 'is_active' => true,
             ]);
+
+            // Ajouter l'utilisateur à l'église avec le nouveau système multi-églises
+            $user->churches()->attach($church->id, [
+                'is_primary' => true,
+                'is_active' => true,
+            ]);
+
+            // Définir l'église courante dans la session
+            $user->setCurrentChurch($church->id);
+
         } catch (\Exception $e) {
             $church->delete(); // Supprimer l'église et le rôle en cas d'erreur
             $adminRole->delete();
@@ -192,8 +222,7 @@ class AuthController extends Controller
         try {
             \Log::info('Vérification des colonnes de la table users...');
 
-            // Forcer l'ajout de chaque colonne
-            $this->addColumnIfNotExists('users', 'church_id', 'BIGINT');
+            // Forcer l'ajout de chaque colonne (sans church_id qui n'existe plus)
             $this->addColumnIfNotExists('users', 'role_id', 'BIGINT');
             $this->addColumnIfNotExists('users', 'is_church_admin', 'BOOLEAN DEFAULT false');
             $this->addColumnIfNotExists('users', 'is_active', 'BOOLEAN DEFAULT true');
@@ -303,12 +332,6 @@ class AuthController extends Controller
     private function addMissingUsersColumns()
     {
         try {
-            // Vérifier et ajouter church_id
-            if (!$this->columnExists('users', 'church_id')) {
-                \DB::statement('ALTER TABLE users ADD COLUMN church_id BIGINT');
-                \Log::info('Colonne church_id ajoutée à users');
-            }
-
             // Vérifier et ajouter role_id
             if (!$this->columnExists('users', 'role_id')) {
                 \DB::statement('ALTER TABLE users ADD COLUMN role_id BIGINT');
@@ -387,7 +410,7 @@ class AuthController extends Controller
         // Filtrer les données selon les colonnes existantes
         $filteredData = [];
         $requiredColumns = ['name', 'email', 'password'];
-        $optionalColumns = ['church_id', 'role_id', 'is_church_admin', 'is_active'];
+        $optionalColumns = ['role_id', 'is_church_admin', 'is_active']; // Supprimé church_id
 
         // Toujours inclure les colonnes requises
         foreach ($requiredColumns as $column) {
@@ -407,11 +430,6 @@ class AuthController extends Controller
         $user = User::create($filteredData);
 
         // Si certaines colonnes n'existaient pas, les ajouter maintenant
-        if (isset($data['church_id']) && !isset($filteredData['church_id'])) {
-            $this->addColumnIfNotExists('users', 'church_id', 'BIGINT');
-            $user->update(['church_id' => $data['church_id']]);
-        }
-
         if (isset($data['role_id']) && !isset($filteredData['role_id'])) {
             $this->addColumnIfNotExists('users', 'role_id', 'BIGINT');
             $user->update(['role_id' => $data['role_id']]);

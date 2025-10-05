@@ -376,6 +376,27 @@
                 </div>
             </div>
 
+            <!-- Informations de l'église -->
+            <div class="form-group">
+                <label for="church_name" class="form-label">Nom de l'église</label>
+                <input type="text" 
+                       id="church_name" 
+                       name="church_name" 
+                       class="form-control @error('church_name') is-invalid @enderror" 
+                       value="{{ old('church_name') }}" 
+                       placeholder="Ex: Église Adventiste de Dongoyo"
+                       required>
+            </div>
+
+            <div class="form-group">
+                <label for="church_description" class="form-label">Description de l'église (optionnel)</label>
+                <textarea id="church_description" 
+                          name="church_description" 
+                          class="form-control @error('church_description') is-invalid @enderror" 
+                          placeholder="Décrivez votre église..."
+                          rows="3">{{ old('church_description') }}</textarea>
+            </div>
+
             <div class="form-check">
                 <input type="checkbox" 
                        id="terms" 

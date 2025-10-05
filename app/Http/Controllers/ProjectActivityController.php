@@ -16,7 +16,7 @@ class ProjectActivityController extends Controller
     public function index(Project $project)
     {
         // Vérifier que le projet appartient à l'église de l'utilisateur
-        if ($project->church_id !== Auth::user()->church_id) {
+        if ($project->church_id !== get_current_church_id()) {
             abort(403, 'Accès non autorisé');
         }
 
@@ -33,7 +33,7 @@ class ProjectActivityController extends Controller
     public function create(Project $project)
     {
         // Vérifier que le projet appartient à l'église de l'utilisateur
-        if ($project->church_id !== Auth::user()->church_id) {
+        if ($project->church_id !== get_current_church_id()) {
             abort(403, 'Accès non autorisé');
         }
 
@@ -46,7 +46,7 @@ class ProjectActivityController extends Controller
     public function store(Request $request, Project $project)
     {
         // Vérifier que le projet appartient à l'église de l'utilisateur
-        if ($project->church_id !== Auth::user()->church_id) {
+        if ($project->church_id !== get_current_church_id()) {
             abort(403, 'Accès non autorisé');
         }
 
@@ -71,7 +71,7 @@ class ProjectActivityController extends Controller
     public function show(Project $project, ProjectActivity $activity)
     {
         // Vérifier que l'activité appartient au projet et à l'église
-        if ($activity->project_id !== $project->id || $project->church_id !== Auth::user()->church_id) {
+        if ($activity->project_id !== $project->id || $project->church_id !== get_current_church_id()) {
             abort(403, 'Accès non autorisé');
         }
 
@@ -84,7 +84,7 @@ class ProjectActivityController extends Controller
     public function edit(Project $project, ProjectActivity $activity)
     {
         // Vérifier que l'activité appartient au projet et à l'église
-        if ($activity->project_id !== $project->id || $project->church_id !== Auth::user()->church_id) {
+        if ($activity->project_id !== $project->id || $project->church_id !== get_current_church_id()) {
             abort(403, 'Accès non autorisé');
         }
 
@@ -97,7 +97,7 @@ class ProjectActivityController extends Controller
     public function update(Request $request, Project $project, ProjectActivity $activity)
     {
         // Vérifier que l'activité appartient au projet et à l'église
-        if ($activity->project_id !== $project->id || $project->church_id !== Auth::user()->church_id) {
+        if ($activity->project_id !== $project->id || $project->church_id !== get_current_church_id()) {
             abort(403, 'Accès non autorisé');
         }
 
@@ -120,7 +120,7 @@ class ProjectActivityController extends Controller
     public function destroy(Project $project, ProjectActivity $activity)
     {
         // Vérifier que l'activité appartient au projet et à l'église
-        if ($activity->project_id !== $project->id || $project->church_id !== Auth::user()->church_id) {
+        if ($activity->project_id !== $project->id || $project->church_id !== get_current_church_id()) {
             abort(403, 'Accès non autorisé');
         }
 

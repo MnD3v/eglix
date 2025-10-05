@@ -26,6 +26,9 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\DocumentFolderController;
 use App\Http\Controllers\SitemapController;
+use App\Http\Controllers\ChurchSwitchController;
+use App\Http\Controllers\ChurchSelectionController;
+use App\Http\Controllers\UserChurchesController;
 use Illuminate\Support\Facades\Auth;
 
 // Routes d'authentification
@@ -53,9 +56,18 @@ Route::get('members/create/{church_id}', [App\Http\Controllers\MemberController:
 Route::post('members/create/{church_id}', [App\Http\Controllers\MemberController::class, 'processPublicRegistration'])->name('members.public.store');
 Route::get('members/success/{church}', [App\Http\Controllers\MemberController::class, 'publicRegistrationSuccess'])->name('members.public.success');
 
+// Route pour la sélection d'église (accessible sans middleware EnsureActiveChurch)
 Route::middleware(['auth', 'auth.ensure'])->group(function () {
+    Route::get('church/selection', [ChurchSelectionController::class, 'index'])->name('church.selection');
+});
+
+Route::middleware(['auth', 'auth.ensure', 'ensure.active.church'])->group(function () {
     Route::get('/', function (Request $request) {
-    $churchId = Auth::user()->church_id;
+    $churchId = get_current_church_id();
+    if (!$churchId) {
+        return redirect()->route('login')->withErrors(['error' => 'Aucune église active trouvée.']);
+    }
+    
     $activeMembers = Member::where('church_id', $churchId)->where('status', 'active')->count();
     // Default to the full current year unless explicit dates are provided
     $from = $request->filled('from')
@@ -371,4 +383,16 @@ Route::prefix('guests')->name('guests.')->group(function () {
     Route::post('admin/churches/{church}/suspend', [AdminController::class, 'suspendSubscription'])->name('admin.suspend-subscription');
     Route::post('admin/churches/{church}/renew', [AdminController::class, 'renewSubscription'])->name('admin.renew-subscription');
     Route::get('admin/export/churches', [AdminController::class, 'exportChurches'])->name('admin.export-churches');
+    
+    // Routes pour le changement d'église
+    Route::post('church/switch', [ChurchSwitchController::class, 'switch'])->name('church.switch');
+    Route::get('church/current', [ChurchSwitchController::class, 'getCurrentChurch'])->name('church.current');
+    Route::get('church/accessible', [ChurchSwitchController::class, 'getAccessibleChurches'])->name('church.accessible');
+    
+    // Routes pour la gestion des églises utilisateur
+    Route::get('user/churches', [UserChurchesController::class, 'index'])->name('user.churches');
+    Route::post('user/churches/add', [UserChurchesController::class, 'addChurch'])->name('user.churches.add');
+    Route::post('user/churches/set-primary', [UserChurchesController::class, 'setPrimary'])->name('user.churches.set-primary');
+    Route::post('user/churches/remove', [UserChurchesController::class, 'removeChurch'])->name('user.churches.remove');
+    Route::get('user/churches/api', [UserChurchesController::class, 'getUserChurches'])->name('user.churches.api');
 });
