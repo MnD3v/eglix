@@ -66,7 +66,7 @@ class DeployMultiChurchSystem extends Command
             
             // 4. Tester le système
             $this->info('🧪 Test du système...');
-            $this->call('test-multi-church-system');
+            $this->call('test:multi-church');
             
             // 5. Nettoyer le cache
             $this->info('🧹 Nettoyage du cache...');

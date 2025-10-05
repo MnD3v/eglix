@@ -23,7 +23,7 @@ php artisan fix:user-church-associations
 
 # 5. Tester le système
 echo "🧪 Test du système multi-églises..."
-php artisan test-multi-church-system
+php artisan test:multi-church
 
 # 6. Nettoyer le cache
 echo "🧹 Nettoyage du cache..."
