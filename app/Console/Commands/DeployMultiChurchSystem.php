@@ -62,7 +62,7 @@ class DeployMultiChurchSystem extends Command
             
             // 3. Vérifier les associations
             $this->info('👥 Vérification des associations...');
-            $this->call('fix-user-church-associations');
+            $this->call('fix:user-church-associations');
             
             // 4. Tester le système
             $this->info('🧪 Test du système...');

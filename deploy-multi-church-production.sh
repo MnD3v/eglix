@@ -19,7 +19,7 @@ php artisan migrate --force
 
 # 4. Corriger les associations utilisateur-église
 echo "👥 Correction des associations utilisateur-église..."
-php artisan fix-user-church-associations
+php artisan fix:user-church-associations
 
 # 5. Tester le système
 echo "🧪 Test du système multi-églises..."
