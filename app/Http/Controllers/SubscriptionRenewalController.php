@@ -14,10 +14,10 @@ class SubscriptionRenewalController extends Controller
     public function renewal()
     {
         $user = Auth::user();
-        $church = $user->church;
+        $church = $user->getCurrentChurch();
         
         if (!$church) {
-            return redirect()->route('dashboard')->with('error', 'Aucune église associée à votre compte.');
+            return redirect()->route('church.selection')->with('error', 'Aucune église associée à votre compte.');
         }
 
         return view('subscription.renewal', compact('church'));
@@ -29,10 +29,10 @@ class SubscriptionRenewalController extends Controller
     public function processRenewal(Request $request)
     {
         $user = Auth::user();
-        $church = $user->church;
+        $church = $user->getCurrentChurch();
         
         if (!$church) {
-            return redirect()->route('dashboard')->with('error', 'Aucune église associée à votre compte.');
+            return redirect()->route('church.selection')->with('error', 'Aucune église associée à votre compte.');
         }
 
         $validated = $request->validate([
@@ -58,6 +58,6 @@ class SubscriptionRenewalController extends Controller
             'payment_date' => now(),
         ]);
 
-        return redirect()->route('dashboard')->with('success', 'Abonnement renouvelé avec succès !');
+        return redirect()->route('church.selection')->with('success', 'Abonnement renouvelé avec succès !');
     }
 }

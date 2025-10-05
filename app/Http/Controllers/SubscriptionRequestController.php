@@ -14,10 +14,10 @@ class SubscriptionRequestController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $church = $user->church;
+        $church = $user->getCurrentChurch();
         
         if (!$church) {
-            return redirect()->route('dashboard')->with('error', 'Aucune église associée à votre compte.');
+            return redirect()->route('church.selection')->with('error', 'Aucune église associée à votre compte.');
         }
 
         return view('subscription.request', compact('church'));
@@ -29,10 +29,10 @@ class SubscriptionRequestController extends Controller
     public function sendRequest(Request $request)
     {
         $user = Auth::user();
-        $church = $user->church;
+        $church = $user->getCurrentChurch();
         
         if (!$church) {
-            return redirect()->route('dashboard')->with('error', 'Aucune église associée à votre compte.');
+            return redirect()->route('church.selection')->with('error', 'Aucune église associée à votre compte.');
         }
 
         $validated = $request->validate([

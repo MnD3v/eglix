@@ -13,10 +13,10 @@ class SubscriptionController extends Controller
     public function index(Request $request)
     {
         $user = Auth::user();
-        $church = $user->church;
+        $church = $user->getCurrentChurch();
         
         if (!$church) {
-            return redirect()->route('dashboard')->with('error', 'Aucune église associée à votre compte.');
+            return redirect()->route('church.selection')->with('error', 'Aucune église associée à votre compte.');
         }
 
         return view('subscriptions.index', compact('church'));
