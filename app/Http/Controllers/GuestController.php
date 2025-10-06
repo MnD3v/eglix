@@ -128,8 +128,17 @@ class GuestController extends Controller
         ]);
 
         // Add church_id and created_by to the validated data
-        $validated['church_id'] = $request->get('current_church_id') ?? get_current_church_id();
+        $churchId = $request->get('current_church_id') ?? get_current_church_id();
+        $validated['church_id'] = $churchId;
         $validated['created_by'] = Auth::id();
+
+        // Debug: Log the values to see what's happening
+        \Log::info('Guest creation debug', [
+            'request_current_church_id' => $request->get('current_church_id'),
+            'get_current_church_id' => get_current_church_id(),
+            'final_church_id' => $churchId,
+            'validated_data' => $validated
+        ]);
 
         Guest::create($validated);
 

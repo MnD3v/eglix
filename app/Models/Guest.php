@@ -41,8 +41,14 @@ class Guest extends Model
         
         static::creating(function ($guest) {
             if (Auth::check()) {
-                $guest->church_id = Auth::user()->church_id;
-                $guest->created_by = Auth::id();
+                // Only set church_id if it's not already set (from controller)
+                if (!$guest->church_id) {
+                    $guest->church_id = get_current_church_id();
+                }
+                // Only set created_by if it's not already set (from controller)
+                if (!$guest->created_by) {
+                    $guest->created_by = Auth::id();
+                }
             }
         });
         
@@ -209,7 +215,7 @@ class Guest extends Model
         $endDate = now()->setYear($year)->setMonth($month)->endOfMonth();
         
         return self::whereBetween('visit_date', [$startDate, $endDate])
-                  ->where('church_id', Auth::user()->church_id)
+                  ->where('church_id', get_current_church_id())
                   ->selectRaw('
                       COUNT(*) as total_guests,
                       COUNT(CASE WHEN status = ? THEN 1 END) as first_time,
