@@ -121,11 +121,15 @@ class GuestController extends Controller
             'phone' => ['nullable', 'string', 'max:20'],
             'address' => ['nullable', 'string', 'max:500'],
             'visit_date' => ['required', 'date'],
-            'origin' => ['required', 'string', 'in:referral,social_media,event,walk_in,flyer,other'],
+            'origin' => ['required', 'string', 'in:referral,social_media,event,walk_in,flyer,other'],    
             'church_background' => ['nullable', 'string', 'max:255'],
             'status' => ['required', 'string', 'in:visit_1,visit_2_3,returning,member_converted,no_longer_interested'],
             'notes' => ['nullable', 'string', 'max:1000'],
         ]);
+
+        // Add church_id and created_by to the validated data
+        $validated['church_id'] = get_current_church_id();
+        $validated['created_by'] = Auth::id();
 
         Guest::create($validated);
 
