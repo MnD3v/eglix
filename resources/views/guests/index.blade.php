@@ -330,7 +330,7 @@
     <!-- Graphique -->
     @if(!empty($chartData))
     <div class="chart-container">
-        <h3 class="chart-title">Évolution des Visiteurs (6 derniers mois)</h3>
+        <h3 class="chart-title">Évolution des Visiteurs (12 derniers mois)</h3>
         <canvas id="guestsChart"></canvas>
     </div>
     @endif

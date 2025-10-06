@@ -50,12 +50,12 @@ class GuestController extends Controller
                 ->returning()->whereBetween('visit_date', [$startDate, $endDate])->count(),
         ];
 
-        // Graphique des données mensuelles (6 derniers mois)
+        // Graphique des données mensuelles (12 derniers mois)
         $chartData = [];
-        for ($i = 5; $i >= 0; $i--) {
+        for ($i = 11; $i >= 0; $i--) {
             $monthDate = now()->subMonths($i);
             $monthStats = Guest::getMonthlyStats($monthDate->year, $monthDate->month);
-            
+
             $chartData[] = [
                 'month' => $monthDate->format('M Y'),
                 'first_time' => $monthStats->first_time,
